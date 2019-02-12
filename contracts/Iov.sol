@@ -1,90 +1,86 @@
 pragma solidity ^0.5.0;
 
 contract Iov {
-    
-    address owner;
-    mapping(uint => Application) public appArray;
-    uint applicationCount;
-    
-    // Application information (pki, content, etc)
-    struct Application {
+
+    // Model a vehicle
+    struct Vehicle {
         uint id;
         string name;
-        string content;
-        string author;
-        string public_key;
         uint trustIndex;
+        uint videoTime; // In seconds
+        //accessMode rights;
+    }
+
+    // Store vehicles
+    // Search for vehicle
+    mapping(uint => Vehicle) public vehicleArray;
+
+    // Keep track of vehicles count
+    uint public vehicleCount;
+
+    // Access modes for vehicle
+    struct accessMode{
+        bool canSend;
+        bool canRecv;
     }
     
-    modifier onlyOthers {
-        require(msg.sender != owner);
-        _;
-    }
-    
-    // Blockchain node signer
-    /*struct Signature {
         
-    }
-    
-    // Agreed terms (nodes, resources)
-    struct ResourcesContract {
-        
-    }*/
-    
-    Application application;
-    //Signature[] signatures;
-    
-    //ResourcesContract[] resourcesContracts;
-    
-    // Smart contract instanciation (Application)
     constructor() public{
-        owner = msg.sender;
+        addVehicle("Vehicle 1");
+        addVehicle("Vehicle 2");
     }
 
-    /*function addApplication(string memory _name, string memory _content, string memory _author, string memory _publicKey) private {
-        applicationCount++;
-        appArray[applicationCount] = Application(applicationCount, _name, _content, _author, _publicKey, computeApplicationTrustIndex());
-    }*/
-    
-    // Application certification (signature)
-    /*function signApplication(signer_node_infos_table) {
-        
-    }
-    
-    // low A-TI, dangerous behavior : revocation
-    function revokeApplication() {
-        
-    }
-    
-    // resources allocation (Resources contract)
-    function resourcesContractInit() {
-        
-    }
-    
-    // contract modification, free resources
-    function resourcesContractCancellation() {
-        
-    }*/
-    
-    // decrement A-TI
-    function decrementApplicationTrustIndex() public onlyOthers{
-        application.trustIndex--;
-    }
-    
-    // calculation of average A-TI
-    function computeApplicationTrustIndex() internal{
-        application.trustIndex = 10;
-    }
-    
-    function getName() view public returns(string memory) {
-        return application.name;
+    function addVehicle(string memory _name) public {
+    	vehicleCount++;
+    	vehicleArray[vehicleCount] = Vehicle(vehicleCount, _name, computeVehicleTrustIndex(vehicleCount), 10);
     }
 
-    function getContent() view public returns(string memory) {
-        return application.content;
+    // calculation of average vehicle trust index
+    function computeVehicleTrustIndex(uint _id) internal returns(uint){
+        vehicleArray[_id].trustIndex = 10;
+        return vehicleArray[_id].trustIndex;
+    }
+
+    // increment vehicle trust index
+    function incrementVehicleTrustIndex(uint _id) internal {
+        vehicleArray[_id].trustIndex++;
     }
     
-    function getTrustIndex() view public returns(uint) {
-        return application.trustIndex;
+    // decrement vehicle trust index
+    function decrementVehicleTrustIndex(uint _id) internal {
+        vehicleArray[_id].trustIndex--;
     }
+
+     // Make sure the sender can be trusted to share content
+    function canShareVideo(uint _id) public returns(bool) {
+        require(vehicleArray[_id].trustIndex >= 5);
+        return true;
+    }
+    
+    // Make sure the receiver has good behavior to receive content
+    function canReceiveVideo(uint _id) public returns(bool) {
+        require(vehicleArray[_id].trustIndex >= 5);
+        return true;    
+    }
+
+    function incrementVideoTime(uint _id) public {
+        vehicleArray[_id].videoTime += 10;
+    }
+
+    function decrementVideoTime(uint _id) public {
+        vehicleArray[_id].videoTime -= 10;
+    }
+    
+    // Feedback for vehicle behavior
+    function feedBack(uint _id, bool _bool) public {
+    	if(_bool) {
+    		incrementVehicleTrustIndex(_id);
+            incrementVideoTime(_id);
+			// Call function payable to pay the publisher    		
+    	} else {
+    		decrementVehicleTrustIndex(_id);
+            decrementVideoTime(_id);
+    	}
+    } 
+   
 }

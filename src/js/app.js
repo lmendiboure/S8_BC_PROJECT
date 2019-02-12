@@ -19,10 +19,6 @@ App = {
     return App.initContract();
   },
 
-  addApplication : function() {
-    
-  },
-
   initContract: function() {
     $.getJSON("Iov.json", function(iov) {
       // Instantiate a new truffle contract from the artifact
@@ -34,7 +30,53 @@ App = {
     });
   },
 
+  render : function() {
+    var iovInstance;
+
+     // Load account data
+    web3.eth.getCoinbase(function(err, account) {
+      if (err === null) {
+        App.account = account;
+        $("#accountAddress").html("Your Account: " + account);
+      }
+    });
+
+    // Load contract data
+    App.contracts.Iov.deployed().then(function(instance) {
+      iovInstance = instance;
+      return iovInstance.vehicleCount();
+    }).then(function(vehicleCount) {
+      for(var i = 1; i <= vehicleCount; i++) {
+        iovInstance.vehicleArray(i).then(function(vehicle) {
+          var id = vehicle[0];
+          var name = vehicle[1];
+          var trustIndex = vehicle[2];
+          $('#vehiclesList').append('<li>' + id + " " + name + " " + trustIndex + '</li>');
+        });
+      }
+    });
+
+  },
+
+  addVehicle : function() {
+  	    // Add a vehicle
+    App.contracts.Iov.deployed().then(function(instance) {
+    	i = instance;
+    	return i.addVehicle($('#inputName').val());
+    }).then(function(variable) {
+    	return i.vehicleCount();
+    }).then(function(vehicleCount) {
+        i.vehicleArray(vehicleCount).then(function(vehicle) {
+          var id = vehicle[0];
+          var name = vehicle[1];
+          var trustIndex = vehicle[2];
+          $('#vehiclesList').append('<li>' + id + " " + name + " " + trustIndex + '</li>');
+        });    
+  	});
+  },
+
 };
+
 
 $(function() {
   $(window).load(function() {

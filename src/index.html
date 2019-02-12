@@ -18,11 +18,33 @@
   </head>
   <body>
     <nav class="navbar navbar-dark bg-dark">
-         <a class="navbar-brand" href="./index.html">IovBlockchain</a>
-          <a class="navbar-brand" href="./login.html">Sign In</a>
-           <a class="navbar-brand" href="./register.html">Sign Up</a>
-         <!-- Navbar content -->
+    	<a class="navbar-brand" href="./index.html">IovBlockchain</a>
+        <a class="navbar-brand" href="./login.html">Sign In</a>
+        <a class="navbar-brand" href="./register.html">Sign Up</a>
+        <!-- Navbar content -->
     </nav>
+
+    <div class="container" align="center">
+    	<ul align="center">
+      		<span id="vehiclesList"></span>
+    	</ul>
+
+    
+
+    	<form class="form-inline" id="newVehicle" onSubmit="App.addVehicle(); return false;">
+  			<div class="form-group mx-sm-3 mb-2">
+    			<label for="New Vehicle" class="sr-only">New Vehicle</label>
+    			<input type="text" class="form-control" id="inputName" placeholder="New Vehicle">
+  			</div>
+  			<button type="submit" class="btn btn-primary mb-2">Add vehicle</button>
+		</form>
+    </div>
+
+    	<span id="accountAddress" align ="center"></span>
+    </div>
+
+
+
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -31,5 +53,7 @@
     <script src="js/web3.min.js"></script>
     <script src="js/truffle-contract.js"></script>
     <script src="js/app.js"></script>
+
+
   </body>
 </html>
