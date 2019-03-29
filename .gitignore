@@ -1,0 +1,4 @@
+*.zip
+/frontend/node_modules
+/build
+/contracts

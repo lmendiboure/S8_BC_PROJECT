@@ -1,0 +1,48 @@
+#div1{
+    text-align: center;
+}
+
+#img1{
+    width: 10%;
+    height: 10%;
+    border: solid 1px grey; 
+    vertical-align:middle;
+}
+
+.wrapper { /*https://codepen.io/anon/pen/YBgxpP pour le faire facilement */
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-gap: 10px;
+  grid-auto-rows: minmax(100px, auto);
+}
+.one {
+  grid-column: 1 / 1 ;
+  grid-row: 1 / 2;
+  text-align: center;
+}
+.two { 
+  grid-column: 2 / 4;
+  grid-row: 1 / 2;
+}
+.three {
+  grid-column: 4 / 5;
+  grid-row: 1 / 2;
+  text-align: center;
+}
+.four {
+  grid-column: 5 / 7;
+  grid-row: 1 / 2;
+}
+.five {
+  grid-column: 7 / 8;
+  grid-row: 1 / 2;
+  text-align: center;
+}
+.six {
+  grid-column: 8 / 10;
+  grid-row: 1 / 2;
+}
+
+#h2stats{
+    text-align: center;  
+}
