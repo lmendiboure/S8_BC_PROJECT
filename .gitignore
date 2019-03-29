@@ -1,1 +1,3 @@
 #Fichier pour ignorer certains fichiers
+node_modules
+build
