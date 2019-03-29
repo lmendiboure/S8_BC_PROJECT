@@ -2,3 +2,5 @@
 /frontend/node_modules
 /build
 /contracts
+/frontend/dist
+/frontend/e2e
