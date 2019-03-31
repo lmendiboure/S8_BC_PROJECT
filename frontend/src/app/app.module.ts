@@ -16,6 +16,7 @@ import { fakeBackendProvider } from './services/fake-backend';
 import { JwtInterceptor } from './services/jwt.interceptor';
 import { ErrorInterceptor } from './services/helpers.component';
 import { DemoService } from './services/demo.service';
+import { ProfileComponent } from './profile/profile.component';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { DemoService } from './services/demo.service';
     AdminComponent,
     ManageUserComponent,
     ManageTIComponent,
-    LoginComponent
+    LoginComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,

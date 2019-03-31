@@ -12,6 +12,10 @@ export class InformationAboutUserComponent implements OnInit {
   ngOnInit() {
   }
 
+  getUserInformation(pseudo: string){
+    
+  }
+
 
 
 }

@@ -14,15 +14,12 @@
     </div>
     <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
         <ul class="navbar-nav ml-auto">
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Actions
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                    <button class="dropdown-item" type="button" (click)="logout()">Déconnexion</button>
-                </div>
-            </div>
+            <li class="nav-item">
+                <a class="nav-link" *ngIf="currentUser" routerLink="/profile">Mon profil</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" *ngIf="currentUser" (click)="logout()">Déconnexion</a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" *ngIf="!currentUser" routerLink="/inscription">Inscription</a>
             </li>

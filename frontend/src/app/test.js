@@ -30,7 +30,9 @@ var myRouter = express.Router();
 var userSchema = mongoose.Schema({
     id: String,
     pseudo: String,
-    password: String
+    password: String,
+    vehicle: String,
+    immatriculation: String,
 });
 
 var User = mongoose.model('User', userSchema);
@@ -42,7 +44,7 @@ myRouter.route('/users')
             if (err) {
                 res.send(err);
             }
-            res.json(users);
+            res.json(users); 
         })
     })
 
@@ -51,6 +53,8 @@ myRouter.route('/users')
         user.id = req.body.id;
         user.pseudo = req.body.pseudo;
         user.password = req.body.password;
+        user.vehicle = req.body.vehicle;
+        user.immatriculation = req.body.immatriculation;
         user.save(function (err) {
             if (err) {
                 res.send(err)
@@ -94,6 +98,8 @@ myRouter.route('/users/:user_pseudo')
                 user.id = req.body.id;
                 user.pseudo = req.body.pseudo;
                 user.password = req.body.password;
+                user.vehicle = req.body.vehicle;
+                user.immatriculation = req.body.immatriculation;
                 user.save(function (err) {
                     if (err) {
                         res.send(err);

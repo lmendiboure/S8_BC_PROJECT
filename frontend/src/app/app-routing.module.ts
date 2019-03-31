@@ -8,6 +8,7 @@ import { ManageTIComponent} from './manage-ti/manage-ti.component'
 import { HomeComponent } from './home/home.component';
 import { GuardsComponent } from './guards/guards.component';
 import { LoginComponent} from './login/login.component';
+import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
   {path: 'inscription', component: AuthentificationComponent},
@@ -17,6 +18,7 @@ const routes: Routes = [
   {path: 'admin/manageTI', component: ManageTIComponent},
   {path: '', component: HomeComponent, canActivate: [GuardsComponent]},
   {path: 'login', component: LoginComponent },
+  {path: 'profile', component: ProfileComponent},
   { path: '**', redirectTo: '' }
 
 ];
