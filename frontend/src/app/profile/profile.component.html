@@ -25,48 +25,44 @@
       </ul>
 
     </div>
-    <!--/col-3-->
     <div class="col-sm-9">
       <div class="tab-content">
         <div class="tab-pane active" id="home">
           <h1 id="h1_1">Vos informations</h1>
           <hr>
-          <form class="form" action="##" method="post" id="registrationForm">
+          <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" #userForm="ngForm">
             <div class="form-group">
-
               <div class="col-xs-6">
-                <label for="first_name">
+                <label for="prenom">
                   <h4>Prénom</h4>
                 </label>
-                <input type="text" class="form-control" name="first_name" id="first_name"
+                <input type="text" formControlName="prenom" class="form-control" [ngClass]="{'is-invalid': submitted && f.prenom.errors}"
                   placeholder="Entrez votre prénom">
               </div>
             </div>
             <div class="form-group">
-
               <div class="col-xs-6">
-                <label for="last_name">
+                <label for="nom">
                   <h4>Nom</h4>
                 </label>
-                <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Entrez votre nom">
+                <input type="text" formControlName="nom" class="form-control" [ngClass]="{'is-invalid': submitted && f.nom.errors}" placeholder="Entrez votre nom">
               </div>
             </div>
 
             <div class="form-group">
               <div class="col-xs-6">
                 <label for="mobile">
-                  <h4>Numéro de téléphone</h4>
+                  <h4>Numéro de téléphone</h4>  
                 </label>
-                <input type="text" class="form-control" name="mobile" id="mobile" placeholder="Entrez votre numéro">
+                <input type="text" formControlName="mobile" class="form-control" [ngClass]="{'is-invalid': submitted && f.mobile.errors}" placeholder="Entrez votre numéro">
               </div>
             </div>
             <div class="form-group">
-
               <div class="col-xs-6">
                 <label for="email">
                   <h4>Email</h4>
                 </label>
-                <input type="email" class="form-control" name="email" id="email" placeholder="nom.prenom@email.com">
+                <input type="email" formControlName="email" class="form-control"  placeholder="nom.prenom@email.com">
               </div>
             </div>
 
@@ -75,20 +71,11 @@
                 <label for="password">
                   <h4>Mot de passe</h4>
                 </label>
-                <input type="password" class="form-control" name="password" id="password"
+                <input type="password" formControlName="password" class="form-control"
                   placeholder="Entrez votre mot de passe">
               </div>
             </div>
-            <div class="form-group">
-
-              <div class="col-xs-6">
-                <label for="password2">
-                  <h4>Vérification</h4>
-                </label>
-                <input type="password" class="form-control" name="password2" id="password2"
-                  placeholder="Retapez votre mot de passe">
-              </div>
-            </div>
+        
             <br>
             <h1 id="h1_2">Votre Véhicule</h1>
             <hr>
@@ -97,7 +84,7 @@
                 <label for="vehicle">
                 </label>
                 <span class="custom-dropdown custom-dropdown--white">
-                  <select class="custom-dropdown__select custom-dropdown__select--white">
+                  <select class="custom-dropdown__select custom-dropdown__select--white" formControlName="vehicle" [ngClass]="{'is-invalid': submitted && f.vehicle.errors}">
                     <option selected disabled>Marque du véhicule</option>
                     <option>ALFA ROMEO</option>
                     <option>ASTON MARTIN</option>
@@ -132,36 +119,40 @@
                     <option>VOLVO</option>
                   </select>
                 </span>
-                <span class="custom-dropdown custom-dropdown--white">
-                  <select class="custom-dropdown__select custom-dropdown__select--white">
-                    <option selected disabled>Année</option>
-                    <option>2000</option>
-                    <option>2001</option>
-                    <option>2002</option>
-                    <option>2003</option>
-                    <option>2004</option>
-                    <option>2005</option>
-                    <option>2006</option>
-                    <option>2007</option>
-                    <option>2008</option>
-                    <option>2009</option>
-                    <option>2010</option>
-                    <option>2011</option>
-                    <option>2012</option>
-                    <option>2013</option>
-                    <option>2014</option>
-                    <option>2015</option>
-                    <option>2016</option>
-                    <option>2017</option>
-                    <option>2018</option>
-                    <option>2019</option>
-                    <option>2020</option>
-                  </select>
-                </span>
+                <div class="form-group">
+                  <label for="year"></label>
+                  <span class="custom-dropdown custom-dropdown--white">
+                    <select class="custom-dropdown__select custom-dropdown__select--white" formControlName="year"
+                      [ngClass]="{'is-invalid': submitted && f.year.errors}">
+                      <option selected disabled>Année</option>
+                      <option>2000</option>
+                      <option>2001</option>
+                      <option>2002</option>
+                      <option>2003</option>
+                      <option>2004</option>
+                      <option>2005</option>
+                      <option>2006</option>
+                      <option>2007</option>
+                      <option>2008</option>
+                      <option>2009</option>
+                      <option>2010</option>
+                      <option>2011</option>
+                      <option>2012</option>
+                      <option>2013</option>
+                      <option>2014</option>
+                      <option>2015</option>
+                      <option>2016</option>
+                      <option>2017</option>
+                      <option>2018</option>
+                      <option>2019</option>
+                      <option>2020</option>
+                    </select>
+                  </span>
+                </div>
                 <div class="col-xs-6">
-                  <label for="password2">
+                  <label for="immatriculation">
                   </label>
-                  <input type="text" class="form-control" name="first_name" id="first_name" placeholder="Immatriculation du véhicule" >
+                  <input type="text" formControlName="immatriculation" class="form-control"  placeholder="Immatriculation du véhicule" [ngClass]="{'is-invalid': submitted && f.immatriculation.errors}" >
                 </div>
               </div>
             </div>

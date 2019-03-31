@@ -37,10 +37,14 @@ export class AuthentificationService {
     return this.http.post<any>('/inscription/newuser',{id,pseudo,password})
   }
 
+  updateInformation(pseudo: string, id:string, prenom: string, nom:string,mobile: string,email: string, password:string, vehicle: string, year:number,immatriculation:string){
+    return this.http.put<any>('/user/updateInformation', { pseudo,id,prenom, nom, mobile, email, password, vehicle, year, immatriculation })
+  }
+
   logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('currentUser');
-    this.currentUserSubject.next(null);
+    this.currentUserSubject.next(null); 
     this.router.navigate(['/login']);
   }
 }

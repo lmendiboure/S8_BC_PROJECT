@@ -31,7 +31,12 @@ var userSchema = mongoose.Schema({
     id: String,
     pseudo: String,
     password: String,
+    prenom: String,
+    nom: String,
+    mobile: String,
+    email: String,
     vehicle: String,
+    year: Number,
     immatriculation: String,
 });
 
@@ -53,8 +58,6 @@ myRouter.route('/users')
         user.id = req.body.id;
         user.pseudo = req.body.pseudo;
         user.password = req.body.password;
-        user.vehicle = req.body.vehicle;
-        user.immatriculation = req.body.immatriculation;
         user.save(function (err) {
             if (err) {
                 res.send(err)
@@ -98,7 +101,12 @@ myRouter.route('/users/:user_pseudo')
                 user.id = req.body.id;
                 user.pseudo = req.body.pseudo;
                 user.password = req.body.password;
+                user.prenom = req.body.prenom;
+                user.nom = req.body.nom;
+                user.email = req.body.email;
+                user.mobile = req.body.mobile;
                 user.vehicle = req.body.vehicle;
+                user.year = req.body.year;
                 user.immatriculation = req.body.immatriculation;
                 user.save(function (err) {
                     if (err) {

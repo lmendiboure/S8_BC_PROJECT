@@ -41,10 +41,8 @@ export class FakeBackendInterceptor {
             }
 
             if (request.url.endsWith('/inscription/newuser') && request.method === 'POST'){
-                console.log("Je suis là");
                 this.http.post('http://localhost:3000/users',{id:request.body.id, pseudo:request.body.pseudo, password:request.body.password}).
                 subscribe(res=>{console.log(res)});
-                console.log("Ok c'est fait");
                 return ok({
                     pseudo: request.body.pseudo,
                     password: request.body.password,
@@ -52,6 +50,29 @@ export class FakeBackendInterceptor {
 
                 })
             }
+
+            if (request.url.endsWith('/user/updateInformation') && request.method === "PUT"){
+                let url = "http://localhost:3000/users/"+ request.body.pseudo;
+                console.log(url);
+                this.http.put(url, { prenom: request.body.prenom, pseudo:request.body.pseudo, id:request.body.id, nom: request.body.nom, mobile: request.body.mobile, email: request.body.email, password: request.body.password, 
+                vehicle: request.body.vehicle, year: request.body.year, immatriculation: request.body.immatriculation})
+                .subscribe(res=>{console.log(res)});
+                this.http.get(url);
+                return ok({
+                    pseudo: request.body.pseudo,
+                    id: request.body.id,
+                    prenom: request.body.prenom, 
+                    nom: request.body.nom, 
+                    mobile: request.body.mobile, 
+                    email: request.body.email, 
+                    password: request.body.password, 
+                    vehicle: request.body.vehicle, 
+                    year: request.body.year, 
+                    immatriculation: request.body.immatriculation
+                })
+            }
+
+
 
             // get all users
             //if (request.url.endsWith('/users') && request.method === 'GET') {
