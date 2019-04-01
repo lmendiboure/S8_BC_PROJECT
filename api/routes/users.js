@@ -1,4 +1,5 @@
 const express = require('express');
+const truffleContract = require('../../connection/app.js');
 const router = express.Router();
 
 router.get('/', (req, res, next) => {
@@ -17,18 +18,25 @@ router.post('/', (req, res, next) => {
     });
 });
 
-router.get('/:userId', (req, res, next) => {
+router.get('/:userId', async (req, res, next) => {
+    var json =[];
     const id = req.params.userId;
-    if(id === 'special') {
-        res.status(200).json({
-            message: 'You are special',
-            id: id
-        });
-    }
-
-    res.status(200).json({
-        message: 'You passed an ID'
-    });
+    var info = { account:"", name:"", trustIndex:""}; 
+            await truffleContract.renderAccount(id).then(async (response) => {
+                info.account = response;
+                //console.log(json);
+                await truffleContract.renderName(id).then(async (response) => {
+                    info.name = response;
+                    await truffleContract.renderTrustIndex(id).then((response) => {
+                        info.trustIndex = response.toNumber();
+                        json.push(info);
+                        return json;
+                    });
+                });      
+            }).catch((err) => {
+                send(err.message);
+            })
+        res.status(200).send(json);
 });
 
 router.patch('/:userId', (req, res, next) => {
