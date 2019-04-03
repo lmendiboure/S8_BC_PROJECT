@@ -36,6 +36,13 @@ export class FakeBackendInterceptor {
                     pseudo: this.userFind.pseudo,
                     password: this.userFind.password,
                     id: this.userFind.id,
+                    prenom: this.userFind.prenom,
+                    nom:this.userFind.nom,
+                    mobile:this.userFind.mobile,
+                    email: this.userFind.email,
+                    vehicule: this.userFind.vehicule,
+                    year: this.userFind.year,
+                    immatriculation: this.userFind.immatriculation,
                     token: 'jwt-token',
                 });
             }

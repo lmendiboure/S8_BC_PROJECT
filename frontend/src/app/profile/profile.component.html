@@ -37,7 +37,7 @@
                   <h4>Prénom</h4>
                 </label>
                 <input type="text" formControlName="prenom" class="form-control" [ngClass]="{'is-invalid': submitted && f.prenom.errors}"
-                  placeholder="Entrez votre prénom">
+                  placeholder="{{currentUser.prenom}}">
               </div>
             </div>
             <div class="form-group">
@@ -45,7 +45,7 @@
                 <label for="nom">
                   <h4>Nom</h4>
                 </label>
-                <input type="text" formControlName="nom" class="form-control" [ngClass]="{'is-invalid': submitted && f.nom.errors}" placeholder="Entrez votre nom">
+                <input type="text" formControlName="nom" class="form-control" [ngClass]="{'is-invalid': submitted && f.nom.errors}" placeholder="{{currentUser.nom}}">
               </div>
             </div>
 
@@ -54,7 +54,7 @@
                 <label for="mobile">
                   <h4>Numéro de téléphone</h4>  
                 </label>
-                <input type="text" formControlName="mobile" class="form-control" [ngClass]="{'is-invalid': submitted && f.mobile.errors}" placeholder="Entrez votre numéro">
+                <input type="text" formControlName="mobile" class="form-control" [ngClass]="{'is-invalid': submitted && f.mobile.errors}" placeholder="{{currentUser.mobile}}">
               </div>
             </div>
             <div class="form-group">
@@ -62,7 +62,7 @@
                 <label for="email">
                   <h4>Email</h4>
                 </label>
-                <input type="email" formControlName="email" class="form-control"  placeholder="nom.prenom@email.com">
+                <input type="email" formControlName="email" class="form-control"  placeholder="{{currentUser.email}}">
               </div>
             </div>
 
@@ -84,8 +84,8 @@
                 <label for="vehicle">
                 </label>
                 <span class="custom-dropdown custom-dropdown--white">
-                  <select class="custom-dropdown__select custom-dropdown__select--white" formControlName="vehicle" [ngClass]="{'is-invalid': submitted && f.vehicle.errors}">
-                    <option selected disabled>Marque du véhicule</option>
+                  <select class="custom-dropdown__select custom-dropdown__select--white" formControlName="vehicle" [ngClass]="{'is-invalid': submitted && f.vehicle.errors} ">
+                    <option selected disabled>{{currentUser.vehicle}}</option>
                     <option>ALFA ROMEO</option>
                     <option>ASTON MARTIN</option>
                     <option>AUDI</option>
@@ -152,7 +152,7 @@
                 <div class="col-xs-6">
                   <label for="immatriculation">
                   </label>
-                  <input type="text" formControlName="immatriculation" class="form-control"  placeholder="Immatriculation du véhicule" [ngClass]="{'is-invalid': submitted && f.immatriculation.errors}" >
+                  <input type="text" formControlName="immatriculation" class="form-control"  placeholder="{{currentUser.immatriculation}}" [ngClass]="{'is-invalid': submitted && f.immatriculation.errors}" >
                 </div>
               </div>
             </div>
