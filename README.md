@@ -1,5 +1,5 @@
 # blockchains8
 
-1 - truffle migrate
-2 - npm install
+1 - npm install
+2 - truffle migrate (--reset)
 3 - npm start
