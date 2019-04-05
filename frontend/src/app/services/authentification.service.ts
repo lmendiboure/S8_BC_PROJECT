@@ -32,7 +32,7 @@ export class AuthentificationService {
       return user;
     }));
   }
-
+w
   register(id: string, pseudo: string, password: string){
     return this.http.post<any>('/inscription/newuser',{id,pseudo,password})
   }
@@ -44,7 +44,7 @@ export class AuthentificationService {
   logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('currentUser');
-    this.currentUserSubject.next(null); 
-    this.router.navigate(['/login']);
+    this.currentUserSubject.next(null);   
+    this.router.navigate(['/login']); 
   }
 }

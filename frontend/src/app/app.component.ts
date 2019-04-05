@@ -24,14 +24,7 @@ export class AppComponent {
   ngOnInit() {
   }
 
-  /*getUsers() {
-    this.demoService.getUsers().subscribe(
-      data => { this.users = data },
-      err => console.error(err),
-      () => console.log('loading all users done')
-    )};*/
-
-    logout() {
-      this.authenticationService.logout();
-    }
+  logout() {
+    this.authenticationService.logout();
   }
+}
