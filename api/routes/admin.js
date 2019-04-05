@@ -3,12 +3,30 @@ var async = require('async');
 const truffleContract = require('../../connection/app.js');
 const router = express.Router();
 
-router.post('/', async (req, res, next) => {
+router.post('/delete/:id', async (req, res, next) => {
     const user = {
-        name: req.body.name
+        name: req.body.name,
+        ip: req.body.ip
     };
     //console.log(user.name);
-    await truffleContract.addAccount("jhkl", user.name).then((response) => {
+    var id = req.params.id;
+    await truffleContract.deleteAccount(id).then((response) => {
+        res.status(200).json({
+            message: 'admin deletes user',
+            deletedUser: response
+            })
+        }).catch((err) => {
+            res.send(err.message);
+        });
+})
+
+router.post('/', async (req, res, next) => {
+    const user = {
+        name: req.body.name,
+        ip: req.body.ip
+    };
+    //console.log(user.name);
+    await truffleContract.addAccount(user.ip, user.name).then((response) => {
     res.status(200).json({
         message: 'admin adds user',
         createdUser: response
@@ -47,14 +65,25 @@ router.get('/accounts', (req, res, next) => {
     });
 });
 
-router.get('/:userId', (req, res, next) => {
+router.get('/:userId', async (req, res, next) => {
+    var json =[];
     const id = req.params.userId;
-    truffleContract.renderAccount(id).then((result) => {
-            console.log(result);
-            res.status(200).json({
-            accounts : result
-        })
-    });
+    var info = { account:"", name:"", trustIndex:""}; 
+            await truffleContract.renderAccount(id).then(async (response) => {
+                info.account = response;
+                //console.log(json);
+                await truffleContract.renderName(id).then(async (response) => {
+                    info.name = response;
+                    await truffleContract.renderTrustIndex(id).then((response) => {
+                        info.trustIndex = response.toNumber();
+                        json.push(info);
+                        return json;
+                    });
+                });      
+            }).catch((err) => {
+                send(err.message);
+            })
+        res.status(200).send(json);
 });
 
 

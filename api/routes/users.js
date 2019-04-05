@@ -9,6 +9,7 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
+    //on peut faire en sorte que l'identifiant d'un utilisateur soit son adresse IP
     const userAddr = { /*li an9ssu lih trustIndex*/
         userId: req.body.userId
     };
