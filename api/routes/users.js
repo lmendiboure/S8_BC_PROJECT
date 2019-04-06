@@ -2,6 +2,10 @@ const express = require('express');
 const truffleContract = require('../../connection/app.js');
 const router = express.Router();
 
+const mongoose = require('mongoose');
+
+const User = require('../models/users');
+
 router.get('/', (req, res, next) => {
     res.status(200).json({
         message: 'Handling GET requests to /users'
@@ -19,26 +23,38 @@ router.post('/', (req, res, next) => {
     });
 });
 
-router.get('/:userId', async (req, res, next) => {
+router.get('/:userId', (req, res, next) => {
     var json =[];
     const id = req.params.userId;
-    var info = { account:"", name:"", trustIndex:""}; 
-            await truffleContract.renderAccount(id).then(async (response) => {
+
+    User.findById(id).exec().then(async (result) => {
+        if(result) {
+            var info = { account:"", name:"", trustIndex:""}; 
+            await truffleContract.renderAccount(result.bcId).then(async (response) => {
                 info.account = response;
                 //console.log(json);
-                await truffleContract.renderName(id).then(async (response) => {
+                await truffleContract.renderName(result.bcId).then(async (response) => {
                     info.name = response;
-                    await truffleContract.renderTrustIndex(id).then((response) => {
+                    await truffleContract.renderTrustIndex(result.bcId).then((response) => {
                         info.trustIndex = response.toNumber();
                         json.push(info);
                         return json;
+                    }).then((result) => {
+                        res.status(200).send(json);
                     });
-                });      
-            }).catch((err) => {
-                send(err.message);
-            })
-        res.status(200).send(json);
+                });
+            });
+        } else {
+            res.status(404).json({
+                message : 'No valid entry for provided ID'
+            });
+        }
+       
+        }).catch((err) => {
+            res.status(500).send(err);
+    });
 });
+
 
 router.patch('/:userId', (req, res, next) => {
     res.status(200).json({

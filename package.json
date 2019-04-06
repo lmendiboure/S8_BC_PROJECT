@@ -13,6 +13,7 @@
     "express": "^4.16.4",
     "get-json": "^1.0.1",
     "jQuery": "^1.7.4",
+    "mongoose": "^5.4.22",
     "morgan": "^1.9.1",
     "nodemon": "^1.18.10",
     "truffle-contract": "^4.0.10",

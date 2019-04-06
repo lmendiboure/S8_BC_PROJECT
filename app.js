@@ -1,11 +1,18 @@
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const app = express();
 
 const userRoutes = require('./api/routes/users');
 const adminRoutes = require('./api/routes/admin');
+
+mongoose.connect('mongodb+srv://Iov:' + process.env.PW +'@cluster0-zw9s8.mongodb.net/test?retryWrites=true', {
+    useNewUrlParser: true
+});
+
+
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));

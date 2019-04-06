@@ -44,6 +44,33 @@ App = {
   });
   },
 
+  renderLastAccount: function() {
+    var self = this;
+    var iovInstance;
+    //console.log(account);
+
+    Iov.setProvider(self.web3.currentProvider);
+    //console.log('the account ' + account);
+
+    return new Promise(function(resolve, reject) {
+
+    Iov.deployed().then((instance) => {
+      //console.log(instance);
+      iovInstance = instance;
+      return iovInstance.vehicleCount();
+      //console.log(iovInstance.vehicleCount());
+      //return iovInstance.vehicleArray(vehicleCount());
+    }).then((result) => {
+      //console.log(result);
+      return iovInstance.vehicleArray(result);
+    }).then((result) => {
+      resolve(result);
+    }).catch((err) => {
+      reject(err.message);
+    })
+  });
+  },
+
   renderName: function(index) {
   var self = this;
   var iovInstance;
@@ -127,16 +154,16 @@ renderTrustIndex: function(index) {
 
 
 
-  addAccount: function(_IP,_name) {
+  addAccount: function(_IP, _name) {
     var self = this;
     var iovInstance ;
     //console.log(_admin);
     //console.log(_name);
-    console.log(_IP);
+    //console.log(_IP);
 
     Iov.setProvider(self.web3.currentProvider);
     //User.setProvider(self.web3.currentProvider);
-    console.log('cccccc ' + self.web3.eth.accounts[0]);
+    //console.log('cccccc ' + self.web3.eth.accounts[0]);
 
     return new Promise(function(resolve, reject) {
       Iov.deployed().then((instance) => {
