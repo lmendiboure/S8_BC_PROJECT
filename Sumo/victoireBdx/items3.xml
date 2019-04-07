@@ -1,0 +1,16 @@
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+	<vehicles>
+		<vehicle depart="1.00" departLane="best" departSpeed="max" id="10.0.0.1">
+			<route edges="88291 23948" />
+		</vehicle>
+		<vehicle depart="32.99" departLane="best" departSpeed="max" id="10.0.0.2">
+			<route edges="88291 23948" />
+		</vehicle>
+		<vehicle depart="3.00" departLane="best" departSpeed="max" id="10.0.0.3">
+			<route edges="" />
+		</vehicle>
+		<vehicle depart="4.00" departLane="best" departSpeed="max" id="10.0.0.4">
+			<route edges="" />
+		</vehicle>
+	</vehicles>
+</routes>
