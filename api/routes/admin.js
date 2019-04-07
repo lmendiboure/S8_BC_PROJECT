@@ -3,13 +3,15 @@ var async = require('async');
 const truffleContract = require('../../connection/app.js');
 const router = express.Router();
 const mongoose = require('mongoose');
+var Hashids = require('hashids');
+var hashids = new Hashids('', 10);
 
 const User = require('../models/users');
 
 //var counter = 2;
 
 router.post('/delete/:id', (req, res, next) => {
-    var id = req.params.id;
+    var id = hashids.decode(req.params.id);
     var name = req.body.name;
 
     /*User.find({name: name}).exec().then((result) => {
@@ -31,34 +33,46 @@ router.post('/delete/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-    User.find().then(async (result) => {
-        console.log(result.length);
-    const user = new User({
-        _id: new mongoose.Types.ObjectId(),
-        bcId: result.length + 3,
-        name: req.body.name,
-        ipAddress: req.body.ip,
-        bcAddress: "",
-    })
-
-    //console.log(user.name);
-    await truffleContract.addAccount(user.ipAddress, user.name).then((response) => {
-        truffleContract.renderLastAccount().then(async (result) => {
-            user.bcAddress = result;
-            //console.log(user);
-            user.save().then((result) => {
-                //console.log(result);
-            
-        res.status(200).json({
-            message: 'admin adds user',
-            createdUser: response
+    User.find({name: req.body.name})
+    .exec()
+    .then((name) => {
+        if(name.length >= 1) {
+            return res.status(409).json({
+                message: 'name already exists'
+            });
+        } else {
+            User.find().then(async (result) => {
+                console.log(result.length);
+                var id = hashids.encode(result.length + 3);
+            const user = new User({
+                _id: new mongoose.Types.ObjectId(),
+                bcId: id,
+                name: req.body.name,
+                ipAddress: req.body.ip,
+                bcAddress: "",
             })
-        }).catch((err) => {
-            res.send(err.message);
-        });
+            //console.log('hash id ' + user.bcId);
+        
+            //console.log(user.name);
+            await truffleContract.addAccount(user.ipAddress, user.name).then((response) => {
+                truffleContract.renderLastAccount().then(async (result) => {
+                    user.bcAddress = result;
+                    //console.log(user);
+                    user.save().then((result) => {
+                        //console.log(result);
+                    
+                    res.status(200).json({
+                        message: 'admin adds user',
+                        createdUser: response
+                    })
+                }).catch((err) => {
+                    res.send(err.message);
+                });
+                });
+                });
+            });
+        }
     });
-    });
-});
 });
 
 router.get('/accounts', (req, res, next) => {
@@ -96,13 +110,15 @@ router.get('/:userId', (req, res, next) => {
 
     User.findById(id).exec().then(async (result) => {
         if(result) {
+            blockId = hashids.decode(result.bcId)
+            //console.log('hello ' + hashids.decode(result.bcId));
             var info = { account:"", name:"", trustIndex:""}; 
-            await truffleContract.renderAccount(result.bcId).then(async (response) => {
+            await truffleContract.renderAccount(blockId).then(async (response) => {
                 info.account = response;
                 //console.log(json);
-                await truffleContract.renderName(result.bcId).then(async (response) => {
+                await truffleContract.renderName(blockId).then(async (response) => {
                     info.name = response;
-                    await truffleContract.renderTrustIndex(result.bcId).then((response) => {
+                    await truffleContract.renderTrustIndex(blockId).then((response) => {
                         info.trustIndex = response.toNumber();
                         json.push(info);
                         return json;

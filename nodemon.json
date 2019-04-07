@@ -1,5 +1,6 @@
 {
     "env": {
-        "PW": "iopiopiop"
+        "PW": "iopiopiop",
+        "JWT_KEY": "somepassword"
     }
 }

@@ -2,10 +2,12 @@ const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    bcId: Number,
+    bcId: String,
     name: String,
     ipAddress: String,
-    bcAddress: String
+    bcAddress: String,
+    email: String,
+    password: String
 });
 
 
