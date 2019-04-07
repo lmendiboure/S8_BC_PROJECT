@@ -1,3 +1,12 @@
+#td1{
+  border: 1px solid rgb(190,190,190);
+  padding: 10px 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;      
+  
+}
+
 hr{
     width:75%;
     margin-left:10px;
@@ -35,23 +44,38 @@ hr{
 
 table {
   border-collapse: collapse;
-  width:100%;
   border: 2px solid rgb(200,200,200);
   letter-spacing: 1px;
   font-size: 0.8rem;
+  table-layout: fixed;
+  width:500px;
+  word-wrap:break-word;
 }
 
 td, th {
   border: 1px solid rgb(190,190,190);
   padding: 10px 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;  
+  table-layout: fixed;
+  width:100%;
+  word-wrap:break-word;
+
 }
 
 th {
   background-color: rgb(235,235,235);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;  
 }
 
 td {
   text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;  
 }
 
 tr:nth-child(even) td {
@@ -65,12 +89,6 @@ tr:nth-child(odd) td {
 
 /*//////////////////////////////////////////////////////////////////
 [ RESTYLE TAG ]*/
-
-* {
-	margin: 0px; 
-	padding: 0px; 
-	box-sizing: border-box;
-}
 
 body, html {
 	height: 100%;
@@ -120,7 +138,7 @@ ul, li {
 /*---------------------------------------------*/
 input {
 	outline: none;
-	border: none;
+  border: none; 
 }
 
 textarea {

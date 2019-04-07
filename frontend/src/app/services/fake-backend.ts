@@ -4,9 +4,6 @@ import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInterceptor, HTT
 import { Observable, of, throwError, from } from 'rxjs';
 import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
 import { DemoService } from './demo.service';
-import { AuthentificationService } from './authentification.service';
-import { promise } from 'protractor';
-import { resolve } from 'dns';
 
 @Injectable()
 export class FakeBackendInterceptor {
@@ -14,6 +11,8 @@ export class FakeBackendInterceptor {
         private demoService: DemoService
     ) { }
     public users;
+    public allusers;
+
     public resultUsers;
     public userFind;
 
@@ -22,7 +21,6 @@ export class FakeBackendInterceptor {
         let params = new HttpParams();
         const authHeader = request.headers.get('Authorization');
         const isLoggedIn = authHeader && authHeader.startsWith('Bearer jwt-token');
-        let test3;
 
         function getUsers() {
             return new Promise(resolve=>{
@@ -73,7 +71,29 @@ export class FakeBackendInterceptor {
                     id: request.body.password
 
                 })
+
+                
             }
+
+            if (request.url.endsWith('/admin/adduser') && request.method === 'POST') {
+                this.http.post('http://localhost:3001/admin', {name: request.body.name}).
+                    subscribe(res => { console.log(res) });
+                return ok({
+                    name: request.body.name
+                })
+            }
+
+            /*if (request.url.endsWith('/admin/getusers') && request.method === 'GET') {
+                this.http.get('http://localhost:3001/admin/accounts').
+                    subscribe(res => { 
+                        this.allusers=res;
+                        console.log(res) });
+                return ok({
+                    users: this.allusers
+                })
+            }*/
+
+
 
             if (request.url.endsWith('/user/updateInformation') && request.method === "PUT") {
                 let url = "http://localhost:3000/users/" + request.body.pseudo;

@@ -41,6 +41,14 @@ w
     return this.http.put<any>('/user/updateInformation', { pseudo,id,prenom, nom, mobile, email, password, vehicle, year, immatriculation })
   }
 
+  addUser(name:string){
+    return this.http.post<any>('/admin/adduser',{name});
+  }
+
+  getUsers(){
+    return this.http.get<any>('/admin/getusers');
+  }
+
   logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('currentUser');

@@ -17,6 +17,7 @@ import { JwtInterceptor } from './services/jwt.interceptor';
 import { ErrorInterceptor } from './services/helpers.component';
 import { DemoService } from './services/demo.service';
 import { ProfileComponent } from './profile/profile.component';
+import { UsersResolver } from './resolvers/users.resolver'
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import { ProfileComponent } from './profile/profile.component';
     DemoService,
 
     // provider used to create fake backend
-    fakeBackendProvider
+    fakeBackendProvider,
+    UsersResolver
   ],
   bootstrap: [AppComponent]
 })
