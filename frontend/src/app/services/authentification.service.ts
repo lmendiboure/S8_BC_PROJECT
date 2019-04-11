@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';   
 import { User } from '../models/user';
 import { Router} from '@angular/router';
-import { openSync } from 'fs';
+//import { openSync } from 'fs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthentificationService {
@@ -53,11 +53,11 @@ w
   }
 
   addUser(name:string){
-    return this.http.post<any>('/admin/adduser',{name});
+    return this.http.post<any>('http://localhost:3001/admin/',{name});
   }
 
   getUsers(){
-    return this.http.get<any>('/admin/getusers');
+    return this.http.get<any>('http://localhost:3001/admin/accounts');
   }
 
   logout() {
