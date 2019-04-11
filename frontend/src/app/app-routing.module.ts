@@ -9,13 +9,13 @@ import { HomeComponent } from './home/home.component';
 import { GuardsComponent } from './guards/guards.component';
 import { LoginComponent} from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
-import { UsersResolver } from './resolvers/users.resolver';
+//import { UsersResolver } from './resolvers/users.resolver';
 
 const routes: Routes = [
   {path: 'inscription', component: AuthentificationComponent},
   {path: 'userinformation', component: InformationAboutUserComponent},
   {path: 'admin', component: AdminComponent},
-  {path: 'admin/manageuser', component: ManageUserComponent, resolve: {users : UsersResolver}},
+  {path: 'admin/manageuser', component: ManageUserComponent},
   {path: 'admin/manageTI', component: ManageTIComponent},
   {path: '', component: HomeComponent, canActivate: [GuardsComponent]},
   {path: 'login', component: LoginComponent },

@@ -45,6 +45,8 @@ export class LoginComponent implements OnInit {
     }
 
     this.loading = true;
+    console.log("pseudo " + this.f.pseudo.value);
+    console.log("password " + this.f.password.value);
     this.authenticationService.login(this.f.pseudo.value, this.f.password.value)
       .pipe(first())
       .subscribe(

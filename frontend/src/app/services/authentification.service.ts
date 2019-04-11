@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';   
 import { User } from '../models/user';
 import { Router} from '@angular/router';
+import { openSync } from 'fs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthentificationService {
@@ -20,9 +21,10 @@ export class AuthentificationService {
     return this.currentUserSubject.value;
   }
 
-  login(pseudo: string, password: string){
-    return this.http.post<any>('/users/authenticate', { pseudo, password }).
-    pipe(map(user => {
+  login(email: string, password: string){
+    return this.http.post<any>('http://localhost:3001/users/login', { email, password })
+    .pipe(map(user => {
+      console.log(user.token);
       // login successful if there's a jwt token in the response
       if (user && user.token) {
         localStorage.setItem('currentUser', JSON.stringify(user));
@@ -33,8 +35,17 @@ export class AuthentificationService {
     }));
   }
 w
-  register(id: string, pseudo: string, password: string){
-    return this.http.post<any>('/inscription/newuser',{id,pseudo,password})
+  register(id: string, email: string, password: string){
+    var url = 'http://localhost:3001/users/signup/' + id;
+    return this.http.patch<any>(url ,[
+      {
+        "propName":"email", "value":email
+      },
+      {
+        "propName":"password", "value":password
+      }
+      ]
+      )
   }
 
   updateInformation(pseudo: string, id:string, prenom: string, nom:string,mobile: string,email: string, password:string, vehicle: string, year:number,immatriculation:string){

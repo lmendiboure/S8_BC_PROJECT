@@ -5,7 +5,7 @@
   <div class="form-group">
     <label for="pseudo">Pseudo</label>
     <input type="text" formControlName="pseudo" class="form-control"
-      [ngClass]="{ 'is-invalid': submitted && f.pseudo.errors }" />
+      [ngClass]="{ 'is-invalid': submitted && f.pseudo.errors }" autofocus/>
     <div *ngIf="submitted && f.pseudo.errors" class="invalid-feedback">
       <div *ngIf="f.pseudo.errors.required">Pseudo requis</div>
     </div>

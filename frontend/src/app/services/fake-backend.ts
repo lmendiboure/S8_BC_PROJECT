@@ -4,6 +4,7 @@ import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInterceptor, HTT
 import { Observable, of, throwError, from } from 'rxjs';
 import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
 import { DemoService } from './demo.service';
+import { reject } from 'q';
 
 @Injectable()
 export class FakeBackendInterceptor {
@@ -23,10 +24,17 @@ export class FakeBackendInterceptor {
         const isLoggedIn = authHeader && authHeader.startsWith('Bearer jwt-token');
 
         function getUsers() {
-            return new Promise(resolve=>{
-                const res = fetch('http://localhost:3000/users')
+            return new Promise((resolve, reject) =>{
+                const res = fetch('http://localhost:3001/users/login')
                 .then(response=>{
-                    resolve(response.json());
+                    if(response) {
+                        console.log(response);
+                        resolve(response.json());
+                    } else {
+                        console.log("error");
+                        reject("cc");
+                    }
+                    
                 })      
             })
         }
