@@ -2,19 +2,76 @@ const express = require('express');
 var async = require('async');
 const truffleContract = require('../../connection/app.js');
 const router = express.Router();
+const mongoose = require('mongoose');
+var Hashids = require('hashids');
+var hashids = new Hashids('', 10);
 
-router.post('/', async (req, res, next) => {
-    const user = {
-        name: req.body.name
-    };
-    //console.log(user.name);
-    await truffleContract.addAccount("jhkl", user.name).then((response) => {
-    res.status(200).json({
-        message: 'admin adds user',
-        createdUser: response
+const User = require('../models/users');
+
+//var counter = 2;
+
+router.post('/delete/:id', (req, res, next) => {
+    var id = hashids.decode(req.params.id);
+    var name = req.body.name;
+
+    /*User.find({name: name}).exec().then((result) => {
+        console.log(result[0].bcAddress); //It works
+    })*/
+
+    User.deleteOne({
+        bcId: id //Je peux mettre aussi le nom ou l'@ ip du vehicule
+    }).exec().then(async () => {
+        await truffleContract.deleteAccount(id).then((response) => {
+            res.status(200).json({
+                message: 'admin deletes user',
+                deletedUser: response
+            })
         })
-    }).catch((err) => {
+    }).catch(() => {
         res.send(err.message);
+    });
+});
+
+router.post('/', (req, res, next) => {
+    User.find({name: req.body.name})
+    .exec()
+    .then((name) => {
+        if(name.length >= 1) {
+            return res.status(409).json({
+                message: 'name already exists'
+            });
+        } else {
+            User.find().then(async (result) => {
+                console.log(result.length);
+                var id = hashids.encode(result.length + 3);
+            const user = new User({
+                _id: new mongoose.Types.ObjectId(),
+                bcId: id,
+                name: req.body.name,
+                ipAddress: req.body.ip,
+                bcAddress: "",
+            })
+            //console.log('hash id ' + user.bcId);
+        
+            //console.log(user.name);
+            await truffleContract.addAccount(user.ipAddress, user.name).then((response) => {
+                truffleContract.renderLastAccount().then(async (result) => {
+                    user.bcAddress = result;
+                    //console.log(user);
+                    user.save().then((result) => {
+                        //console.log(result);
+                    
+                    res.status(200).json({
+                        message: 'admin adds user',
+                        createdUser: response
+                    })
+                }).catch((err) => {
+                    res.send(err.message);
+                });
+                });
+                });
+            });
+        }
     });
 });
 
@@ -48,12 +105,36 @@ router.get('/accounts', (req, res, next) => {
 });
 
 router.get('/:userId', (req, res, next) => {
+    var json =[];
     const id = req.params.userId;
-    truffleContract.renderAccount(id).then((result) => {
-            console.log(result);
-            res.status(200).json({
-            accounts : result
-        })
+
+    User.findById(id).exec().then(async (result) => {
+        if(result) {
+            blockId = hashids.decode(result.bcId)
+            //console.log('hello ' + hashids.decode(result.bcId));
+            var info = { account:"", name:"", trustIndex:""}; 
+            await truffleContract.renderAccount(blockId).then(async (response) => {
+                info.account = response;
+                //console.log(json);
+                await truffleContract.renderName(blockId).then(async (response) => {
+                    info.name = response;
+                    await truffleContract.renderTrustIndex(blockId).then((response) => {
+                        info.trustIndex = response.toNumber();
+                        json.push(info);
+                        return json;
+                    }).then((result) => {
+                        res.status(200).send(json);
+                    });
+                });
+            });
+        } else {
+            res.status(404).json({
+                message : 'No valid entry for provided ID'
+            });
+        }
+       
+        }).catch((err) => {
+            res.status(500).send(err);
     });
 });
 

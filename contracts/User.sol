@@ -28,6 +28,7 @@ contract User {
 
 	// A user is defined by :
 	uint public id;
+	string public ip;
 	string public name;
 	uint public trustIndex;
 	uint public videoTime; // In seconds
@@ -38,6 +39,21 @@ contract User {
 		bool canSend;
 		bool canRecv;
 	}
+
+	mapping(uint => accessMode) public vehicleAccess;
+
+
+	event sendMsg(
+        address  _from,
+        uint _id,
+        string msgS
+    );
+    
+    event recvMsg(
+        address _from,
+        uint _id,
+        string _msgR
+    );
 	
 	//string[] public subs;
     
@@ -51,11 +67,14 @@ contract User {
     
 	constructor(uint _id, string memory _name, uint _trustIndex, uint _videoTime, address _admin) public {
 		id = _id;
+		//ip = _ip;
 		name = _name;
 		trustIndex = _trustIndex;
 		videoTime = _videoTime;
-		rights.canSend = true;
-		rights.canRecv = true;
+		for (uint i=0; i<id+1; i++) {
+            vehicleAccess[i].canSend=true;
+	    	vehicleAccess[i].canRecv=true;
+        }
 		admin = _admin;
 	}
 	
@@ -63,12 +82,20 @@ contract User {
 	    return trustIndex;
 	}
 	
-	function getRightCanSend() public view returns(bool) {
+	/*function getRightCanSend() public view returns(bool) {
 	    return rights.canSend;
 	}
 	
 	function getRightCanRecv() public view returns(bool) {
 	    return rights.canRecv;
+	}*/
+
+	function getRightCanSend(uint _idwanted) public view returns(bool) {
+	    return vehicleAccess[_idwanted].canSend;
+	}
+	
+	function getRightCanRecv(uint _idwanted) public view returns(bool) {
+	    return vehicleAccess[_idwanted].canRecv;
 	}
 	
 	function incrementTrustIndex() public payable returns(uint) {
@@ -91,7 +118,7 @@ contract User {
 	    return trustIndex - _value;
 	}
 	
-	function changeRightCanSend(address _admin, bool _right) public payable returns(bool) {
+	/*function changeRightCanSend(address _admin, bool _right) public payable returns(bool) {
 	    require(admin == _admin);
 	    rights.canSend = _right;
 	    return rights.canSend;
@@ -115,7 +142,7 @@ contract User {
 	    assert(rights.canRecv);
 	    assert(u.getRightCanSend());
 	    emit recvVideo(_recvFrom);
-	}
+	}*/
 	
 	/*function addSubscription(string memory _name) public returns(string[] memory) {
 	    subs.push(_name);
@@ -127,5 +154,31 @@ contract User {
 	    Advertisment u = Advertisment(ads);
 	    u.addSubscriberToAds(msg.sender);
 	}*/
+
+	function changeRightCanSend(address _admin, bool _right,uint _idwanted) public payable returns(bool) {
+	    require(admin == _admin);
+	    vehicleAccess[_idwanted].canSend = _right;
+	    return vehicleAccess[_idwanted].canSend;
+	}
+	
+	function changeRightCanRecv(address _admin, bool _right,uint _idwanted) public payable returns(bool) {
+	    require(admin == _admin);
+	    vehicleAccess[_idwanted].canRecv = _right;
+	    return vehicleAccess[_idwanted].canRecv;
+	}
+	
+	function sendMessage(uint _idwanted,address _sendTo,string memory _msgS) public {
+	    User u = User(_sendTo);
+	    assert(vehicleAccess[_idwanted].canSend);
+	    assert(u.getRightCanRecv(_idwanted));
+	    emit sendMsg(_sendTo,_idwanted,_msgS);
+	}
+	
+	function recvMessage(uint _idwanted,address _recvFrom,string memory _msgR) public {
+	    User u = User(_recvFrom);
+	    assert(vehicleAccess[_idwanted].canRecv);
+	    assert(u.getRightCanSend(_idwanted));
+	    emit recvMsg(_recvFrom,_idwanted,_msgR);
+	}
 	
 }
