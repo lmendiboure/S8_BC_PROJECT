@@ -34,7 +34,7 @@ export class AuthentificationService {
       return user;
     }));
   }
-w
+
   register(id: string, email: string, password: string){
     var url = 'http://localhost:3001/users/signup/' + id;
     return this.http.patch<any>(url ,[
