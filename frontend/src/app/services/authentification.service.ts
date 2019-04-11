@@ -4,7 +4,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';   
 import { User } from '../models/user';
 import { Router} from '@angular/router';
-import { openSync } from 'fs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthentificationService {
