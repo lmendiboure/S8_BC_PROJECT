@@ -4,7 +4,7 @@ var Web3 = require('web3');
 const Tx = require('ethereumjs-tx');
 const truffleContract = require('./connection/app.js');
 
-const port = process.env.PORT || 3000;
+const port = 3001;
 
 const server = http.createServer(app);
 
