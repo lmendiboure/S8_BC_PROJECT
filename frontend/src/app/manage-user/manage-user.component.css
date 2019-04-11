@@ -40,6 +40,7 @@ hr{
     margin-left: 5px;
     margin-right: 5px;
     margin-top:5px;
+    border-style: none;
 }
 
 table {
@@ -52,6 +53,16 @@ table {
   word-wrap:break-word;
 }
 
+
+.my-custom-scrollbar {
+  position: relative;
+  height: 400px;
+  overflow:auto;
+  overflow-x: visible
+}
+
+
+
 td, th {
   border: 1px solid rgb(190,190,190);
   padding: 10px 20px;
@@ -59,6 +70,7 @@ td, th {
   text-overflow: ellipsis;
   white-space: nowrap;  
   table-layout: fixed;
+  
   width:100%;
   word-wrap:break-word;
 

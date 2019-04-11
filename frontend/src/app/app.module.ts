@@ -18,6 +18,7 @@ import { ErrorInterceptor } from './services/helpers.component';
 import { DemoService } from './services/demo.service';
 import { ProfileComponent } from './profile/profile.component';
 import { UsersResolver } from './resolvers/users.resolver'
+import { MDBBootstrapModule } from 'angular-bootstrap-md'
 
 
 @NgModule({
@@ -39,6 +40,7 @@ import { UsersResolver } from './resolvers/users.resolver'
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
+    MDBBootstrapModule.forRoot()
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

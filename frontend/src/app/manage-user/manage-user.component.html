@@ -13,14 +13,17 @@
           </form>
         </div>
         <div class="card-body">
+          <div class="table-wrapper-scroll-y my-custom-scrollbar">
           <table>
+            <thead>
             <tr>
               <td>Name</td>
               <td>ID</td>
               <td>TI</td>
               <td>&nbsp;</td>
             </tr>
-            <!--<div *ngFor="let user of users">-->
+            </thead>
+            <tbody id="tbody1">
             <tr *ngIf="userSearch">
               <td>{{userSearch.name}}</td>
               <td>{{userSearch.account}}</td>
@@ -34,8 +37,9 @@
               <td *ngIf="!userSearch">{{user.trustIndex}}</td>
               <td *ngIf="!userSearch"> <button type="button" class="btn btn-outline-danger" style="color: #808080">Retirer</button></td>
             </tr>
-            <!-- </div>-->
+            </tbody>
           </table>
+          </div>
         </div>
       </div>
     </div>
