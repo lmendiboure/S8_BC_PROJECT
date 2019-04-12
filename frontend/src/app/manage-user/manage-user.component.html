@@ -27,14 +27,15 @@
                 <td>{{userSearch.name}}</td>
                 <td>{{userSearch.account}}</td>
                 <td>{{userSearch.trustIndex}}</td>
-                <td> <button type="button" class="btn btn-outline-danger" style="color: #808080">Retirer</button></td>
+                <td> <button mdbBtn type="button" size="sm" color="danger" outline="true"
+                    mdbWavesEffect>Retirer</button></td>
                 <td>&nbsp;</td>
               </tr>
               <tr *ngFor="let user of users">
                 <td *ngIf="!userSearch"><i>{{user.name}}</i></td>
                 <td *ngIf="!userSearch"><i>{{user.account}}</i></td>
                 <td *ngIf="!userSearch">{{user.trustIndex}}</td>
-                <td *ngIf="!userSearch"> <button mdbBtn type="button" size="sm"color="danger" outline="true" mdbWavesEffect>Retirer</button></td>
+                <td *ngIf="!userSearch"> <button mdbBtn type="button" size="sm" color="danger" outline="true" mdbWavesEffect>Retirer</button></td>
               </tr>
             </tbody>
           </table>
