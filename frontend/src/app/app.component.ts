@@ -7,7 +7,7 @@ import { DemoService } from './services/demo.service';
 @Component({
   selector: 'app-component',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
   title = 'IOV BLOCKCHAIN S8';

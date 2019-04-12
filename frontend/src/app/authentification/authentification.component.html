@@ -19,7 +19,7 @@
         [ngClass]="{'is-invalid': submitted && f.password.errors}">
       <div *ngIf="submitted && f.password.errors" class="invalid-feedback"></div>
     </div>
-    <button type="submit" class="btn btn-success">S'inscrire</button>
+    <button mdbBtn type="button" color="primary" type="submit" rounded="true" outline="true" mdbWavesEffect>S'inscire</button>
     <div *ngIf="correct" class="alert alert-success" role="alert">
       Inscription réussie !
     </div>

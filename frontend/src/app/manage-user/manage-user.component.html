@@ -13,33 +13,31 @@
           </form>
         </div>
         <div class="card-body">
-          <div class="table-wrapper-scroll-y my-custom-scrollbar">
-          <table>
+          <table mdbTable mdbTableScroll scrollY="true" maxHeight="500" bordered="true">
             <thead>
-            <tr>
-              <td>Name</td>
-              <td>ID</td>
-              <td>TI</td>
-              <td>&nbsp;</td>
-            </tr>
+              <tr>
+                <td>Name</td>
+                <td>ID</td>
+                <td>TI</td>
+                <td>&nbsp;</td>
+              </tr>
             </thead>
-            <tbody id="tbody1">
-            <tr *ngIf="userSearch">
-              <td>{{userSearch.name}}</td>
-              <td>{{userSearch.account}}</td>
-              <td>{{userSearch.trustIndex}}</td>
-              <td> <button type="button" class="btn btn-outline-danger" style="color: #808080">Retirer</button></td>
-              <td>&nbsp;</td>
-            </tr>
-            <tr *ngFor="let user of users">
-              <td *ngIf="!userSearch"><i>{{user.name}}</i></td>
-              <td *ngIf="!userSearch"><i>{{user.account}}</i></td>
-              <td *ngIf="!userSearch">{{user.trustIndex}}</td>
-              <td *ngIf="!userSearch"> <button type="button" class="btn btn-outline-danger" style="color: #808080">Retirer</button></td>
-            </tr>
+            <tbody>
+              <tr *ngIf="userSearch">
+                <td>{{userSearch.name}}</td>
+                <td>{{userSearch.account}}</td>
+                <td>{{userSearch.trustIndex}}</td>
+                <td> <button type="button" class="btn btn-outline-danger" style="color: #808080">Retirer</button></td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr *ngFor="let user of users">
+                <td *ngIf="!userSearch"><i>{{user.name}}</i></td>
+                <td *ngIf="!userSearch"><i>{{user.account}}</i></td>
+                <td *ngIf="!userSearch">{{user.trustIndex}}</td>
+                <td *ngIf="!userSearch"> <button mdbBtn type="button" size="sm"color="danger" outline="true" mdbWavesEffect>Retirer</button></td>
+              </tr>
             </tbody>
           </table>
-          </div>
         </div>
       </div>
     </div>
@@ -56,7 +54,7 @@
               <input class="input100" type="text" name="name" formControlName="name"
                 [ngClass]="{ 'is-invalid': submitted && f.name.errors }" placeholder="">
               <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-                <div *ngIf="f.name.errors.required">Identifiant requis</div>
+                <div *ngIf="f.name.errors.required">Identifiant requis </div>
               </div>
               <span class="focus-input100"></span>
             </div>
