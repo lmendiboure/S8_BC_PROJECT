@@ -34,8 +34,8 @@ eth_tab={}
 #ip_tab[src_ip]->(mac)
 ip_to_mac={}
 
-#group_multicast[mult_addr]->[eth1,eth2,eth3,...]
-group_multicast={}
+#group_multicast[mult_addr][dpid]->count
+group_multicast=defaultdict(lambda:defaultdict(lambda:None))
  
 #adjacency map [sw1][sw2]->port from sw1 to sw2
 adjacency=defaultdict(lambda:defaultdict(lambda:None))
@@ -448,15 +448,18 @@ class ProjectController(app_manager.RyuApp):
 
 	    #IGMP membership query
 	    if ip.proto == 0x02 and pkt[2].msgtype == 0x11:
-	       if dpid not in group_multicast[pkt[2].address]:
-	         group_multicast[pkt[2].address].append(dpid)
+	       if (pkt[2].address in group_multicast) and (dpid in group_multicast[pkt[2].address]):
+	         group_multicast[pkt[2].address][dpid]+=1
+	       elif (pkt[2].address in group_multicast) and (dpid not in group_multicast[pkt[2].address])
+	         group_multicast[pkt[2].address][dpid]=0
 	       print group_multicast
 	       return 
 
 	    #IGMP leave group
 	    if ip.proto == 0x02 and pkt[2].msgtype == 0x17:
-	       if dpid not in group_multicast[pkt[2].address]:
-	         group_multicast[pkt[2].address].remove(dpid)
+	       if (pkt[2].address in group_multicast) and (dpid in group_multicast[pkt[2].address]):
+		 if group_multicast[pkt[2].address][dpid]>0:
+	           group_multicast[pkt[2].address][dpid]-=1
 	       print group_multicast
    	       return 
 
@@ -504,20 +507,24 @@ class ProjectController(app_manager.RyuApp):
 	 paths=[]
 	
 	 for dpid_tmp in group_multicast[ip.src]:
-            paths.append(get_path_multicast(dpid,dpid_tmp))
+            paths.append(get_path_multicast(dpid,dpid_tmp,in_port,1))
 
-	 buckets={}
+	 buckets=defaultdict(lambda:defaultdict(lambda:list))
+
 	 for path in paths:
-	   for sw, in_port, out_port in p:
+	   for sw, in_port, out_port in path:
 	     bucket_action = [parser.OFPActionOutput(out_port)]
-             buckets[dpid].append(parser.OFPBucket(weight=0,watch_port=0,watch_group=ofproto.OFPG_ANY,actions=bucket_action))
+             buckets[sw][in_port].append(parser.OFPBucket(weight=0,watch_port=0,watch_group=ofproto.OFPG_ANY,actions=bucket_action))
+	     print buckets
 	 
-	 for key, value in my_dict.iteritems():
-	     group_id=random.randint(0, 2**32)
-	     req = ofp_parser.OFPGroupMod(datapath, ofproto.OFPGC_ADD, ofproto.OFPGT_ALL,group_id,value)
-	     actions = [ofp_parser.OFPActionGroup(group_id)]
-	     match=parser.OFPMatch(eth_dst=dst_mac)
-	     self.add_flow(datapath_list[sw],match, actions,0)
+	 for key in buckets:
+	     for key2 in buckets[key]:
+	       group_id=random.randint(0, 2**32)
+	       req = ofp_parser.OFPGroupMod(datapath, ofproto.OFPGC_ADD, ofproto.OFPGT_ALL,group_id,buckets[key][key2])
+	       datapath_list[sw].send_msg[req]
+	       actions = [ofp_parser.OFPActionGroup(group_id)]
+	       match=parser.OFPMatch(eth_dst=dst_mac,in_port=key[1])
+	       self.add_flow(datapath_list[key[0]],match, actions,0)
 
 
 
