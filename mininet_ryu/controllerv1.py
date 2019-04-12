@@ -448,15 +448,17 @@ class ProjectController(app_manager.RyuApp):
 
 	    #IGMP membership query
 	    if ip.proto == 0x02 and pkt[2].msgtype == 0x11:
+	       print src,"joined ",pkt[1].dst,"group"
 	       if (pkt[2].address in group_multicast) and (dpid in group_multicast[pkt[2].address]):
 	         group_multicast[pkt[2].address][dpid]+=1
-	       elif (pkt[2].address in group_multicast) and (dpid not in group_multicast[pkt[2].address])
-	         group_multicast[pkt[2].address][dpid]=0
+	       elif (pkt[2].address in group_multicast) and (dpid not in group_multicast[pkt[2].address]):
+	         group_multicast[pkt[2].address][dpid]=1
 	       print group_multicast
 	       return 
 
 	    #IGMP leave group
 	    if ip.proto == 0x02 and pkt[2].msgtype == 0x17:
+	       print src,"left ",pkt[1].dst,"group"
 	       if (pkt[2].address in group_multicast) and (dpid in group_multicast[pkt[2].address]):
 		 if group_multicast[pkt[2].address][dpid]>0:
 	           group_multicast[pkt[2].address][dpid]-=1
