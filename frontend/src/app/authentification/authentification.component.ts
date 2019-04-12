@@ -8,7 +8,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-authentification',
   templateUrl: './authentification.component.html',
-  styleUrls: ['./authentification.component.css']
+  styleUrls: ['./authentification.component.scss']
 })
 export class AuthentificationComponent {
   registerForm: FormGroup;
