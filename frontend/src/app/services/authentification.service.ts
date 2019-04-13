@@ -4,7 +4,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';   
 import { User } from '../models/user';
 import { Router} from '@angular/router';
-//import { openSync } from 'fs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthentificationService {
@@ -12,7 +11,7 @@ export class AuthentificationService {
   public currentUser: Observable<User>;
 
   constructor(private http: HttpClient, private router: Router) {
-    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
+    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(JSON.stringify(localStorage.getItem('currentUser'))));
     this.currentUser = this.currentUserSubject.asObservable();
   }
 
@@ -24,7 +23,6 @@ export class AuthentificationService {
   login(email: string, password: string){
     return this.http.post<any>('http://localhost:3001/users/login', { email, password })
     .pipe(map(user => {
-      console.log(user.token);
       // login successful if there's a jwt token in the response
       if (user && user.token) {
         localStorage.setItem('currentUser', JSON.stringify(user));

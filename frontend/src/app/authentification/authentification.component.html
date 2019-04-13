@@ -20,9 +20,5 @@
       <div *ngIf="submitted && f.password.errors" class="invalid-feedback"></div>
     </div>
     <button mdbBtn type="button" color="primary" type="submit" rounded="true" outline="true" mdbWavesEffect>S'inscire</button>
-    <div *ngIf="correct" class="alert alert-success" role="alert">
-      Inscription réussie !
-    </div>
-    <div *ngIf="error" class="alert alert-danger">{{error}}</div>
   </form>
 </div>
