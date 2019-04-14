@@ -40,7 +40,7 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md'
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
-    MDBBootstrapModule.forRoot()
+    MDBBootstrapModule.forRoot(),
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

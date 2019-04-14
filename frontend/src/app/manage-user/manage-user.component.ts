@@ -5,6 +5,7 @@ import { AuthentificationService } from '../services/authentification.service';
 import { first } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../models/user';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-manage-user',
@@ -62,7 +63,13 @@ export class ManageUserComponent implements OnInit {
       .pipe(first())
       .subscribe(
         data => {
-          window.location.reload();
+          Swal.fire(
+            'Utilisateur ajouté!',
+            '',
+            'success'
+          ).then(function () {
+            window.location.reload();
+          })
         },
         error => {
           this.error = error;

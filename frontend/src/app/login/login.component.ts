@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, SelectMultipleControlValueAccessor } from '@angular/forms';
 import { first } from 'rxjs/operators';
-
+import Swal from 'sweetalert2'
 import { AuthentificationService } from '../services/authentification.service';
 
-@Component({ templateUrl: 'login.component.html',
-  styleUrls: ['./login.component.scss'] })
+@Component({
+  templateUrl: 'login.component.html',
+  styleUrls: ['./login.component.scss']
+})
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   loading = false;
@@ -18,11 +20,11 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private authenticationService: AuthentificationService
+    private authenticationService: AuthentificationService,
   ) { }
 
   ngOnInit() {
-      this.loginForm = this.formBuilder.group({
+    this.loginForm = this.formBuilder.group({
       pseudo: ['', Validators.required],
       password: ['', Validators.required]
     });
@@ -37,6 +39,10 @@ export class LoginComponent implements OnInit {
 
   get f() { return this.loginForm.controls; }
 
+  delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
   onSubmit() {
     this.submitted = true;
 
@@ -46,15 +52,26 @@ export class LoginComponent implements OnInit {
     }
 
     this.loading = true;
-    console.log("pseudo " + this.f.pseudo.value);
-    console.log("password " + this.f.password.value);
     this.authenticationService.login(this.f.pseudo.value, this.f.password.value)
       .pipe(first())
       .subscribe(
         data => {
-          this.router.navigate([this.returnUrl]);
+          Swal.fire(
+            'Connexion réussie!',
+            '',
+            'success'
+          ).then(function () {
+            window.location.href = "#"
+          })
         },
         error => {
+          Swal.fire({
+            type: 'error',
+            title: "Erreur lors de la connexion",
+            text: error,
+          }).then(function () {
+            window.location.reload();
+          });
           this.error = error;
           this.loading = false;
         });

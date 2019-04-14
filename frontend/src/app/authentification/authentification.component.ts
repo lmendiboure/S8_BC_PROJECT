@@ -3,6 +3,7 @@ import { AuthentificationService } from '../services/authentification.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -14,7 +15,7 @@ export class AuthentificationComponent {
   registerForm: FormGroup;
   submitted = false;
   error = '';
-  correct =false;
+  correct = false;
   returnUrl: string;
 
   constructor(
@@ -49,10 +50,22 @@ export class AuthentificationComponent {
       pipe(first())
       .subscribe(
         data => {
-          this.router.navigate([this.returnUrl]);
+          Swal.fire(
+            'Inscription réussie!',
+            '',
+            'success'
+          ).then(function(){
+            window.location.href='/login';
+          })
         },
         error => {
-          this.correct=false;
+          Swal.fire({
+            type: 'error',
+            title: "Erreur lors de l'inscription",
+            text: error,
+          }).then(function () {
+            window.location.reload();
+          });
           this.error = error;
         });
 

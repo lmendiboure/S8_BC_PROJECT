@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthentificationService } from '../services/authentification.service';
 import { User } from '../models/user';
-import { Observable } from 'rxjs';
 
 
 @Component({
@@ -29,7 +28,8 @@ export class NavbarComponent implements OnInit {
 
   public ifRoot(): Boolean {
     if (this.currentUser) {
-      if (this.currentUser.pseudo == "admin" && this.currentUser.password == "root" && this.currentUser.id == "0x000000") {
+      console.log("ok")
+      if (this.currentUser.pseudo == "admin" && this.currentUser.password == "admin") {
         console.log("Je suis là")
         return true;  
       }
