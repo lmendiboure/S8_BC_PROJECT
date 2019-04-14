@@ -24,10 +24,11 @@ export class AuthentificationService {
   login(email: string, password: string){
     return this.http.post<any>('http://localhost:3001/users/login', { email, password })
     .pipe(map(user => {
-      console.log(user.token);
+      //console.log(user.token);
       // login successful if there's a jwt token in the response
       if (user && user.token) {
         localStorage.setItem('currentUser', JSON.stringify(user));
+        console.log(localStorage.currentUser);
         this.currentUserSubject.next(user);
       }
 
@@ -56,9 +57,16 @@ export class AuthentificationService {
     return this.http.post<any>('http://localhost:3001/admin/',{name});
   }
 
-  getUsers(){
-    return this.http.get<any>('http://localhost:3001/admin/accounts');
+  deleteUser(name:string){
+    var url = 'http://localhost:3001/admin/delete';
+    console.log(url);
+    console.log('cc');
+    return this.http.post<any>(url, {name});
   }
+
+  /*getUsers(){
+    return this.http.get<any>('http://localhost:3001/admin/accounts');
+  }*/
 
   logout() {
     // remove user from local storage to log user out
