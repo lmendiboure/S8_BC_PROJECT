@@ -51,14 +51,6 @@
 
             <div class="form-group">
               <div class="col-xs-6">
-                <label for="mobile">
-                  <h4>Numéro de téléphone</h4>  
-                </label>
-                <input type="text" formControlName="mobile" class="form-control" [ngClass]="{'is-invalid': submitted && f.mobile.errors}" placeholder="{{currentUser.mobile}}">
-              </div>
-            </div>
-            <div class="form-group">
-              <div class="col-xs-6">
                 <label for="email">
                   <h4>Email</h4>
                 </label>
@@ -150,8 +142,10 @@
                   </span>
                 </div>
                 <div class="col-xs-6">
+                  
                   <label for="immatriculation">
                   </label>
+                  <h4>Immatriculation</h4>
                   <input type="text" formControlName="immatriculation" class="form-control"  placeholder="{{currentUser.immatriculation}}" [ngClass]="{'is-invalid': submitted && f.immatriculation.errors}" >
                 </div>
               </div>

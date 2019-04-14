@@ -51,7 +51,7 @@ export class AuthentificationComponent {
       .subscribe(
         data => {
           Swal.fire(
-            'Connexion réussie!',
+            'Inscription réussie!',
             '',
             'success'
           ).then(function(){

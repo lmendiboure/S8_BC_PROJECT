@@ -54,8 +54,9 @@
             <div class="wrap-input100 validate-input">
               <div class="md-form">
                 <i class="fas fa-user prefix"></i>
-                <input type="text" id="inputIconEx2" class="form-control" formControlName="name"
-                  [ngClass]="{ 'is-invalid': submitted && f.name.errors }" placeholder="Identifiant Véhicule">
+                <input type="text" id="inputIconEx2" class="form-control" formControlName="name" id="basicExample"
+                  [ngClass]="{ 'is-invalid': submitted && f.name.errors }" [mdbValidation]="false" mdbInputDirective>
+                  <label for="basicExample">Identifiant véhicule</label>
                 <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
                   <div *ngIf="f.name.errors.required">Identifiant requis </div>
                 </div>
@@ -64,7 +65,7 @@
           </div>
           <div class="form-group">
             <div class="text-center">
-            <button type="button" [disabled]="loading" class="btn btn-deep-orange">Ajouter</button>
+            <button type="button" class="btn btn-deep-orange">Ajouter</button>
             </div>
           </div>
         </form>

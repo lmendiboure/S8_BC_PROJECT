@@ -13,14 +13,13 @@ import { UsersResolver } from './resolvers/users.resolver';
 
 const routes: Routes = [
   {path: 'inscription', component: AuthentificationComponent},
-  {path: 'userinformation', component: InformationAboutUserComponent},
-  {path: 'admin', component: AdminComponent},
-  {path: 'admin/manageuser', component: ManageUserComponent, resolve: {users: UsersResolver}},
-  {path: 'admin/manageTI', component: ManageTIComponent},
+  { path: 'userinformation', component: InformationAboutUserComponent, canActivate: [GuardsComponent]},
+  { path: 'admin', component: AdminComponent, canActivate: [GuardsComponent]},
+  { path: 'admin/manageuser', component: ManageUserComponent, canActivate: [GuardsComponent], resolve: {users: UsersResolver}},
+  { path: 'admin/manageTI', component: ManageTIComponent, canActivate: [GuardsComponent]},
   {path: '', component: HomeComponent, canActivate: [GuardsComponent]},
   {path: 'login', component: LoginComponent },
-  {path: 'profile', component: ProfileComponent}, 
-  { path: '**', redirectTo: '' }
+  { path: 'profile', component: ProfileComponent, canActivate: [GuardsComponent]}, 
 
 ];
 

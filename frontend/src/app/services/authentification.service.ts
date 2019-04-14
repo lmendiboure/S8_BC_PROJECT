@@ -24,6 +24,7 @@ export class AuthentificationService {
     return this.http.post<any>('http://localhost:3001/users/login', { email, password })
     .pipe(map(user => {
       // login successful if there's a jwt token in the response
+      console.log(user.token);
       if (user && user.token) {
         localStorage.setItem('currentUser', JSON.stringify(user));
         this.currentUserSubject.next(user);
