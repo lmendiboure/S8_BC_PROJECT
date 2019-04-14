@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';   
 import { User } from '../models/user';
-import { Router} from '@angular/router';
+import { Router, ActivatedRoute} from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthentificationService {
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private http: HttpClient, private router: Router,
+    private _route: ActivatedRoute) {
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(JSON.stringify(localStorage.getItem('currentUser'))));
     this.currentUser = this.currentUserSubject.asObservable();
   }
@@ -66,6 +67,24 @@ export class AuthentificationService {
   /*getUsers(){
     return this.http.get<any>('http://localhost:3001/admin/accounts');
   }*/
+
+  getSpecificUser(id: string, token: string) {
+    
+    var headers = new HttpHeaders();
+    //headers.set('Content-Type', 'application/json');
+    headers.set('Authorization', 'Bearer  ' + token);
+    console.log('heey ' + token + id)
+
+    let options = {headers: headers};
+
+     
+    var url = 'http://localhost:3001/users/' + id;
+    console.log(url);
+
+    //const options = {headers: headers};
+    console.log(options);
+    return this.http.get<any>(url, options)
+  }
 
   logout() {
     // remove user from local storage to log user out
