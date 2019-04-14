@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+//import { HttpClientModule } from '@angular/common';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';   
 import { User } from '../models/user';
+import {Http, Headers, RequestOptionsArgs, Request, Response, ConnectionBackend, RequestOptions} from "@angular/http";
 import { Router, ActivatedRoute} from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
@@ -64,26 +66,19 @@ export class AuthentificationService {
     return this.http.post<any>(url, {name});
   }
 
-  /*getUsers(){
-    return this.http.get<any>('http://localhost:3001/admin/accounts');
-  }*/
+  getUsers(){
+    return console.log(this.http.get<any>('http://localhost:3001/admin/accounts'));
+  }
 
   getSpecificUser(id: string, token: string) {
-    
-    var headers = new HttpHeaders();
-    //headers.set('Content-Type', 'application/json');
-    headers.set('Authorization', 'Bearer  ' + token);
-    console.log('heey ' + token + id)
-
-    let options = {headers: headers};
-
-     
     var url = 'http://localhost:3001/users/' + id;
     console.log(url);
 
-    //const options = {headers: headers};
-    console.log(options);
-    return this.http.get<any>(url, options)
+    let headers = new HttpHeaders().set('Authorization','Bearer '+ token);
+    console.log('ff ' + headers.get('Authorization'));
+
+    return console.log(this.http.get(url,{headers}))
+      
   }
 
   logout() {
