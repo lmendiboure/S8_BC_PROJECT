@@ -6,6 +6,99 @@ pragma experimental ABIEncoderV2;
 
 contract User {
 
+
+struct accessMode {
+	    string IP;
+	    bool canSend;
+	}
+    
+    mapping(uint=> accessMode) public vehicleAccess;
+    address public admin;
+    
+	uint public id;
+	string public name;
+	uint public trustIndex;
+	uint public netCount;
+	address myUserAd;
+	string IP;
+
+	
+	event sendMsg(
+        address  _from,
+        uint _id,
+        string msgS
+    );
+    
+    event recvMsg(
+        address _from,
+        uint _id,
+        string _msgR
+    );
+
+    
+	constructor(uint _id, string memory _name, uint _trustIndex,address _admin,address _myUserAd,string memory _IP) public payable {
+		id = _id;
+		name = _name;
+		trustIndex = _trustIndex;
+		netCount=1;
+        	vehicleAccess[netCount].canSend=true;
+        	vehicleAccess[netCount].IP=_IP;
+		admin = _admin;
+		myUserAd = _myUserAd;
+		IP=_IP;
+		
+	}
+	
+ 	function compareStrings (string memory a, string memory b) public view returns (bool) {
+             return (keccak256(abi.encodePacked((a))) == keccak256(abi.encodePacked((b))) );
+
+       }
+	
+	function getTrustIndex() public view returns(uint) {
+	    return trustIndex;
+	}
+	
+	function getAddressIP() public view returns(string memory) {
+	    return IP;
+	}	
+
+	function getAddress() public view returns(address) {
+	    return myUserAd;
+	}
+	
+	function getRightCanSend(string memory  _IP) public view returns(bool) {
+    	    for (uint i=0; i<netCount+1; i++) {
+    	        if(compareStrings(_IP,vehicleAccess[i].IP))
+                    return vehicleAccess[i].canSend;
+		else
+			return false;
+             }
+	    
+	}
+	
+	function addAddressIP(string memory  _IP) public payable {
+	     netCount++;
+	     vehicleAccess[netCount].canSend=true;
+         vehicleAccess[netCount].IP=_IP;
+	}
+
+	function incrementTrustIndex() public payable returns(uint) {
+	    return trustIndex+=1;
+	}
+	
+	function decrementTrustIndex() public payable returns(uint) {
+	    return trustIndex--;
+	}
+	
+	function changeRightCanSend(address _admin, bool _right,uint _idwanted) public payable {
+	    require(admin == _admin);
+	    vehicleAccess[_idwanted].canSend = _right;
+	}
+
+
+//***************************************************
+//old_version
+
     // I should add a modifier access to functions increment and decrement : Done //
 
 
@@ -27,7 +120,8 @@ contract User {
     // C'est plus facile-, automatique, rapide et ça renforce l'utilité de la décentralisation //
 
 	// A user is defined by :
-	uint public id;
+
+/*	uint public id;
 	string public ip;
 	string public name;
 	uint public trustIndex;
@@ -54,12 +148,6 @@ contract User {
         uint _id,
         string _msgR
     );
-	
-	//string[] public subs;
-    
-    //Advertisment public ads = new Advertisment();
-    //Emergencies public emergencies;
-    
     address public admin;
     
     event sendVideo(address _sendTo);
@@ -72,8 +160,8 @@ contract User {
 		trustIndex = _trustIndex;
 		videoTime = _videoTime;
 		for (uint i=0; i<id+1; i++) {
-            vehicleAccess[i].canSend=true;
-	    	vehicleAccess[i].canRecv=true;
+           		 vehicleAccess[i].canSend=true;
+	    		 vehicleAccess[i].canRecv=true;
         }
 		admin = _admin;
 	}
@@ -81,14 +169,6 @@ contract User {
 	function getTrustIndex() public view returns(uint) {
 	    return trustIndex;
 	}
-	
-	/*function getRightCanSend() public view returns(bool) {
-	    return rights.canSend;
-	}
-	
-	function getRightCanRecv() public view returns(bool) {
-	    return rights.canRecv;
-	}*/
 
 	function getRightCanSend(uint _idwanted) public view returns(bool) {
 	    return vehicleAccess[_idwanted].canSend;
@@ -117,43 +197,7 @@ contract User {
 	    //require(admin == _admin);
 	    return trustIndex - _value;
 	}
-	
-	/*function changeRightCanSend(address _admin, bool _right) public payable returns(bool) {
-	    require(admin == _admin);
-	    rights.canSend = _right;
-	    return rights.canSend;
-	}
-	
-	function changeRightCanRecv(address _admin, bool _right) public payable returns(bool) {
-	    require(admin == _admin);
-	    rights.canRecv = _right;
-	    return rights.canRecv;
-	}
-	
-	function sendMessage(address _sendTo) public {
-	    User u = User(_sendTo);
-	    assert(rights.canSend);
-	    assert(u.getRightCanRecv());
-	    emit sendVideo(msg.sender);
-	}
-	
-	function recvMessage(address _recvFrom) public {
-	    User u = User(_recvFrom);
-	    assert(rights.canRecv);
-	    assert(u.getRightCanSend());
-	    emit recvVideo(_recvFrom);
-	}*/
-	
-	/*function addSubscription(string memory _name) public returns(string[] memory) {
-	    subs.push(_name);
-	    return subs;
-	}
-	
-	function subscribeToAds(string memory _name) public payable {
-	    addSubscription(_name);
-	    Advertisment u = Advertisment(ads);
-	    u.addSubscriberToAds(msg.sender);
-	}*/
+
 
 	function changeRightCanSend(address _admin, bool _right,uint _idwanted) public payable returns(bool) {
 	    require(admin == _admin);
@@ -181,4 +225,6 @@ contract User {
 	    emit recvMsg(_recvFrom,_idwanted,_msgR);
 	}
 	
+*/
+
 }

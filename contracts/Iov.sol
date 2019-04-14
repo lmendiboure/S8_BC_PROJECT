@@ -14,7 +14,125 @@ contract Iov {
 
     // Store vehicles
     // Search for vehicle
+   
     mapping(uint => User) public vehicleArray;
+    mapping(uint => Adv) public advUsers;
+    mapping(uint => SOS) public sosUsers;
+
+    mapping(uint => int256 ) public moneyCount;
+    
+    uint public vehicleCount;
+        
+    event userAdded(uint _id,address _UserAdded,string _name);
+    event userDeleted(uint _id);
+    
+    event returnFeedback(
+        address  _recv,bool _feedback
+    );
+
+ constructor() public payable {
+        admin = msg.sender;
+        vehicleArray[vehicleCount] = new User(0,"admin", 10000,msg.sender,msg.sender,"vip IP");
+        moneyCount[0]=0;
+    }
+
+    function addVehicle(address _admin, string memory _name,address _myUserAd,string memory _IP) public payable onlyAdmin {
+        vehicleCount++;
+        vehicleArray[vehicleCount]= new User(vehicleCount, _name, 0, _admin,_myUserAd,_IP);
+        moneyCount[vehicleCount]=0;
+       emit userAdded(vehicleCount,_myUserAd,_name);
+    }
+    
+     function deleteVehicle(uint _id) public onlyAdmin {
+        vehicleArray[_id] = vehicleArray[vehicleCount];
+        delete vehicleArray[vehicleCount];
+        vehicleCount--;
+    }
+    
+    function AskHelp(uint _iduser,string memory _msg) public payable {
+        sosUsers[_iduser] = new SOS(_iduser);
+        sosUsers[_iduser].senSos(_msg);
+    }
+    
+   /* function shareAdv (bytes24 _ipuser,address _to) public payable {
+        uint canAdv;
+        
+        for (uint i=0; i<vehicleCount+1; i++) {
+            if(getRightCanSendById(_ipuser,i)==true){
+                canAdv++;
+            }
+        }
+        require(
+            canAdv == vehicleCount,
+        "He can send to everyone else");
+        
+         require(
+            getTrustIndexById(_iduser) > 2000,
+            "There already is a higher Trust Index."
+        );
+    
+        advUsers[_iduser] = new Adv(_iduser);
+        advUsers[_iduser].shareAds(_to);
+    } */
+
+    function getAddressIPById(uint _id) public view returns(string memory) {
+        return(vehicleArray[_id].getAddressIP());
+    } 
+   
+   function getAddressById(uint _id) public view returns(address) {
+        return(vehicleArray[_id].getAddress());
+    } 
+    
+    function addAddressIPtolist(uint _id,string memory _IP) public payable{
+        vehicleArray[_id].addAddressIP(_IP);
+    }
+   
+   function getTrustIndexById(uint _id) public view returns(uint) {
+        return(vehicleArray[_id].getTrustIndex());
+    }
+   
+    function getRightCanSendById(uint _myid,string memory _IP) public view returns(bool) {
+        return vehicleArray[_myid].getRightCanSend(_IP);
+    }
+    
+    function incrementTrustIndex(uint _id) public payable returns(uint){
+        return vehicleArray[_id].incrementTrustIndex();
+    }
+    
+    function decrementTrustIndex(uint _id) public payable returns(uint) {
+        return vehicleArray[_id].decrementTrustIndex();
+    }
+    
+    function changeRightCanSendByid(address _admin, uint _id, bool _right,uint _idwanted) public payable {
+        vehicleArray[_id].changeRightCanSend(_admin, _right, _idwanted);
+    }
+	
+    function giveMoney(uint _iduser,int256 _value) public payable{
+        moneyCount[_iduser]=_value;
+    }
+    
+    function giveFeedback(uint _iduser,address _recv,bool _feedback) public payable{
+        if( _feedback == true){
+           giveMoney(_iduser,100);
+            emit returnFeedback(_recv,_feedback);    
+            }
+        else{
+            giveMoney(_iduser,-100);
+            emit returnFeedback(_recv,_feedback);
+        }
+        
+    }
+
+
+
+//****************************************************************************
+//old_format
+
+
+
+/*
+
+ mapping(uint => User) public vehicleArray;
 
     mapping(uint => Adv) public advUsers;
     mapping(uint => SOS) public sosUsers;
@@ -31,6 +149,7 @@ contract Iov {
         address  _recv,bool _feedback
     );
 
+
     constructor() public payable {
         admin = msg.sender;
         addVehicle(admin, "Vehicle 1");
@@ -46,11 +165,9 @@ contract Iov {
     }
 
     function deleteVehicle(uint _id) public onlyAdmin {
-        //delete vehicleArray[_id];
         vehicleArray[_id] = vehicleArray[vehicleCount];
         delete vehicleArray[vehicleCount];
         vehicleCount--;
-        //emit userDeleted(_id);
     }
 
     // calculation of average vehicle trust index
@@ -58,50 +175,6 @@ contract Iov {
         return 10;
     }
     
-    /*function getTrustIndexByAddress(address _userAddress) public view returns(uint) {
-        User u = User(_userAddress);
-        return u.getTrustIndex();
-    }
-    
-    function getRightCanSendByAddress(address _userAddress) public view returns(bool) {
-        User u = User(_userAddress);
-        return u.getRightCanSend();
-    }
-    
-    function getRightCanRecvByAddress(address _userAddress) public view returns(bool) {
-        User u = User(_userAddress);
-        return u.getRightCanRecv();
-    }
-    
-    function incrementTrustIndex(address _userAddress) public payable returns(uint){
-        User u = User(_userAddress);
-        return u.incrementTrustIndex();
-    }
-    
-    function decrementTrustIndex(address _userAddress) public payable returns(uint) {
-        User u = User(_userAddress);
-        return u.decrementTrustIndex();
-    }
-    
-    function incrementTrustIndexByValue(address _userAddress, uint _value) public payable returns(uint) {
-        User u = User(_userAddress);
-        return u.incrementTrustIndexByValue(_value);
-    }
-    
-    function decrementTrustIndexByValue(address _userAddress, uint _value) public payable returns(uint) {
-        User u = User(_userAddress);
-        return u.decrementTrustIndexByValue(_value);
-    }
-    
-    function changeRightCanSendByAddress(address _admin, address _userAddress, bool _right) public payable returns(bool) {
-        User u = User(_userAddress);
-        return u.changeRightCanSend(_admin, _right);
-    }
-    
-    function changeRightCanRecvByAddress(address _admin, address _userAddress, bool _right) public payable returns(bool) {
-        User u= User(_userAddress);
-        return u.changeRightCanRecv(_admin, _right);
-    }*/
 
     function getTrustIndexById(uint _id) public view returns(uint) {
         return(vehicleArray[_id].getTrustIndex());
@@ -183,5 +256,6 @@ contract Iov {
         }
         
     }
+*/
     
 }
