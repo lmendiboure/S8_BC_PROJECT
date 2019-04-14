@@ -28,9 +28,7 @@ export class NavbarComponent implements OnInit {
 
   public ifRoot(): Boolean {
     if (this.currentUser) {
-      console.log("ok")
       if (this.currentUser.pseudo == "admin" && this.currentUser.password == "admin") {
-        console.log("Je suis là")
         return true;  
       }
       else {
