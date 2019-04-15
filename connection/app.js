@@ -74,21 +74,16 @@ App = {
   renderName: function(index) {
   var self = this;
   var iovInstance;
-  //console.log(account);
 
   Iov.setProvider(self.web3.currentProvider);
   User.setProvider(self.web3.currentProvider);
-  //console.log('the account ' + account);
 
   return new Promise(function(resolve, reject) {
 
   Iov.deployed().then((instance) => {
-    //console.log(instance);
     iovInstance = instance;
-    //console.log(iovInstance.vehicleCount());
     return iovInstance.vehicleArray(index);
     }).then((result) => {
-      //console.log(result);
       User.at(result).then((instance) => {
       name = instance;
       return name.name();
@@ -132,6 +127,31 @@ renderTrustIndex: function(index) {
 });
 },
 
+renderAddressIP: function(index) {
+    var self = this;
+  var iovInstance;
+
+  Iov.setProvider(self.web3.currentProvider);
+  User.setProvider(self.web3.currentProvider);
+
+  return new Promise(function(resolve, reject) {
+
+  Iov.deployed().then((instance) => {
+    iovInstance = instance;
+    return iovInstance.vehicleArray(index);
+    }).then((result) => {
+      User.at(result).then((instance) => {
+      name = instance;
+      return name.IP();
+    }).then((result) => {
+      resolve(result);
+    }).catch((err) => {
+      reject(err.message);
+    })
+  });
+});
+ },
+
   renderAllAccounts: function() {
     var self = this;
     var iovInstance;
@@ -152,8 +172,6 @@ renderTrustIndex: function(index) {
   });
 },
 
-
-
   addAccount: function(_IP, _name) {
     var self = this;
     var iovInstance ;
@@ -169,9 +187,28 @@ renderTrustIndex: function(index) {
       Iov.deployed().then((instance) => {
         iovInstance = instance;
         return iovInstance;
-        //return await iovInstance.addVehicle("0xf364689b868471726ACd0005F82e9f3fd10d2f4",_name);
       }).then((res) => {
-        return iovInstance.addVehicle(self.web3.eth.accounts[0], _name, {from: self.web3.eth.accounts[0]});
+        return iovInstance.addVehicle(self.web3.eth.accounts[0], _name,self.web3.eth.accounts[1],_IP,{from: self.web3.eth.accounts[0]});
+      }).then((count) => {
+        resolve(count);
+      }).catch((err) => {
+        reject(err);
+      })
+    });
+  },
+
+ addAddressTolist: function(_IP) {
+    var self = this;
+    var iovInstance ;
+
+    Iov.setProvider(self.web3.currentProvider);
+
+    return new Promise(function(resolve, reject) {
+      Iov.deployed().then((instance) => {
+        iovInstance = instance;
+        return iovInstance;
+      }).then((res) => {
+        return iovInstance.addAddressIPtolist(0,_IP);
       }).then((count) => {
         resolve(count);
       }).catch((err) => {
@@ -200,7 +237,92 @@ renderTrustIndex: function(index) {
     });
   },
 
-  /*function catchEvent() {
+ 
+getsendrights: function(_IP) {
+    var self = this;
+    var iovInstance;
+
+    Iov.setProvider(self.web3.currentProvider);
+
+    return new Promise(function(resolve, reject) {
+      Iov.deployed().then((instance) => {
+        iovInstance = instance;
+        return iovInstance;
+      }).then((res) => {
+        return iovInstance.getRightCanSendById(0,_IP);
+      }).then((res) => {
+        resolve(res);
+      }).catch((err) => {
+        reject(err);
+      })
+    });
+  },
+
+
+
+/*getsendrights: function(_id) {
+    var self = this;
+    var iovInstance;
+
+    Iov.setProvider(self.web3.currentProvider);
+
+    return new Promise(function(resolve, reject) {
+      Iov.deployed().then((instance) => {
+        iovInstance = instance;
+        return iovInstance;
+      }).then((res) => {
+        return iovInstance.getRightCanSendById(1,_id);
+      }).then((res) => {
+        resolve(res);
+      }).catch((err) => {
+        reject(err);
+      })
+    });
+  },
+
+
+
+
+ getrecvrights: function(_id) {
+    var self = this;
+    var iovInstance;
+
+    Iov.setProvider(self.web3.currentProvider);
+
+    return new Promise(function(resolve, reject) {
+      Iov.deployed().then((instance) => {
+        iovInstance = instance;
+        return iovInstance;
+      }).then((res) => {
+        return iovInstance.getRightCanRecvById(1,_id);
+      }).then((res) => {
+        resolve(res);
+      }).catch((err) => {
+        reject(err);
+      })
+    });
+  },
+
+ changesendrights: function(_id,_value) {
+    var self = this;
+    var iovInstance;
+
+    Iov.setProvider(self.web3.currentProvider);
+
+    return new Promise(function(resolve, reject) {
+      Iov.deployed().then((instance) => {
+        iovInstance = instance;
+        return iovInstance;
+      }).then((res) => {
+        return iovInstance.changeRightCanSendByid(1,,_value,_id);
+      }).then((res) => {
+        resolve(res);
+      }).catch((err) => {
+        reject(err);
+      })
+    });
+  },
+  function catchEvent() {
     return new Promise(function(resolve, reject) {
 
     });

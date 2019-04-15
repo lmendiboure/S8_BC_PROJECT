@@ -37,7 +37,7 @@ router.post("/login", (req, res, next) => {
               },
               process.env.JWT_KEY,
               {
-                  expiresIn: "1h"
+                  expiresIn: "24h"
               }
             );
             return res.status(200).json({
@@ -55,7 +55,7 @@ router.post("/login", (req, res, next) => {
         res.status(500).json({
           error: err
         });
-      });
+      });2
   });
 
   //router.use(checkAuth);
@@ -101,6 +101,22 @@ router.patch('/signup/:userId', (req, res, next) => {
     })
 });
 
+router.get('/rightsend', checkAuth, (req, res, next) => {
+      var ip = req.body.ip;
+      User.find({ipAddress: ip}).exec().then(async (result) => {
+	 await truffleContract.getsendrights(ip).then((response) => {
+            res.status(200).json({
+                message: 'Can he send from this user-id ?',
+                deletedUser: response
+            })
+        })
+    }).catch((err) => {
+        res.send(err.message);
+    });
+});
+
+
+
 router.get('/accounts', checkAuth, (req, res, next) => {
     console.log('getting accounts information');
     //console.log(req.query.account);
@@ -110,7 +126,7 @@ router.get('/accounts', checkAuth, (req, res, next) => {
     truffleContract.renderAllAccounts().then(async (i) => {
         i = i;
         for(let j = 1; j <= i; j++) {
-            var info = { account:"", name:"", trustIndex:""}; 
+            var info = { account:"", name:"", trustIndex:"", AddressIP:""}; 
             await truffleContract.renderAccount(j).then(async (response) => {
                 info.account = response;
                 //console.log(json);
@@ -118,8 +134,11 @@ router.get('/accounts', checkAuth, (req, res, next) => {
                     info.name = response;
                     await truffleContract.renderTrustIndex(j).then((response) => {
                         info.trustIndex = response.toNumber();
-                        json.push(info);
-                        return json;
+			//await truffleContract.renderAddressIP(j).then(async (response) => {
+		              //  info.AddressIP = response;
+		                json.push(info);
+		                return json;
+			//});
                     });
                 });      
             }).catch((err) => {
@@ -129,6 +148,23 @@ router.get('/accounts', checkAuth, (req, res, next) => {
         res.status(200).send(json);
     });
 });
+
+
+
+/*router.get('/canrecv', checkAuth, (req, res, next) => {
+      var ip = req.body.ip;
+      User.find({ipAddress: ip}).exec().then(async (result) => {
+	 await truffleContract.getrecvrights(hashids.decode(result.bcId)).then((response) => {
+            res.status(200).json({
+                message: 'Can he receive from this user-id ?',
+                deletedUser: response
+            })
+        })
+    }).catch((err) => {
+        res.send(err.message);
+    });
+});*/
+
 
 router.get('/:userId', checkAuth, (req, res, next) => {
     var json =[];
@@ -152,7 +188,7 @@ router.get('/:userId', checkAuth, (req, res, next) => {
                     });
                 });
             });
-        } else {
+        } else {6
             res.status(404).json({
                 message : 'No valid entry for provided ID'
             });
@@ -162,6 +198,7 @@ router.get('/:userId', checkAuth, (req, res, next) => {
             res.status(500).send(err);
     });
 });
+
 
 router.get('/', checkAuth, (req, res, next) => {
     res.status(200).json({
