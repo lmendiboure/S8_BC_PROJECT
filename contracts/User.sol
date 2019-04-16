@@ -41,8 +41,8 @@ struct accessMode {
 		name = _name;
 		trustIndex = _trustIndex;
 		netCount=1;
-        	vehicleAccess[netCount].canSend=true;
         	vehicleAccess[netCount].IP=_IP;
+		vehicleAccess[netCount].canSend=true;
 		admin = _admin;
 		myUserAd = _myUserAd;
 		IP=_IP;
@@ -60,6 +60,10 @@ struct accessMode {
 	
 	function getAddressIP() public view returns(string memory) {
 	    return IP;
+	}
+	
+	function getId() public view returns(uint) {
+	    return id;
 	}	
 
 	function getAddress() public view returns(address) {
@@ -67,19 +71,17 @@ struct accessMode {
 	}
 	
 	function getRightCanSend(string memory  _IP) public view returns(bool) {
-    	    for (uint i=0; i<netCount+1; i++) {
-    	        if(compareStrings(_IP,vehicleAccess[i].IP))
-                    return vehicleAccess[i].canSend;
-		else
-			return false;
+    	    for (uint i=1; i<netCount+1; i++) {
+    	        if(compareStrings(_IP,vehicleAccess[i].IP)){
+                    return vehicleAccess[i].canSend;}
              }
 	    
 	}
 	
-	function addAddressIP(string memory  _IP) public payable {
+	function addAddressIP(string memory  _IP) public payable{
 	     netCount++;
 	     vehicleAccess[netCount].canSend=true;
-         vehicleAccess[netCount].IP=_IP;
+             vehicleAccess[netCount].IP=_IP;
 	}
 
 	function incrementTrustIndex() public payable returns(uint) {

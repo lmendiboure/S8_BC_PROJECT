@@ -25,6 +25,7 @@ contract Iov {
         
     event userAdded(uint _id,address _UserAdded,string _name);
     event userDeleted(uint _id);
+    event IPAdded(uint _id,string _IP);
     
     event returnFeedback(
         address  _recv,bool _feedback
@@ -75,16 +76,24 @@ contract Iov {
         advUsers[_iduser].shareAds(_to);
     } */
 
+     function getIdbyAdd(address _add) public view returns(uint) {
+	 for (uint i=0; i<vehicleCount+1; i++) {
+    	        if(vehicleArray[i].getAddress() == _add)
+                    return i;
+             }
+    }
+
     function getAddressIPById(uint _id) public view returns(string memory) {
         return(vehicleArray[_id].getAddressIP());
     } 
    
-   function getAddressById(uint _id) public view returns(address) {
-        return(vehicleArray[_id].getAddress());
-    } 
+ function getAddressById(uint _id) public view returns(address) {
+    return(vehicleArray[_id].getAddress());
+   } 
     
-    function addAddressIPtolist(uint _id,string memory _IP) public payable{
+    function addAddressIPtolist(uint _id,string memory _IP) public payable {
         vehicleArray[_id].addAddressIP(_IP);
+	emit IPAdded(_id,_IP);
     }
    
    function getTrustIndexById(uint _id) public view returns(uint) {

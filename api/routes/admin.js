@@ -8,7 +8,6 @@ var hashids = new Hashids('', 10);
 
 const User = require('../models/users');
 
-//var counter = 2;
 
 router.post('/delete/:id', (req, res, next) => {
     var id = hashids.decode(req.params.id);
@@ -43,7 +42,7 @@ router.post('/', (req, res, next) => {
         } else {
             User.find().then(async (result) => {
                 console.log(result.length);
-                var id = hashids.encode(result.length + 3);
+                var id = hashids.encode(result.length);
             const user = new User({
                 _id: new mongoose.Types.ObjectId(),
                 bcId: id,
@@ -84,17 +83,23 @@ router.get('/accounts', (req, res, next) => {
     truffleContract.renderAllAccounts().then(async (i) => {
         i = i;
         for(let j = 1; j <= i; j++) {
-            var info = { account:"", name:"", trustIndex:""}; 
-            await truffleContract.renderAccount(j).then(async (response) => {
+            var info = { account:"", name:"", trustIndex:"", ip:""};
+ 		await truffleContract.renderAccount(j).then(async (response) => {
                 info.account = response;
-                //console.log(json);
                 await truffleContract.renderName(j).then(async (response) => {
                     info.name = response;
-                    await truffleContract.renderTrustIndex(j).then((response) => {
+                    await truffleContract.renderTrustIndex(j).then(async (response) => {
                         info.trustIndex = response.toNumber();
-                        json.push(info);
-                        return json;
-                    });
+				//console.log(info);
+			  await truffleContract.renderAddressIP(j).then((response) => {
+					console.log(info);
+					info.ip=response;
+					console.log(info.ip);
+				        json.push(info);
+				        return json;
+
+			});
+		 });
                 });      
             }).catch((err) => {
                 send(err.message);
@@ -137,6 +142,7 @@ router.get('/:userId', (req, res, next) => {
             res.status(500).send(err);
     });
 });
+
 
 
 router.get('/', (req, res, next) => {
