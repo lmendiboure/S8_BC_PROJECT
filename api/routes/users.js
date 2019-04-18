@@ -55,7 +55,7 @@ router.post("/login", (req, res, next) => {
         res.status(500).json({
           error: err
         });
-      });2
+      });
   });
 
   //router.use(checkAuth);
@@ -103,43 +103,82 @@ router.patch('/signup/:userId', (req, res, next) => {
 
 router.get('/rightsend', checkAuth, (req, res, next) => {
       var ip = req.body.ip;
+  
       User.find({ipAddress: ip}).exec().then(async (result) => {
-	 await truffleContract.getsendrights(ip).then((response) => {
-            res.status(200).json({
-                message: 'Can he send from this user-id ?',
-                deletedUser: response
-            })
-        })
+		if(result.length == 0) {
+		    	return res.status(409).json({
+		        message: 'IP does not exist in database'
+		    		});}
+		else {
+			 	var id = hashids.decode(result[0].bcId);
+				console.log(id);
+			 await truffleContract.getsendrights(id,ip).then((response) => {
+			    res.status(200).json({
+				message: 'Can he send from this user-id ?',
+				deletedUser: response
+			    })
+			})
+		    }
+    }).catch((err) => {
+        res.send(err.message);
+    });
+});
+
+router.get('/add', checkAuth, (req, res, next) => {
+     var myip = req.body.myip;
+     var ipadded = req.body.ipadded;
+      User.find({ipAddress: myip}).exec().then(async (result) => {
+		var id = hashids.decode(result[0].bcId);
+		//console.log(result);
+		if(result.length == 0) {
+		    	return res.status(409).json({
+		        message: 'IP does not exist in database'
+		    		});}
+		else {
+			 	 User.find({ipAddress: ipadded}).exec().then(async (result) => {
+					if(result.length == 0) {
+					    	return res.status(409).json({
+						message: 'IP does not exist in database, You have to add it First'
+					    		});}
+					 }).catch((err) => {
+							res.send(err.message);
+						    });
+			        await truffleContract.addAddressTolist(id,ipadded).then((response) => {
+					console.log(response);	
+			                  res.status(200).json({
+					  message: 'it was done heho'
+			   		 })
+			        })
+		    }
     }).catch((err) => {
         res.send(err.message);
     });
 });
 
 
-
 router.get('/accounts', checkAuth, (req, res, next) => {
     console.log('getting accounts information');
-    //console.log(req.query.account);
-    //var query = req.query.account;
-    //console.log(query);
     var json =[];
     truffleContract.renderAllAccounts().then(async (i) => {
         i = i;
         for(let j = 1; j <= i; j++) {
-            var info = { account:"", name:"", trustIndex:"", AddressIP:""}; 
-            await truffleContract.renderAccount(j).then(async (response) => {
+            var info = { account:"", name:"", trustIndex:"", ip:""};
+ 		await truffleContract.renderAccount(j).then(async (response) => {
                 info.account = response;
-                //console.log(json);
                 await truffleContract.renderName(j).then(async (response) => {
                     info.name = response;
-                    await truffleContract.renderTrustIndex(j).then((response) => {
+                    await truffleContract.renderTrustIndex(j).then(async (response) => {
                         info.trustIndex = response.toNumber();
-			//await truffleContract.renderAddressIP(j).then(async (response) => {
-		              //  info.AddressIP = response;
-		                json.push(info);
-		                return json;
-			//});
-                    });
+				//console.log(info);
+			  await truffleContract.renderAddressIP(j).then((response) => {
+					console.log(info);
+					info.ip=response;
+					console.log(info.ip);
+				        json.push(info);
+				        return json;
+
+			});
+		 });
                 });      
             }).catch((err) => {
                 send(err.message);
@@ -149,21 +188,6 @@ router.get('/accounts', checkAuth, (req, res, next) => {
     });
 });
 
-
-
-/*router.get('/canrecv', checkAuth, (req, res, next) => {
-      var ip = req.body.ip;
-      User.find({ipAddress: ip}).exec().then(async (result) => {
-	 await truffleContract.getrecvrights(hashids.decode(result.bcId)).then((response) => {
-            res.status(200).json({
-                message: 'Can he receive from this user-id ?',
-                deletedUser: response
-            })
-        })
-    }).catch((err) => {
-        res.send(err.message);
-    });
-});*/
 
 
 router.get('/:userId', checkAuth, (req, res, next) => {
@@ -188,7 +212,7 @@ router.get('/:userId', checkAuth, (req, res, next) => {
                     });
                 });
             });
-        } else {6
+        } else {
             res.status(404).json({
                 message : 'No valid entry for provided ID'
             });

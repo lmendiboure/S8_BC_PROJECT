@@ -138,19 +138,15 @@ renderAddressIP: function(index) {
 
   Iov.deployed().then((instance) => {
     iovInstance = instance;
-    return iovInstance.vehicleArray(index);
+    return iovInstance.getAddressIPById(index);
     }).then((result) => {
-      User.at(result).then((instance) => {
-      name = instance;
-      return name.IP();
-    }).then((result) => {
+     // console.log('IP' + result);
       resolve(result);
     }).catch((err) => {
       reject(err.message);
     })
-  });
 });
- },
+},
 
   renderAllAccounts: function() {
     var self = this;
@@ -197,7 +193,7 @@ renderAddressIP: function(index) {
     });
   },
 
- addAddressTolist: function(_IP) {
+ addAddressTolist: function(_id,_IP) {
     var self = this;
     var iovInstance ;
 
@@ -208,7 +204,7 @@ renderAddressIP: function(index) {
         iovInstance = instance;
         return iovInstance;
       }).then((res) => {
-        return iovInstance.addAddressIPtolist(0,_IP);
+        return iovInstance.addAddressIPtolist(_id,_IP,{from: self.web3.eth.accounts[1]});
       }).then((count) => {
         resolve(count);
       }).catch((err) => {
@@ -238,7 +234,7 @@ renderAddressIP: function(index) {
   },
 
  
-getsendrights: function(_IP) {
+getsendrights: function(_id,_IP) {
     var self = this;
     var iovInstance;
 
@@ -249,7 +245,9 @@ getsendrights: function(_IP) {
         iovInstance = instance;
         return iovInstance;
       }).then((res) => {
-        return iovInstance.getRightCanSendById(0,_IP);
+	//var id = iovInstance.getIdbyAdd({from: self.web3.eth.accounts[0]});
+	var IP=String(_IP); 
+        return iovInstance.getRightCanSendById(_id,IP);
       }).then((res) => {
         resolve(res);
       }).catch((err) => {
