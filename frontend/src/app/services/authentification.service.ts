@@ -58,10 +58,8 @@ export class AuthentificationService {
   }
 
   deleteUser(name:string){
-    var url = 'http://localhost:3001/admin/delete';
-    console.log(url);
-    console.log('cc');
-    return this.http.post<any>(url, {name});
+    var url = 'http://localhost:3001/admin/delete/';
+    return this.http.post<any>(url,{name}).subscribe(data=>console.log(data));
   }
 
   getUsers(){

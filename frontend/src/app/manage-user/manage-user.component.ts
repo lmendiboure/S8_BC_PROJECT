@@ -83,8 +83,7 @@ export class ManageUserComponent implements OnInit {
     this.userSearch = this.users.find(x=> x.name===this.g.research.value);
   }
 
-  deleteUser(){
-    console.log("Je suis ici");
-    //this.authenticationService.deleteUser(name);
+  deleteUser(name:string){
+    this.authenticationService.deleteUser(name);
   }
 }
