@@ -18,7 +18,7 @@ router.post('/delete/:id', (req, res, next) => {
     })*/
 
     User.deleteOne({
-        bcId: id //Je peux mettre aussi le nom ou l'@ ip du vehicule
+        name: name //Je peux mettre aussi le nom ou l'@ ip du vehicule
     }).exec().then(async () => {
         await truffleContract.deleteAccount(id).then((response) => {
             res.status(200).json({
@@ -51,7 +51,7 @@ router.post('/', (req, res, next) => {
                 bcAddress: "",
             })
             //console.log('hash id ' + user.bcId);
-        
+
             //console.log(user.name);
             await truffleContract.addAccount(user.ipAddress, user.name).then((response) => {
                 truffleContract.renderLastAccount().then(async (result) => {
@@ -59,7 +59,7 @@ router.post('/', (req, res, next) => {
                     //console.log(user);
                     user.save().then((result) => {
                         //console.log(result);
-                    
+
                     res.status(200).json({
                         message: 'admin adds user',
                         createdUser: response
@@ -100,7 +100,7 @@ router.get('/accounts', (req, res, next) => {
 
 			});
 		 });
-                });      
+                });
             }).catch((err) => {
                 send(err.message);
             })
@@ -117,7 +117,7 @@ router.get('/:userId', (req, res, next) => {
         if(result) {
             blockId = hashids.decode(result.bcId)
             //console.log('hello ' + hashids.decode(result.bcId));
-            var info = { account:"", name:"", trustIndex:""}; 
+            var info = { account:"", name:"", trustIndex:""};
             await truffleContract.renderAccount(blockId).then(async (response) => {
                 info.account = response;
                 //console.log(json);
@@ -137,7 +137,7 @@ router.get('/:userId', (req, res, next) => {
                 message : 'No valid entry for provided ID'
             });
         }
-       
+
         }).catch((err) => {
             res.status(500).send(err);
     });
