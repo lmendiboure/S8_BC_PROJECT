@@ -9,16 +9,17 @@ var hashids = new Hashids('', 10);
 const User = require('../models/users');
 
 
-router.post('/delete/:id', (req, res, next) => {
-    var id = hashids.decode(req.params.id);
+router.post('/delete', (req, res, next) => {
+    var id;
     var name = req.body.name;
 
-    /*User.find({name: name}).exec().then((result) => {
-        console.log(result[0].bcAddress); //It works
-    })*/
+    User.find({name: name}).exec().then((result) => {
+        console.log(result[0].bcAddress);
+        id =  hashids.decode(result[0].bcAddress)//It works
+    })
 
     User.deleteOne({
-        bcId: id //Je peux mettre aussi le nom ou l'@ ip du vehicule
+        name: name //Je peux mettre aussi le nom ou l'@ ip du vehicule
     }).exec().then(async () => {
         await truffleContract.deleteAccount(id).then((response) => {
             res.status(200).json({
