@@ -59,7 +59,7 @@ export class AuthentificationService {
 
   deleteUser(name:string){
     var url = 'http://localhost:3001/admin/delete/';
-    return this.http.post<any>(url,{name}).subscribe(data=>console.log(data));
+    return this.http.post<any>(url,{name}).subscribe(data=>{console.log(data);window.location.reload()});
   }
 
   getUsers(){
@@ -68,11 +68,7 @@ export class AuthentificationService {
 
   getSpecificUser(id: string, token: string) {
     var url = 'http://localhost:3001/users/' + id;
-    //console.log(url);
-
     let headers = new HttpHeaders().set('Authorization','Bearer '+ token);
-    //console.log('ff ' + headers.get('Authorization'));
-
     return this.http.get(url,{headers});
       
   }
