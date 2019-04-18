@@ -10,14 +10,15 @@ import { GuardsComponent } from './guards/guards.component';
 import { LoginComponent} from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
 import { UsersResolver } from './resolvers/users.resolver';
+import { InformationUserResolver } from './resolvers/informationAboutUser.resolver';
 
 const routes: Routes = [
   {path: 'inscription', component: AuthentificationComponent},
-  { path: 'userinformation', component: InformationAboutUserComponent, canActivate: [GuardsComponent]},
+  { path: 'userinformation', component: InformationAboutUserComponent, canActivate: [GuardsComponent], resolve: { information: InformationUserResolver}},
   { path: 'admin', component: AdminComponent, canActivate: [GuardsComponent]},
   { path: 'admin/manageuser', component: ManageUserComponent, canActivate: [GuardsComponent], resolve: {users: UsersResolver}},
   { path: 'admin/manageTI', component: ManageTIComponent, canActivate: [GuardsComponent]},
-  {path: '', component: HomeComponent, canActivate: [GuardsComponent]},
+  { path: '', component: HomeComponent, canActivate: [GuardsComponent]},
   {path: 'login', component: LoginComponent },
   { path: 'profile', component: ProfileComponent, canActivate: [GuardsComponent]}, 
 

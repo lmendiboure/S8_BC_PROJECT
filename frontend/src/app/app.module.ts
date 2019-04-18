@@ -19,6 +19,7 @@ import { DemoService } from './services/demo.service';
 import { ProfileComponent } from './profile/profile.component';
 import { UsersResolver } from './resolvers/users.resolver'
 import { MDBBootstrapModule } from 'angular-bootstrap-md'
+import { InformationUserResolver } from './resolvers/informationAboutUser.resolver';
 
 
 @NgModule({
@@ -49,7 +50,8 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md'
 
     // provider used to create fake backend
     fakeBackendProvider,
-    UsersResolver
+    UsersResolver,
+    InformationUserResolver
   ],
   bootstrap: [AppComponent]
 })

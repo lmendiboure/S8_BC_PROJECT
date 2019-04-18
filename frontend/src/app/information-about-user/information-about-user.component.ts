@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpRequest, HttpHeaders} from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { Router, ActivatedRoute} from '@angular/router';
 import { AuthentificationService } from '../services/authentification.service';
 
@@ -11,6 +10,8 @@ import { AuthentificationService } from '../services/authentification.service';
   styleUrls: ['./information-about-user.component.scss']
 })
 export class InformationAboutUserComponent implements OnInit {
+
+  userSearch;
   
 
   constructor(private http: HttpClient, private router: Router
@@ -26,8 +27,8 @@ export class InformationAboutUserComponent implements OnInit {
     //this.currentUser = this.currentUserSubject.asObservable();
     var id = this._route.snapshot.queryParamMap.get('id');
     //console.log(this._route.snapshot.queryParamMap.get('id'))
-    console.log('cc ' + jsonInfo.token);
-    this.authenticationService.getSpecificUser(id, jsonInfo.token);
+    this.userSearch = this._route.snapshot.data['information'];
+    console.log(this.userSearch);
   }
 
   /*getUserInformation(id: string){

@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-//import { HttpClientModule } from '@angular/common';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';   
 import { User } from '../models/user';
-import {Http, Headers, RequestOptionsArgs, Request, Response, ConnectionBackend, RequestOptions} from "@angular/http";
 import { Router, ActivatedRoute} from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
@@ -72,12 +70,12 @@ export class AuthentificationService {
 
   getSpecificUser(id: string, token: string) {
     var url = 'http://localhost:3001/users/' + id;
-    console.log(url);
+    //console.log(url);
 
     let headers = new HttpHeaders().set('Authorization','Bearer '+ token);
-    console.log('ff ' + headers.get('Authorization'));
+    //console.log('ff ' + headers.get('Authorization'));
 
-    return console.log(this.http.get(url,{headers}))
+    return this.http.get(url,{headers});
       
   }
 
