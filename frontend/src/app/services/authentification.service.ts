@@ -53,8 +53,8 @@ export class AuthentificationService {
     return this.http.put<any>('/user/updateInformation', { pseudo,id,prenom, nom, mobile, email, password, vehicle, year, immatriculation })
   }
 
-  addUser(name:string){
-    return this.http.post<any>('http://localhost:3001/admin/',{name});
+  addUser(name:string,ip:string){
+    return this.http.post<any>('http://localhost:3001/admin/',{name,ip});
   }
 
   deleteUser(name:string){

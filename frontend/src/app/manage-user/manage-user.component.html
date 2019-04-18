@@ -35,7 +35,8 @@
                 <td *ngIf="!userSearch"><i>{{user.name}}</i></td>
                 <td *ngIf="!userSearch"><i>{{user.account}}</i></td>
                 <td *ngIf="!userSearch">{{user.trustIndex}}</td>
-                <td *ngIf="!userSearch"> <button (ngSubmit)="deleteUser()" mdbBtn type="button" size="sm" color="danger" outline="true" mdbWavesEffect>Retirer</button></td>
+                <td *ngIf="!userSearch"> <button (ngSubmit)="deleteUser()" mdbBtn type="button" size="sm" color="danger"
+                    outline="true" mdbWavesEffect>Retirer</button></td>
               </tr>
             </tbody>
           </table>
@@ -48,18 +49,28 @@
           <span class="contact100-form-title">
             Ajouter un véhicule
           </span>
-          <div class="form-group">
-            <label for="name"></label>
-            <div class="wrap-input100 validate-input">
+          <div class="wrap-input100 validate-input">
+            <div class="form-group">
+              <label for="name"></label>
               <div class="md-form">
                 <i class="fas fa-user prefix"></i>
                 <input type="text" id="inputIconEx2" class="form-control" formControlName="name" id="basicExample"
                   [ngClass]="{ 'is-invalid': submitted && f.name.errors }" [mdbValidation]="false" mdbInputDirective>
-                  <label for="basicExample">Identifiant véhicule</label>
+                <label for="basicExample">Identifiant véhicule</label>
                 <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
                   <div *ngIf="f.name.errors.required">Identifiant requis </div>
                 </div>
               </div>
+            </div>
+            <div class="form-group">
+              <label for="ip"></label>
+              <div class="md-form">
+                <i class="fas fa-at prefix"></i>
+                <input mdbInput mdbValidate type="text" formControlName="ip" id="form3" class="form-control"
+                  [ngClass]="{'is-invalid': submitted && f.ip.errors}">
+                <label for="form3">Adresse IP</label>
+              </div>
+              <div *ngIf="submitted && f.ip.errors" class="invalid-feedback"></div>
             </div>
           </div>
           <div class="form-group">

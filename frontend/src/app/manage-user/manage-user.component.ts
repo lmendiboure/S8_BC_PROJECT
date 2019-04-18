@@ -40,6 +40,7 @@ export class ManageUserComponent implements OnInit {
   ngOnInit() {
     this.addUserForm=this.formBuilder.group({
       name:['',Validators.required],
+      ip:['',Validators.required]
     })
     this.researchForm=this.formBuilder.group({
       research:['',Validators.required],
@@ -59,7 +60,7 @@ export class ManageUserComponent implements OnInit {
     }
 
     this.loadingAdd = true;
-    this.authenticationService.addUser(this.f.name.value)
+    this.authenticationService.addUser(this.f.name.value, this.f.ip.value)
       .pipe(first())
       .subscribe(
         data => {
