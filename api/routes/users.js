@@ -14,6 +14,7 @@ const User = require('../models/users');
 
 
 router.post("/login", (req, res, next) => {
+    var identifiant;
     User.find({ email: req.body.email })
       .exec()
       .then(user => {
@@ -29,6 +30,7 @@ router.post("/login", (req, res, next) => {
             });
           }
           if (result) {
+            identifiant = user._id;
             const token = jwt.sign(
               {
                 email: user[0].email,
@@ -42,6 +44,7 @@ router.post("/login", (req, res, next) => {
             );
             return res.status(200).json({
               message: "Auth successful",
+              id: identifiant;
               token: token
             });
           }
