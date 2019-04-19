@@ -5,9 +5,12 @@ const userSchema = mongoose.Schema({
     bcId: String,
     name: String,
     surname: String,
+    immatriculation: String,
     ipAddress: String,
     bcAddress: String,
-    email: String,
+    email: String, //pseudo
+    mail: String,
+    year: Number,
     password: String
 });
 
