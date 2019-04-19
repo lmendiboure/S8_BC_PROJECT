@@ -14,7 +14,6 @@ const User = require('../models/users');
 
 
 router.post("/login", (req, res, next) => {
-    var identifiant;
     User.find({ email: req.body.email })
       .exec()
       .then(user => {
@@ -30,7 +29,6 @@ router.post("/login", (req, res, next) => {
             });
           }
           if (result) {
-            identifiant = user._id;
             const token = jwt.sign(
               {
                 email: user[0].email,
@@ -39,12 +37,16 @@ router.post("/login", (req, res, next) => {
               },
               process.env.JWT_KEY,
               {
-                  expiresIn: "24h"
+                  expiresIn: "1h"
               }
             );
+            console.log("you're here");
             return res.status(200).json({
               message: "Auth successful",
+<<<<<<< HEAD
+=======
               id: identifiant,
+>>>>>>> abffb987ade67db139940a84336269473004681a
               token: token
             });
           }
@@ -63,12 +65,17 @@ router.post("/login", (req, res, next) => {
 
   //router.use(checkAuth);
 
-router.patch('/profile/:userId', checkAuth, (req, res, next) => {
+router.patch('/signup/:userId', (req, res, next) => {
     const id = req.params.userId;
-    var n;
-    const updateOps = {};
     User.find({_id: id})
     .exec()
+<<<<<<< HEAD
+    .then((user) => {
+        if(user.length > 1) {
+            console.log(user);
+            return res.status(409).json({
+                message: 'Mail already exists'
+=======
     .then(async user => {
         for (const ops of req.body) {
             updateOps[ops.propName] = ops.value;
@@ -96,6 +103,73 @@ router.patch('/profile/:userId', checkAuth, (req, res, next) => {
                 })
             }).catch((err) => {
                 res.send(err.message);
+>>>>>>> abffb987ade67db139940a84336269473004681a
+            });
+        } else {
+            const updateOps = {};
+            for (const ops of req.body) {
+                updateOps[ops.propName] = ops.value;
+                if(ops.propName == "password") {
+                    bcrypt.hash(updateOps.password, 10, (err, hash) => {
+                        if(err) {
+                            return res.status(500).json({
+                                error: err
+                            });
+                        } else {
+                            updateOps[ops.propName] = hash;
+                            User.update({_id: id}, {$set: updateOps})
+                            .exec()
+                            .then((result) => {
+                                console.log(result);
+                                res.status(200).json(result);
+                            })
+                            .catch((err) => {
+                                console.log(err);
+                                res.status(500).json({
+                                    error : err
+                                })
+                            });
+                        }
+                    });
+                }
+            }
+        }
+    })
+});
+
+<<<<<<< HEAD
+=======
+router.patch('/profile/:userId', (req, res, next) => {
+    const id = req.params.userId;
+    var n;
+    const updateOps = {};
+    User.find({_id: id})
+    .exec()
+    .then(async user => {
+        for (const ops of req.body) {
+            updateOps[ops.propName] = ops.value;
+        }
+        User.update({_id: id}, {$set: updateOps})
+            .exec()
+            .then((result) => {
+            console.log(result);
+            res.status(200).json(result);
+        })
+
+        await truffleContract.changeName(user.bcId, user.name).then(async (response) => {
+            n = response;
+            await truffleContract.changeImmatriculation(user.bcId, updateOps['immatriculation']).then((result) => {
+                //console.log(user);
+                user.save().then((result) => {
+                    //console.log(result);
+
+                res.status(200).json({
+                    message: 'info modified',
+                    name: n,
+                    immatriculation: result
+                })
+            }).catch((err) => {
+                res.send(err.message);
             });
             })
             })
@@ -108,6 +182,9 @@ router.patch('/profile/:userId', checkAuth, (req, res, next) => {
     })
 });
 
+<<<<<<< HEAD
+=======
+>>>>>>> f9df632881b1f536ecf4b54da118fcd5b1b594e5
 router.get('/rightsend', checkAuth, (req, res, next) => {
       var ip = req.body.ip;
 
@@ -163,19 +240,30 @@ router.get('/add', checkAuth, (req, res, next) => {
 });
 
 
+>>>>>>> abffb987ade67db139940a84336269473004681a
 router.get('/accounts', checkAuth, (req, res, next) => {
     console.log('getting accounts information');
+    //console.log(req.query.account);
+    //var query = req.query.account;
+    //console.log(query);
     var json =[];
     truffleContract.renderAllAccounts().then(async (i) => {
         i = i;
         for(let j = 1; j <= i; j++) {
-            var info = { account:"", name:"", trustIndex:"", ip:""};
- 		await truffleContract.renderAccount(j).then(async (response) => {
+            var info = { account:"", name:"", trustIndex:""}; 
+            await truffleContract.renderAccount(j).then(async (response) => {
                 info.account = response;
+                //console.log(json);
                 await truffleContract.renderName(j).then(async (response) => {
                     info.name = response;
-                    await truffleContract.renderTrustIndex(j).then(async (response) => {
+                    await truffleContract.renderTrustIndex(j).then((response) => {
                         info.trustIndex = response.toNumber();
+<<<<<<< HEAD
+                        json.push(info);
+                        return json;
+                    });
+                });      
+=======
 				//console.log(info);
 			  await truffleContract.renderAddressIP(j).then((response) => {
 					console.log(info);
@@ -187,6 +275,7 @@ router.get('/accounts', checkAuth, (req, res, next) => {
 			});
 		 });
                 });
+>>>>>>> abffb987ade67db139940a84336269473004681a
             }).catch((err) => {
                 send(err.message);
             })
@@ -194,8 +283,6 @@ router.get('/accounts', checkAuth, (req, res, next) => {
         res.status(200).send(json);
     });
 });
-
-
 
 router.get('/:userId', checkAuth, (req, res, next) => {
     var json =[];
@@ -229,7 +316,6 @@ router.get('/:userId', checkAuth, (req, res, next) => {
             res.status(500).send(err);
     });
 });
-
 
 router.get('/', checkAuth, (req, res, next) => {
     res.status(200).json({
