@@ -49,8 +49,22 @@ export class AuthentificationService {
       )
   }
 
-  updateInformation(pseudo: string, id:string, prenom: string, nom:string,mobile: string,email: string, password:string, vehicle: string, year:number,immatriculation:string){
-    return this.http.put<any>('/user/updateInformation', { pseudo,id,prenom, nom, mobile, email, password, vehicle, year, immatriculation })
+  updateInformation(name: string, prenom: string, email:string, password:string, vehicle: string, year:number,immatriculation:string){
+    return this.http.patch<any>('http://localhost:3001/users/profile', 
+    [
+      {
+        "propName":"name", "value":name
+      },
+      {
+        "propName":"email", "value":email
+      },
+      {
+        "propName":"password", "value":password
+      },
+      {
+        "propName":"immatriculation", "value":immatriculation
+      }
+      ])
   }
 
   addUser(name:string,ip:string){

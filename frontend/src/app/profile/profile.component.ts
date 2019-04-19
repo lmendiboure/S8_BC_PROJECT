@@ -59,7 +59,7 @@ export class ProfileComponent implements OnInit {
     }
     this.correct = true;
 
-    this.authentificationService.updateInformation(this.currentUser.pseudo,this.currentUser.id,this.f.prenom.value, this.f.nom.value, this.f.mobile.value,
+    this.authentificationService.updateInformation(this.currentUser.pseudo, this.f.nom.value,
       this.f.email.value, this.f.password.value, this.f.vehicle.value, this.f.year.value, this.f.immatriculation.value).
       pipe(first())
       .subscribe(
