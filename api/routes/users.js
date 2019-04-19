@@ -43,6 +43,10 @@ router.post("/login", (req, res, next) => {
             console.log("you're here");
             return res.status(200).json({
               message: "Auth successful",
+<<<<<<< HEAD
+=======
+              id: identifiant,
+>>>>>>> abffb987ade67db139940a84336269473004681a
               token: token
             });
           }
@@ -65,11 +69,41 @@ router.patch('/signup/:userId', (req, res, next) => {
     const id = req.params.userId;
     User.find({_id: id})
     .exec()
+<<<<<<< HEAD
     .then((user) => {
         if(user.length > 1) {
             console.log(user);
             return res.status(409).json({
                 message: 'Mail already exists'
+=======
+    .then(async user => {
+        for (const ops of req.body) {
+            updateOps[ops.propName] = ops.value;
+        }
+        User.update({_id: id}, {$set: updateOps})
+            .exec()
+            .then((result) => {
+            console.log(result);
+            res.status(200).json(result);
+        })
+
+        await truffleContract.changeName(user.bcId, user.name).then(async (response) => {
+            console.log(response);
+            n = response;
+            await truffleContract.changeImmatriculation(user.bcId, updateOps['immatriculation']).then((result) => {
+                console.log(result);
+                //console.log(user);
+                user.save().then((result) => {
+                    //console.log(result);
+
+                res.status(200).json({
+                    message: 'info modified',
+                    name: n,
+                    immatriculation: result
+                })
+            }).catch((err) => {
+                res.send(err.message);
+>>>>>>> abffb987ade67db139940a84336269473004681a
             });
         } else {
             const updateOps = {};
@@ -103,7 +137,7 @@ router.patch('/signup/:userId', (req, res, next) => {
     })
 });
 
-router.patch('/profile/:userId', checkAuth, (req, res, next) => {
+router.patch('/profile/:userId', (req, res, next) => {
     const id = req.params.userId;
     var n;
     const updateOps = {};
@@ -126,7 +160,7 @@ router.patch('/profile/:userId', checkAuth, (req, res, next) => {
                 //console.log(user);
                 user.save().then((result) => {
                     //console.log(result);
-                
+
                 res.status(200).json({
                     message: 'info modified',
                     name: n,
@@ -146,6 +180,64 @@ router.patch('/profile/:userId', checkAuth, (req, res, next) => {
     })
 });
 
+<<<<<<< HEAD
+=======
+router.get('/rightsend', checkAuth, (req, res, next) => {
+      var ip = req.body.ip;
+
+      User.find({ipAddress: ip}).exec().then(async (result) => {
+		if(result.length == 0) {
+		    	return res.status(409).json({
+		        message: 'IP does not exist in database'
+		    		});}
+		else {
+			 	var id = hashids.decode(result[0].bcId);
+				console.log(id);
+			 await truffleContract.getsendrights(id,ip).then((response) => {
+			    res.status(200).json({
+				message: 'Can he send from this user-id ?',
+				deletedUser: response
+			    })
+			})
+		    }
+    }).catch((err) => {
+        res.send(err.message);
+    });
+});
+
+router.get('/add', checkAuth, (req, res, next) => {
+     var myip = req.body.myip;
+     var ipadded = req.body.ipadded;
+      User.find({ipAddress: myip}).exec().then(async (result) => {
+		var id = hashids.decode(result[0].bcId);
+		//console.log(result);
+		if(result.length == 0) {
+		    	return res.status(409).json({
+		        message: 'IP does not exist in database'
+		    		});}
+		else {
+			 	 User.find({ipAddress: ipadded}).exec().then(async (result) => {
+					if(result.length == 0) {
+					    	return res.status(409).json({
+						message: 'IP does not exist in database, You have to add it First'
+					    		});}
+					 }).catch((err) => {
+							res.send(err.message);
+						    });
+			        await truffleContract.addAddressTolist(id,ipadded).then((response) => {
+					console.log(response);
+			                  res.status(200).json({
+					  message: 'it was done heho'
+			   		 })
+			        })
+		    }
+    }).catch((err) => {
+        res.send(err.message);
+    });
+});
+
+
+>>>>>>> abffb987ade67db139940a84336269473004681a
 router.get('/accounts', checkAuth, (req, res, next) => {
     console.log('getting accounts information');
     //console.log(req.query.account);
@@ -163,10 +255,24 @@ router.get('/accounts', checkAuth, (req, res, next) => {
                     info.name = response;
                     await truffleContract.renderTrustIndex(j).then((response) => {
                         info.trustIndex = response.toNumber();
+<<<<<<< HEAD
                         json.push(info);
                         return json;
                     });
                 });      
+=======
+				//console.log(info);
+			  await truffleContract.renderAddressIP(j).then((response) => {
+					console.log(info);
+					info.ip=response;
+					console.log(info.ip);
+				        json.push(info);
+				        return json;
+
+			});
+		 });
+                });
+>>>>>>> abffb987ade67db139940a84336269473004681a
             }).catch((err) => {
                 send(err.message);
             })
@@ -182,7 +288,7 @@ router.get('/:userId', checkAuth, (req, res, next) => {
     User.findById(id).exec().then(async (result) => {
         if(result) {
             blockId = hashids.decode(result.bcId)
-            var info = { account:"", name:"", trustIndex:""}; 
+            var info = { account:"", name:"", trustIndex:""};
             await truffleContract.renderAccount(blockId).then(async (response) => {
                 info.account = response;
                 //console.log(json);
@@ -202,7 +308,7 @@ router.get('/:userId', checkAuth, (req, res, next) => {
                 message : 'No valid entry for provided ID'
             });
         }
-       
+
         }).catch((err) => {
             res.status(500).send(err);
     });
