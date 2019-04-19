@@ -17,6 +17,7 @@ struct accessMode {
     
 	uint public id;
 	string public name;
+	string public immatriculation;
 	uint public trustIndex;
 	uint public netCount;
 	address myUserAd;
@@ -47,6 +48,16 @@ struct accessMode {
 		myUserAd = _myUserAd;
 		IP=_IP;
 		
+	}
+
+	function changeName(string memory _name) public returns(string){
+		name = _name;
+		return name;
+	}
+
+	function changeImmatriculation(string memory _immatriculation) public returns (string){
+		immatriculation = _immatriculation;
+		return immatriculation;
 	}
 	
  	function compareStrings (string memory a, string memory b) public view returns (bool) {
