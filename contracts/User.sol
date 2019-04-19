@@ -11,10 +11,10 @@ struct accessMode {
 	    string IP;
 	    bool canSend;
 	}
-    
+
     mapping(uint=> accessMode) public vehicleAccess;
     address public admin;
-    
+
 	uint public id;
 	string public name;
 	string public immatriculation;
@@ -23,20 +23,20 @@ struct accessMode {
 	address myUserAd;
 	string IP;
 
-	
+
 	event sendMsg(
         address  _from,
         uint _id,
         string msgS
     );
-    
+
     event recvMsg(
         address _from,
         uint _id,
         string _msgR
     );
 
-    
+
 	constructor(uint _id, string memory _name, uint _trustIndex,address _admin,address _myUserAd,string memory _IP) public payable {
 		id = _id;
 		name = _name;
@@ -47,48 +47,48 @@ struct accessMode {
 		admin = _admin;
 		myUserAd = _myUserAd;
 		IP=_IP;
-		
+
 	}
 
-	function changeName(string memory _name) public returns(string){
+	function changeName(string memory _name) public returns(string memory){
 		name = _name;
 		return name;
 	}
 
-	function changeImmatriculation(string memory _immatriculation) public returns (string){
+	function changeImmatriculation(string memory _immatriculation) public returns (string memory){
 		immatriculation = _immatriculation;
 		return immatriculation;
 	}
-	
+
  	function compareStrings (string memory a, string memory b) public view returns (bool) {
              return (keccak256(abi.encodePacked((a))) == keccak256(abi.encodePacked((b))) );
 
        }
-	
+
 	function getTrustIndex() public view returns(uint) {
 	    return trustIndex;
 	}
-	
+
 	function getAddressIP() public view returns(string memory) {
 	    return IP;
 	}
-	
+
 	function getId() public view returns(uint) {
 	    return id;
-	}	
+	}
 
 	function getAddress() public view returns(address) {
 	    return myUserAd;
 	}
-	
+
 	function getRightCanSend(string memory  _IP) public view returns(bool) {
     	    for (uint i=1; i<netCount+1; i++) {
     	        if(compareStrings(_IP,vehicleAccess[i].IP)){
                     return vehicleAccess[i].canSend;}
              }
-	    
+
 	}
-	
+
 	function addAddressIP(string memory  _IP) public payable{
 	     netCount++;
 	     vehicleAccess[netCount].canSend=true;
@@ -98,11 +98,11 @@ struct accessMode {
 	function incrementTrustIndex() public payable returns(uint) {
 	    return trustIndex+=1;
 	}
-	
+
 	function decrementTrustIndex() public payable returns(uint) {
 	    return trustIndex--;
 	}
-	
+
 	function changeRightCanSend(address _admin, bool _right,uint _idwanted) public payable {
 	    require(admin == _admin);
 	    vehicleAccess[_idwanted].canSend = _right;
@@ -155,17 +155,17 @@ struct accessMode {
         uint _id,
         string msgS
     );
-    
+
     event recvMsg(
         address _from,
         uint _id,
         string _msgR
     );
     address public admin;
-    
+
     event sendVideo(address _sendTo);
     event recvVideo(address _recvFrom);
-    
+
 	constructor(uint _id, string memory _name, uint _trustIndex, uint _videoTime, address _admin) public {
 		id = _id;
 		//ip = _ip;
@@ -178,7 +178,7 @@ struct accessMode {
         }
 		admin = _admin;
 	}
-	
+
 	function getTrustIndex() public view returns(uint) {
 	    return trustIndex;
 	}
@@ -186,26 +186,26 @@ struct accessMode {
 	function getRightCanSend(uint _idwanted) public view returns(bool) {
 	    return vehicleAccess[_idwanted].canSend;
 	}
-	
+
 	function getRightCanRecv(uint _idwanted) public view returns(bool) {
 	    return vehicleAccess[_idwanted].canRecv;
 	}
-	
+
 	function incrementTrustIndex() public payable returns(uint) {
 	    //require(admin == _admin);
 	    return trustIndex++;
 	}
-	
+
 	function decrementTrustIndex() public payable returns(uint) {
 	    //require(admin == _admin);
 	    return trustIndex--;
 	}
-	
+
 	function incrementTrustIndexByValue(uint _value) public payable returns(uint) {
 	    //require(admin == _admin);
 	    return trustIndex + _value;
 	}
-	
+
 	function decrementTrustIndexByValue(uint _value) public payable returns(uint) {
 	    //require(admin == _admin);
 	    return trustIndex - _value;
@@ -217,27 +217,27 @@ struct accessMode {
 	    vehicleAccess[_idwanted].canSend = _right;
 	    return vehicleAccess[_idwanted].canSend;
 	}
-	
+
 	function changeRightCanRecv(address _admin, bool _right,uint _idwanted) public payable returns(bool) {
 	    require(admin == _admin);
 	    vehicleAccess[_idwanted].canRecv = _right;
 	    return vehicleAccess[_idwanted].canRecv;
 	}
-	
+
 	function sendMessage(uint _idwanted,address _sendTo,string memory _msgS) public {
 	    User u = User(_sendTo);
 	    assert(vehicleAccess[_idwanted].canSend);
 	    assert(u.getRightCanRecv(_idwanted));
 	    emit sendMsg(_sendTo,_idwanted,_msgS);
 	}
-	
+
 	function recvMessage(uint _idwanted,address _recvFrom,string memory _msgR) public {
 	    User u = User(_recvFrom);
 	    assert(vehicleAccess[_idwanted].canRecv);
 	    assert(u.getRightCanSend(_idwanted));
 	    emit recvMsg(_recvFrom,_idwanted,_msgR);
 	}
-	
+
 */
 
 }

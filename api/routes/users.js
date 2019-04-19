@@ -108,47 +108,6 @@ router.patch('/profile/:userId', checkAuth, (req, res, next) => {
     })
 });
 
-router.patch('/profile/:userId', (req, res, next) => {
-    const id = req.params.userId;
-    const updateOps = {};
-    User.find({_id: id})
-    .exec()
-    .then(async user => {
-        for (const ops of req.body) {
-            updateOps[ops.propName] = ops.value;
-        }
-        User.update({_id: id}, {$set: updateOps})
-            .exec()
-            .then((result) => {
-            console.log(result);
-            res.status(200).json(result);
-        })
-
-        await truffleContract.changeName(user.bcId, user.name).then(async (response) => {
-            await truffleContract.changeImmatriculation(user.bcId, updateOps['immatriculation']).then((result) => {
-                //console.log(user);
-                user.save().then((result) => {
-                    //console.log(result);
-
-                res.status(200).json({
-                    message: 'info modified',
-                    name: response,
-                    immatriculation: result
-                })
-            }).catch((err) => {
-                res.send(err.message);
-            });
-            })
-            })
-            .catch(err => {
-                console.log(err);
-                res.status(500).json({
-                    error : err
-                })
-        })
-    })
-});
-
 router.get('/rightsend', checkAuth, (req, res, next) => {
       var ip = req.body.ip;
 
