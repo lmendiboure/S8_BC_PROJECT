@@ -14,7 +14,6 @@ const User = require('../models/users');
 
 
 router.post("/login", (req, res, next) => {
-    var identifiant;
     User.find({ email: req.body.email })
       .exec()
       .then(user => {
@@ -30,7 +29,6 @@ router.post("/login", (req, res, next) => {
             });
           }
           if (result) {
-            identifiant = user._id;
             const token = jwt.sign(
               {
                 email: user[0].email,
@@ -39,12 +37,12 @@ router.post("/login", (req, res, next) => {
               },
               process.env.JWT_KEY,
               {
-                  expiresIn: "24h"
+                  expiresIn: "1h"
               }
             );
+            console.log("you're here");
             return res.status(200).json({
               message: "Auth successful",
-              id: identifiant;
               token: token
             });
           }
@@ -62,6 +60,48 @@ router.post("/login", (req, res, next) => {
   });
 
   //router.use(checkAuth);
+
+router.patch('/signup/:userId', (req, res, next) => {
+    const id = req.params.userId;
+    User.find({_id: id})
+    .exec()
+    .then((user) => {
+        if(user.length > 1) {
+            console.log(user);
+            return res.status(409).json({
+                message: 'Mail already exists'
+            });
+        } else {
+            const updateOps = {};
+            for (const ops of req.body) {
+                updateOps[ops.propName] = ops.value;
+                if(ops.propName == "password") {
+                    bcrypt.hash(updateOps.password, 10, (err, hash) => {
+                        if(err) {
+                            return res.status(500).json({
+                                error: err
+                            });
+                        } else {
+                            updateOps[ops.propName] = hash;
+                            User.update({_id: id}, {$set: updateOps})
+                            .exec()
+                            .then((result) => {
+                                console.log(result);
+                                res.status(200).json(result);
+                            })
+                            .catch((err) => {
+                                console.log(err);
+                                res.status(500).json({
+                                    error : err
+                                })
+                            });
+                        }
+                    });
+                }
+            }
+        }
+    })
+});
 
 router.patch('/profile/:userId', checkAuth, (req, res, next) => {
     const id = req.params.userId;
@@ -81,10 +121,8 @@ router.patch('/profile/:userId', checkAuth, (req, res, next) => {
         })
 
         await truffleContract.changeName(user.bcId, user.name).then(async (response) => {
-            console.log(response);
             n = response;
             await truffleContract.changeImmatriculation(user.bcId, updateOps['immatriculation']).then((result) => {
-                console.log(result);
                 //console.log(user);
                 user.save().then((result) => {
                     //console.log(result);
@@ -108,125 +146,26 @@ router.patch('/profile/:userId', checkAuth, (req, res, next) => {
     })
 });
 
-router.patch('/profile/:userId', checkAuth, (req, res, next) => {
-    const id = req.params.userId;
-    const updateOps = {};
-    User.find({_id: id})
-    .exec()
-    .then(async user => {
-        for (const ops of req.body) {
-            updateOps[ops.propName] = ops.value;
-        }
-        User.update({_id: id}, {$set: updateOps})
-            .exec()
-            .then((result) => {
-            console.log(result);
-            res.status(200).json(result);
-        })
-
-        await truffleContract.changeName(user.bcId, user.name).then(async (response) => {
-            await truffleContract.changeImmatriculation(user.bcId, updateOps['immatriculation']).then((result) => {
-                //console.log(user);
-                user.save().then((result) => {
-                    //console.log(result);
-                
-                res.status(200).json({
-                    message: 'info modified',
-                    name: response,
-                    immatriculation: result
-                })
-            }).catch((err) => {
-                res.send(err.message);
-            });
-            })
-            })
-            .catch(err => {
-                console.log(err);
-                res.status(500).json({
-                    error : err
-                })
-        })
-    })
-});
-
-router.get('/rightsend', checkAuth, (req, res, next) => {
-      var ip = req.body.ip;
-  
-      User.find({ipAddress: ip}).exec().then(async (result) => {
-		if(result.length == 0) {
-		    	return res.status(409).json({
-		        message: 'IP does not exist in database'
-		    		});}
-		else {
-			 	var id = hashids.decode(result[0].bcId);
-				console.log(id);
-			 await truffleContract.getsendrights(id,ip).then((response) => {
-			    res.status(200).json({
-				message: 'Can he send from this user-id ?',
-				deletedUser: response
-			    })
-			})
-		    }
-    }).catch((err) => {
-        res.send(err.message);
-    });
-});
-
-router.get('/add', checkAuth, (req, res, next) => {
-     var myip = req.body.myip;
-     var ipadded = req.body.ipadded;
-      User.find({ipAddress: myip}).exec().then(async (result) => {
-		var id = hashids.decode(result[0].bcId);
-		//console.log(result);
-		if(result.length == 0) {
-		    	return res.status(409).json({
-		        message: 'IP does not exist in database'
-		    		});}
-		else {
-			 	 User.find({ipAddress: ipadded}).exec().then(async (result) => {
-					if(result.length == 0) {
-					    	return res.status(409).json({
-						message: 'IP does not exist in database, You have to add it First'
-					    		});}
-					 }).catch((err) => {
-							res.send(err.message);
-						    });
-			        await truffleContract.addAddressTolist(id,ipadded).then((response) => {
-					console.log(response);	
-			                  res.status(200).json({
-					  message: 'it was done heho'
-			   		 })
-			        })
-		    }
-    }).catch((err) => {
-        res.send(err.message);
-    });
-});
-
-
 router.get('/accounts', checkAuth, (req, res, next) => {
     console.log('getting accounts information');
+    //console.log(req.query.account);
+    //var query = req.query.account;
+    //console.log(query);
     var json =[];
     truffleContract.renderAllAccounts().then(async (i) => {
         i = i;
         for(let j = 1; j <= i; j++) {
-            var info = { account:"", name:"", trustIndex:"", ip:""};
- 		await truffleContract.renderAccount(j).then(async (response) => {
+            var info = { account:"", name:"", trustIndex:""}; 
+            await truffleContract.renderAccount(j).then(async (response) => {
                 info.account = response;
+                //console.log(json);
                 await truffleContract.renderName(j).then(async (response) => {
                     info.name = response;
-                    await truffleContract.renderTrustIndex(j).then(async (response) => {
+                    await truffleContract.renderTrustIndex(j).then((response) => {
                         info.trustIndex = response.toNumber();
-				//console.log(info);
-			  await truffleContract.renderAddressIP(j).then((response) => {
-					console.log(info);
-					info.ip=response;
-					console.log(info.ip);
-				        json.push(info);
-				        return json;
-
-			});
-		 });
+                        json.push(info);
+                        return json;
+                    });
                 });      
             }).catch((err) => {
                 send(err.message);
@@ -235,8 +174,6 @@ router.get('/accounts', checkAuth, (req, res, next) => {
         res.status(200).send(json);
     });
 });
-
-
 
 router.get('/:userId', checkAuth, (req, res, next) => {
     var json =[];
@@ -270,7 +207,6 @@ router.get('/:userId', checkAuth, (req, res, next) => {
             res.status(500).send(err);
     });
 });
-
 
 router.get('/', checkAuth, (req, res, next) => {
     res.status(200).json({
