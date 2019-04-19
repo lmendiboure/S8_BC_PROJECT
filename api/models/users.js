@@ -4,6 +4,7 @@ const userSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     bcId: String,
     name: String,
+    surname: String,
     ipAddress: String,
     bcAddress: String,
     email: String,
