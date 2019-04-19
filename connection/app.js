@@ -96,6 +96,37 @@ App = {
 });
 },
 
+
+renderImmatriculation: function(index) {
+  var self = this;
+  var iovInstance;
+  //console.log(account);
+
+  Iov.setProvider(self.web3.currentProvider);
+  User.setProvider(self.web3.currentProvider);
+  //console.log('the account ' + account);
+
+  return new Promise(function(resolve, reject) {
+
+  Iov.deployed().then((instance) => {
+    //console.log(instance);
+    iovInstance = instance;
+    //console.log(iovInstance.vehicleCount());
+    return iovInstance.vehicleArray(index);
+    }).then((result) => {
+      //console.log(result);
+      User.at(result).then((instance) => {
+      immatriculation = instance;
+      return immatriculation.immatriculation();
+    }).then((result) => {
+      resolve(result);
+    }).catch((err) => {
+      reject(err.message);
+    })
+  });
+});
+},
+
 renderTrustIndex: function(index) {
   var self = this;
   var iovInstance;
@@ -231,6 +262,66 @@ renderAddressIP: function(index) {
         reject(err);
       })
     });
+  },
+
+  changeName: function(index, name) {
+    var self = this;
+    var iovInstance;
+    //console.log(account);
+  
+    Iov.setProvider(self.web3.currentProvider);
+    User.setProvider(self.web3.currentProvider);
+    //console.log('the account ' + account);
+  
+    return new Promise(function(resolve, reject) {
+  
+    Iov.deployed().then((instance) => {
+      //console.log(instance);
+      iovInstance = instance;
+      //console.log(iovInstance.vehicleCount());
+      return iovInstance.vehicleArray(index);
+      }).then((result) => {
+        //console.log(result);
+        User.at(result).then((instance) => {
+        name = instance;
+        return name.changeName(name);
+      }).then((result) => {
+        resolve(result);
+      }).catch((err) => {
+        reject(err.message);
+      })
+    });
+  });
+  },
+  
+  changeImmatriculation: function(index, immatriculation) {
+    var self = this;
+    var iovInstance;
+    //console.log(account);
+  
+    Iov.setProvider(self.web3.currentProvider);
+    User.setProvider(self.web3.currentProvider);
+    //console.log('the account ' + account);
+  
+    return new Promise(function(resolve, reject) {
+  
+    Iov.deployed().then((instance) => {
+      //console.log(instance);
+      iovInstance = instance;
+      //console.log(iovInstance.vehicleCount());
+      return iovInstance.vehicleArray(index);
+      }).then((result) => {
+        //console.log(result);
+        User.at(result).then((instance) => {
+        immatriculation = instance;
+        return immatriculation.changeImmatriculation(immatriculation);
+      }).then((result) => {
+        resolve(result);
+      }).catch((err) => {
+        reject(err.message);
+      })
+    });
+  });
   },
 
  
