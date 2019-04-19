@@ -33,6 +33,7 @@ router.post('/delete', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
+    var identifiant;
     User.find({name: req.body.name})
     .exec()
     .then((name) => {
@@ -52,7 +53,7 @@ router.post('/', (req, res, next) => {
                 bcAddress: "",
             })
             //console.log('hash id ' + user.bcId);
-
+            identifiant=user._id;
             //console.log(user.name);
             await truffleContract.addAccount(user.ipAddress, user.name).then((response) => {
                 truffleContract.renderLastAccount().then(async (result) => {
@@ -63,6 +64,7 @@ router.post('/', (req, res, next) => {
 
                     res.status(200).json({
                         message: 'admin adds user',
+                        identifiant: identifiant,
                         createdUser: response
                     })
                 }).catch((err) => {
