@@ -13,5 +13,13 @@ def PacketHandler(packet) :
 	        packet=IP(dst='225.0.0.0')/ICMP(type=10)
 	        send(packet,verbose=0)
 
+                with open(sys.argv[1], "r") as fd:
+                  mygroups=fd.read()
+
+		groups=mygroups.split('\n')
+
+		for address in groups:
+		  packet=IP(dst=address)/scapy.contrib.igmp.IGMP(type=17)
+	          send(packet,verbose=0)
 
 sniff(lfilter = lambda x: x.haslayer(ICMP),prn = PacketHandler,count=0,store=0)

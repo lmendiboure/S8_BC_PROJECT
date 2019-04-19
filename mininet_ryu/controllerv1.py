@@ -425,7 +425,7 @@ class ProjectController(app_manager.RyuApp):
 	    
 	    #add unknown mac address
             if src not in eth_tab.keys():
-               eth_tab[src]=(dpid,  in_port)
+               eth_tab[src]=(dpid,  in_port,0)
 	       ip_to_mac[ip.src]=src
 	    #print dst,src,eth_tab[src][0],dpid,in_port
 
@@ -435,7 +435,7 @@ class ProjectController(app_manager.RyuApp):
 	    #car have changed of RSU, need to update flow table
 	    if ip.proto == 0x01 and pkt[2].type == 10 : #ICMPv4 router sollicitation
 	       print src,"change de RSU, prev :",eth_tab[src][0],"new",dpid
-	       eth_tab[src]=(dpid,in_port)
+	       eth_tab[src]=(dpid,in_port,eth_tab[src][0])
 	       for sw in switches:
 	         datapath_tmp=datapath_list[sw]
 	         for link in links:
@@ -451,18 +451,20 @@ class ProjectController(app_manager.RyuApp):
 	       print src,"joined ",pkt[1].dst,"group"
 	       if (pkt[2].address in group_multicast) and (dpid in group_multicast[pkt[2].address]):
 	         group_multicast[pkt[2].address][dpid]+=1
-	       elif (pkt[2].address in group_multicast) and (dpid not in group_multicast[pkt[2].address]):
+	         print 1
+	       else:
 	         group_multicast[pkt[2].address][dpid]=1
-	       print group_multicast
+		 print 2
+	       print group_multicast[pkt[2].address][dpid]
 	       return 
 
 	    #IGMP leave group
 	    if ip.proto == 0x02 and pkt[2].msgtype == 0x17:
 	       print src,"left ",pkt[1].dst,"group"
-	       if (pkt[2].address in group_multicast) and (dpid in group_multicast[pkt[2].address]):
-		 if group_multicast[pkt[2].address][dpid]>0:
-	           group_multicast[pkt[2].address][dpid]-=1
-	       print group_multicast
+	       if (pkt[2].address in group_multicast) and (eth_tab[src][2] in group_multicast[pkt[2].address]):
+		 if group_multicast[pkt[2].address][eth_tab[src][2]]>0:
+	           group_multicast[pkt[2].address][eth_tab[src][2]]-=1
+	       print group_multicast[pkt[2].address][eth_tab[src][2]]
    	       return 
 
             if self.isMulticast(ip.dst):
@@ -494,6 +496,7 @@ class ProjectController(app_manager.RyuApp):
          return ( dst[0:2] == '01' or dst[0:5] == '33:33')
 
     def sendMulticast(self,msg):
+	 print "Entering send Multicast"
 	 msg = ev.msg
          datapath = msg.datapath
          ofproto = datapath.ofproto
