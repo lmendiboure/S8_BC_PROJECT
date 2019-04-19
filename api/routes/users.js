@@ -44,7 +44,7 @@ router.post("/login", (req, res, next) => {
             );
             return res.status(200).json({
               message: "Auth successful",
-              id: identifiant;
+              id: identifiant,
               token: token
             });
           }
@@ -88,7 +88,7 @@ router.patch('/profile/:userId', checkAuth, (req, res, next) => {
                 //console.log(user);
                 user.save().then((result) => {
                     //console.log(result);
-                
+
                 res.status(200).json({
                     message: 'info modified',
                     name: n,
