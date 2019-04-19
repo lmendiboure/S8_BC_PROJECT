@@ -104,7 +104,7 @@ router.patch('/signup/:userId', (req, res, next) => {
     })
 });
 
-router.patch('/profile/:userId', (req, res, next) => {
+router.patch('/profile/:userId', checkAuth, (req, res, next) => {
     const id = req.params.userId;
     var n;
     const updateOps = {};
