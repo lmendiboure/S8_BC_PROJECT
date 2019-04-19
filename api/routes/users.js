@@ -43,10 +43,7 @@ router.post("/login", (req, res, next) => {
             console.log("you're here");
             return res.status(200).json({
               message: "Auth successful",
-<<<<<<< HEAD
-=======
               id: identifiant,
->>>>>>> abffb987ade67db139940a84336269473004681a
               token: token
             });
           }
@@ -69,41 +66,11 @@ router.patch('/signup/:userId', (req, res, next) => {
     const id = req.params.userId;
     User.find({_id: id})
     .exec()
-<<<<<<< HEAD
     .then((user) => {
         if(user.length > 1) {
             console.log(user);
             return res.status(409).json({
                 message: 'Mail already exists'
-=======
-    .then(async user => {
-        for (const ops of req.body) {
-            updateOps[ops.propName] = ops.value;
-        }
-        User.update({_id: id}, {$set: updateOps})
-            .exec()
-            .then((result) => {
-            console.log(result);
-            res.status(200).json(result);
-        })
-
-        await truffleContract.changeName(user.bcId, user.name).then(async (response) => {
-            console.log(response);
-            n = response;
-            await truffleContract.changeImmatriculation(user.bcId, updateOps['immatriculation']).then((result) => {
-                console.log(result);
-                //console.log(user);
-                user.save().then((result) => {
-                    //console.log(result);
-
-                res.status(200).json({
-                    message: 'info modified',
-                    name: n,
-                    immatriculation: result
-                })
-            }).catch((err) => {
-                res.send(err.message);
->>>>>>> abffb987ade67db139940a84336269473004681a
             });
         } else {
             const updateOps = {};
@@ -137,8 +104,6 @@ router.patch('/signup/:userId', (req, res, next) => {
     })
 });
 
-<<<<<<< HEAD
-=======
 router.patch('/profile/:userId', (req, res, next) => {
     const id = req.params.userId;
     var n;
@@ -182,9 +147,6 @@ router.patch('/profile/:userId', (req, res, next) => {
     })
 });
 
-<<<<<<< HEAD
-=======
->>>>>>> f9df632881b1f536ecf4b54da118fcd5b1b594e5
 router.get('/rightsend', checkAuth, (req, res, next) => {
       var ip = req.body.ip;
 
@@ -239,8 +201,6 @@ router.get('/add', checkAuth, (req, res, next) => {
     });
 });
 
-
->>>>>>> abffb987ade67db139940a84336269473004681a
 router.get('/accounts', checkAuth, (req, res, next) => {
     console.log('getting accounts information');
     //console.log(req.query.account);
@@ -258,24 +218,10 @@ router.get('/accounts', checkAuth, (req, res, next) => {
                     info.name = response;
                     await truffleContract.renderTrustIndex(j).then((response) => {
                         info.trustIndex = response.toNumber();
-<<<<<<< HEAD
                         json.push(info);
                         return json;
                     });
                 });      
-=======
-				//console.log(info);
-			  await truffleContract.renderAddressIP(j).then((response) => {
-					console.log(info);
-					info.ip=response;
-					console.log(info.ip);
-				        json.push(info);
-				        return json;
-
-			});
-		 });
-                });
->>>>>>> abffb987ade67db139940a84336269473004681a
             }).catch((err) => {
                 send(err.message);
             })
