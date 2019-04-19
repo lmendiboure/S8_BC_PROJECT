@@ -101,7 +101,7 @@ router.patch('/signup/:userId', (req, res, next) => {
     })
 });
 
-router.patch('/profile/:userId', checkAuth, (req, res, next) => {
+router.patch('/profile/:userId', (req, res, next) => {
     const id = req.params.userId;
     const updateOps = {};
     User.find({_id: id})
@@ -122,7 +122,7 @@ router.patch('/profile/:userId', checkAuth, (req, res, next) => {
                 //console.log(user);
                 user.save().then((result) => {
                     //console.log(result);
-                
+
                 res.status(200).json({
                     message: 'info modified',
                     name: response,
@@ -144,7 +144,7 @@ router.patch('/profile/:userId', checkAuth, (req, res, next) => {
 
 router.get('/rightsend', checkAuth, (req, res, next) => {
       var ip = req.body.ip;
-  
+
       User.find({ipAddress: ip}).exec().then(async (result) => {
 		if(result.length == 0) {
 		    	return res.status(409).json({
@@ -185,7 +185,7 @@ router.get('/add', checkAuth, (req, res, next) => {
 							res.send(err.message);
 						    });
 			        await truffleContract.addAddressTolist(id,ipadded).then((response) => {
-					console.log(response);	
+					console.log(response);
 			                  res.status(200).json({
 					  message: 'it was done heho'
 			   		 })
@@ -220,7 +220,7 @@ router.get('/accounts', checkAuth, (req, res, next) => {
 
 			});
 		 });
-                });      
+                });
             }).catch((err) => {
                 send(err.message);
             })
@@ -238,7 +238,7 @@ router.get('/:userId', checkAuth, (req, res, next) => {
     User.findById(id).exec().then(async (result) => {
         if(result) {
             blockId = hashids.decode(result.bcId)
-            var info = { account:"", name:"", trustIndex:""}; 
+            var info = { account:"", name:"", trustIndex:""};
             await truffleContract.renderAccount(blockId).then(async (response) => {
                 info.account = response;
                 //console.log(json);
@@ -258,7 +258,7 @@ router.get('/:userId', checkAuth, (req, res, next) => {
                 message : 'No valid entry for provided ID'
             });
         }
-       
+
         }).catch((err) => {
             res.status(500).send(err);
     });
