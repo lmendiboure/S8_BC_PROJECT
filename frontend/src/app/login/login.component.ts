@@ -56,6 +56,7 @@ export class LoginComponent implements OnInit {
       .pipe(first())
       .subscribe(
         data => {
+          console.log(data);
           Swal.fire(
             'Connexion réussie!',
             '',

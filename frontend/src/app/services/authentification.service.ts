@@ -31,7 +31,6 @@ export class AuthentificationService {
         console.log(localStorage.currentUser);
         this.currentUserSubject.next(user);
       }
-
       return user;
     }));
   }
@@ -49,22 +48,36 @@ export class AuthentificationService {
       )
   }
 
-  updateInformation(name: string, prenom: string, email:string, password:string, vehicle: string, year:number,immatriculation:string){
-    return this.http.patch<any>('http://localhost:3001/users/profile', 
+  updateInformation(name: string, prenom: string, mail:string, password:string, vehicle: string, year:number,immatriculation:string){
+    var id = this._route.snapshot.queryParamMap.get('id');
+    let headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('currentUser.token'));
+    return this.http.patch<any>('http://localhost:3001/users/profile/'+id, 
     [
       {
-        "propName":"name", "value":name
+        "propName":"name", "value":prenom
       },
       {
-        "propName":"email", "value":email
+        "propName": "surname", "value": name
       },
+      {
+        "propName":"mail", "value":mail
+      },  
       {
         "propName":"password", "value":password
       },
       {
         "propName":"immatriculation", "value":immatriculation
-      }
-      ])
+      },
+      {
+        "propName": "vehicle", "value": vehicle
+      },
+      {
+        "propName": "year", "value": year
+      },
+      {
+        "propName": "immatriculation", "value": immatriculation
+      },
+      ], { headers })
   }
 
   addUser(name:string,ip:string){

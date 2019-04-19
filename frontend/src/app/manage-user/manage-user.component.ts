@@ -63,8 +63,8 @@ export class ManageUserComponent implements OnInit {
         data => {
           Swal.fire(
             'Utilisateur ajouté!',
-            '',
-            'success'
+            "Identifiant MangoDB:" + JSON.stringify(data.identifiant),
+            'success',
           ).then(function () {
             window.location.reload();
           })
