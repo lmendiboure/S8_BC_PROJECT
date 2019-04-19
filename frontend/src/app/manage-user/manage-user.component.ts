@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute} from '@angular/router';
 import { AuthentificationService } from '../services/authentification.service';
 import { first } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
 import { User } from '../models/user';
 import Swal from 'sweetalert2';
 
@@ -31,8 +30,6 @@ export class ManageUserComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
-    private router: Router,
-    private http: HttpClient,
     private authenticationService: AuthentificationService
   ) { 
   }

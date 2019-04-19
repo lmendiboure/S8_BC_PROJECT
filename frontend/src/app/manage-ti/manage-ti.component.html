@@ -1,29 +1,56 @@
 <app-admin></app-admin>
 
+<!-- Table  -->
 <div style="margin-left:22%">
-  <div class="table100 ver2 m-b-110" id="tabused">
-    <table data-vertable="ver2">
-      <thead>
-        <tr class="row100 head">
-          <th class="column100 column1" data-column="column1">Pseudo</th>
-          <th class="column100 column2" data-column="column2">Identifiant Blockchain</th>
-          <th class="column100 column3" data-column="column3">Réclamations</th>
-          <th class="column100 column4" data-column="column4">Trust Index</th>
-          <th class="column100 column5" data-column="column4">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="row100">
-          <td class="column100 column1" data-column="column1">Pseudo</td>
-          <td class="column100 column2" data-column="column2">0x190ZS0VSN</td>
-          <td class="column100 column3" data-column="column3">--</td>
-          <td class="column100 column4" data-column="column4">102</td>
-          <td class="column100 column5" data-column="column5">
-            <button type="button" class="btn btn-success" style="color: #808080">+</button>
-            <button type="button" class="btn btn-danger" style="margin-left: 70px; color: #808080">-</button></td>
-        </tr>
-  
-      </tbody>
-    </table>
-  </div>
+  <table class="table">
+    <!-- Table head -->
+    <thead>
+      <tr>
+        <th>
+          <mdb-icon fas icon="user" class="mr-2"></mdb-icon>
+          Pseudo
+        </th>
+        <th>
+          <mdb-icon fas icon="fingerprint" class="mr-2 blue-text" aria-hidden="true"></mdb-icon>
+          ID Blockchain
+        </th>
+        <th>
+          <mdb-icon fas icon="exclamation-circle" class="red-text mr-2  " aria-hidden="true"></mdb-icon>
+          Réclamations
+        </th>
+        <th>
+          <mdb-icon far icon="check-circle" class="green-text pr-3" aria-hidden="true"></mdb-icon>
+          TI
+        </th>
+        <th>
+          <mdb-icon fas icon="angle-up"></mdb-icon>
+          <mdb-icon fas icon="angle-down"></mdb-icon>
+          Action
+        </th>
+      </tr>
+    </thead>
+    <!-- Table head -->
+
+    <!-- Table body -->
+    <tbody>
+      <tr *ngFor="let user of users">
+        <th scope="row">{{user.name}}</th>
+        <td>
+          {{user.account}}
+        </td>
+        <td>
+          --
+        </td>
+        <td>
+          {{user.trustIndex}}
+        </td>
+        <td>
+          <button mdbBtn color="green" rounded="true" size="sm" type="button" class="m-0" style="margin: auto" mdbWavesEffect>+</button>
+          <button mdbBtn color="red" rounded="true" size="sm" type="button" class="m-0" style="margin: auto" mdbWavesEffect>-</button>
+        </td>
+      </tr>
+    </tbody>
+    <!-- Table body -->
+  </table>
+  <!-- Table  -->
 </div>

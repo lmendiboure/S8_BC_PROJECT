@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { User } from '../models/user';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-manage-ti',
@@ -7,9 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ManageTIComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private route: ActivatedRoute,
+  ) { }
+  
+  users: User[] = [];
 
   ngOnInit() {
+    this.users = this.route.snapshot.data['users'];
+    console.log(this.users);
   }
 
 }

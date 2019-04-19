@@ -17,7 +17,7 @@ const routes: Routes = [
   { path: 'userinformation', component: InformationAboutUserComponent, canActivate: [GuardsComponent], resolve: { information: InformationUserResolver}},
   { path: 'admin', component: AdminComponent, canActivate: [GuardsComponent]},
   { path: 'admin/manageuser', component: ManageUserComponent, canActivate: [GuardsComponent], resolve: {users: UsersResolver}},
-  { path: 'admin/manageTI', component: ManageTIComponent, canActivate: [GuardsComponent]},
+  { path: 'admin/manageTI', component: ManageTIComponent, canActivate: [GuardsComponent], resolve: { users: UsersResolver }},
   { path: '', component: HomeComponent, canActivate: [GuardsComponent]},
   {path: 'login', component: LoginComponent },
   { path: 'profile', component: ProfileComponent, canActivate: [GuardsComponent]}, 
