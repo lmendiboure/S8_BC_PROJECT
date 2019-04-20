@@ -14,6 +14,7 @@ const User = require('../models/users');
 
 
 router.post("/login", (req, res, next) => {
+    var identifiant;
     User.find({ email: req.body.email })
       .exec()
       .then(user => {
@@ -29,6 +30,7 @@ router.post("/login", (req, res, next) => {
             });
           }
           if (result) {
+            identifiant = user[0]._id;
             const token = jwt.sign(
               {
                 email: user[0].email,
@@ -104,7 +106,7 @@ router.patch('/signup/:userId', (req, res, next) => {
     })
 });
 
-router.patch('/profile/:userId', checkAuth, (req, res, next) => {
+router.patch('/profile/:userId', (req, res, next) => {
     const id = req.params.userId;
     var n;
     const updateOps = {};
@@ -210,7 +212,7 @@ router.get('/accounts', checkAuth, (req, res, next) => {
     truffleContract.renderAllAccounts().then(async (i) => {
         i = i;
         for(let j = 1; j <= i; j++) {
-            var info = { account:"", name:"", trustIndex:""}; 
+            var info = { account:"", name:"", trustIndex:""};
             await truffleContract.renderAccount(j).then(async (response) => {
                 info.account = response;
                 //console.log(json);
@@ -221,7 +223,7 @@ router.get('/accounts', checkAuth, (req, res, next) => {
                         json.push(info);
                         return json;
                     });
-                });      
+                });
             }).catch((err) => {
                 send(err.message);
             })
