@@ -48,16 +48,17 @@ export class AuthentificationService {
       )
   }
 
-  updateInformation(name: string, prenom: string, mail:string, password:string, vehicle: string, year:number,immatriculation:string){
-    var id = this._route.snapshot.queryParamMap.get('id');
+  updateInformation(name: string, surname: string, mail:string, 
+    password:string, vehicle: string, year:number,immatriculation:string,id: string){
+    console.log(id);
     let headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('currentUser.token'));
     return this.http.patch<any>('http://localhost:3001/users/profile/'+id, 
     [
       {
-        "propName":"name", "value":prenom
+        "propName":"name", "value":name
       },
       {
-        "propName": "surname", "value": name
+        "propName": "surname", "value": surname
       },
       {
         "propName":"mail", "value":mail
@@ -66,16 +67,13 @@ export class AuthentificationService {
         "propName":"password", "value":password
       },
       {
-        "propName":"immatriculation", "value":immatriculation
-      },
-      {
         "propName": "vehicle", "value": vehicle
       },
       {
         "propName": "year", "value": year
       },
       {
-        "propName": "immatriculation", "value": immatriculation
+        "propName":"immatriculation", "value":immatriculation
       },
       ], { headers })
   }
@@ -103,6 +101,7 @@ export class AuthentificationService {
   logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('id');
     this.currentUserSubject.next(null);   
     this.router.navigate(['/login']); 
   }

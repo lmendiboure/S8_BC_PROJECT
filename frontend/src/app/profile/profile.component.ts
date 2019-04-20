@@ -12,24 +12,28 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class ProfileComponent implements OnInit {
 
-  currentUser: User;
+  user;
   profileForm: FormGroup;
   submitted = false;
   error = '';
   correct = false;
   returnUrl: string;
+  id;
+  token;
 
 
   constructor(
     private authentificationService: AuthentificationService,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute) {
-    this.authentificationService.currentUser.subscribe(x => this.currentUser = x);
   }
 
   ngOnInit() {
-    var id = this.route.snapshot.queryParamMap.get('id');
-    console.log(id);
+    this.route.params.subscribe(params => {
+      this.id=params['id'];
+    });
+    this.token=JSON.parse(localStorage.getItem('currentUser')).token;
+    this.user=this.authentificationService.getSpecificUser(this.id,this.token);
     this.profileForm = this.formBuilder.group({
       name: ['', Validators.required],
       surname: ['', Validators.required],
@@ -46,26 +50,22 @@ export class ProfileComponent implements OnInit {
 
   get f() { return this.profileForm.controls; }
 
-  getUser() {
-    return this.currentUser;
-  }
-
   onSubmit() {
     this.submitted = true;
     if (this.profileForm.invalid) {
       return;
     }
     this.correct = true;
-    console.log("ok");
     this.authentificationService.updateInformation(this.f.name.value, this.f.surname.value,
-      this.f.mail.value, this.f.password.value, this.f.vehicle.value, this.f.year.value, this.f.immatriculation.value).
+      this.f.mail.value, this.f.password.value, this.f.vehicle.value, this.f.year.value, this.f.immatriculation.value,this.id).
       pipe(first())
       .subscribe(
         data => {
           console.log(data);
-          //window.location.reload();
+          window.location.reload();
         },
         error => {
+          console.log(error);
           this.correct = false;
           this.error = error;
         });

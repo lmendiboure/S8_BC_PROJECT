@@ -12,6 +12,7 @@ export class NavbarComponent implements OnInit {
 
   currentUser: User;
   connected =true;
+  id;
 
 
   constructor(private authentification: AuthentificationService) {
@@ -19,6 +20,9 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(localStorage.getItem('id')!=null){
+      this.id = localStorage.getItem('id').split('"')[1];
+    }
   }
 
   public logout(): void {

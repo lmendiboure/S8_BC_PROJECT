@@ -56,7 +56,7 @@ export class LoginComponent implements OnInit {
       .pipe(first())
       .subscribe(
         data => {
-          console.log(data);
+          localStorage.setItem("id",JSON.stringify(data.id));
           Swal.fire(
             'Connexion réussie!',
             '',
