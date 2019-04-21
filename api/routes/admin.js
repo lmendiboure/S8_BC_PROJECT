@@ -95,9 +95,9 @@ router.get('/accounts', (req, res, next) => {
                         info.trustIndex = response.toNumber();
 				//console.log(info);
 			  await truffleContract.renderAddressIP(j).then((response) => {
-					console.log(info);
+					//console.log(info);
 					info.ip=response;
-					console.log(info.ip);
+					//console.log(info.ip);
 				        json.push(info);
 				        return json;
 
@@ -118,23 +118,27 @@ router.get('/:userId', (req, res, next) => {
 
     User.findById(id).exec().then(async (result) => {
         if(result) {
-            blockId = hashids.decode(result.bcId)
+            blockId = hashids.decode(result.bcId) +1;
             //console.log('hello ' + hashids.decode(result.bcId));
-            var info = { account:"", name:"", trustIndex:""};
+            var info = { account:"", name:"", trustIndex:"", ip:""};
             await truffleContract.renderAccount(blockId).then(async (response) => {
                 info.account = response;
                 //console.log(json);
                 await truffleContract.renderName(blockId).then(async (response) => {
                     info.name = response;
-                    await truffleContract.renderTrustIndex(blockId).then((response) => {
+                    await truffleContract.renderTrustIndex(blockId).then(async(response) => {
                         info.trustIndex = response.toNumber();
-                        json.push(info);
-                        return json;
+			await truffleContract.renderAddressIP(blockId).then((response) => {
+					//console.log(info);
+					info.ip=response;
+                        		json.push(info);
+                        		return json;
                     }).then((result) => {
                         res.status(200).send(json);
                     });
                 });
             });
+	});
         } else {
             res.status(404).json({
                 message : 'No valid entry for provided ID'
