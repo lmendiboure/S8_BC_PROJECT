@@ -15,7 +15,7 @@ const User = require('../models/users');
 
 router.post("/login", (req, res, next) => {
     var identifiant;
-    User.find({ email: req.body.email })
+    User.find({ pseudo: req.body.pseudo })
       .exec()
       .then(user => {
         if (user.length < 1) {
@@ -33,7 +33,7 @@ router.post("/login", (req, res, next) => {
             identifiant = user[0]._id;
             const token = jwt.sign(
               {
-                email: user[0].email,
+                pseudo: user[0].pseudo,
                 userId: user[0]._id,
                 blockAddress : user[0].bcAddress
               },
@@ -106,46 +106,58 @@ router.patch('/signup/:userId', (req, res, next) => {
     })
 });
 
+
+
 router.patch('/profile/:userId', (req, res, next) => {
     const id = req.params.userId;
-    var n;
-    const updateOps = {};
+    var name;
+    var immatriculation;
     User.find({_id: id})
     .exec()
-    .then(async user => {
-        for (const ops of req.body) {
-            updateOps[ops.propName] = ops.value;
-        }
-        User.update({_id: id}, {$set: updateOps})
-            .exec()
-            .then((result) => {
-            console.log(result);
-            res.status(200).json(result);
-        })
-
-        await truffleContract.changeName(user.bcId, user.name).then(async (response) => {
-            n = response;
-            await truffleContract.changeImmatriculation(user.bcId, updateOps['immatriculation']).then((result) => {
-                //console.log(user);
-                user.save().then((result) => {
-                    //console.log(result);
-
-                res.status(200).json({
-                    message: 'info modified',
-                    name: n,
-                    immatriculation: result
-                })
-            }).catch((err) => {
-                res.send(err.message);
-            });
-            })
-            })
-            .catch(err => {
-                console.log(err);
-                res.status(500).json({
-                    error : err
-                })
-        })
+    .then((user) => {
+            const updateOps = {};
+            for (const ops of req.body) {
+                updateOps[ops.propName] = ops.value;
+                if(ops.propName == "password") {
+                    bcrypt.hash(updateOps.password, 10, (err, hash) => {
+                        if(err) {
+                            return res.status(500).json({
+                                error: err
+                            });
+                        } else {
+                            updateOps[ops.propName] = hash;
+                            User.update({_id: id}, {$set: updateOps})
+                            .exec()
+                            .then(async (result) => {
+                                //console.log(result);
+                                await truffleContract.changeName(hashids.decode(user[0].bcId), user[0].name).then((response) => {
+                                    console.log(response)
+                                    name = response;
+                                 
+                                    truffleContract.changeImmatriculation(hashids.decode(user[0].bcId), updateOps['immatriculation']).then((result) => {
+                                        //console.log(user);
+                                        immatriculation = result;
+                                        res.status(200).json({
+                                            message: 'info modified',
+                                            name: name,
+                                            immatriculation: immatriculation,
+                                        })
+                                })
+                                //res.status(200).json(result);
+                                
+                            })
+                            
+                            }).catch((err) => {
+                                //console.log(err);
+                                res.status(500).json({
+                                    error : err
+                                })
+                            })
+                        }
+                    });
+                }
+            }
+        
     })
 });
 

@@ -50,14 +50,14 @@ struct accessMode {
 
 	}
 
-	function changeName(string memory _name) public returns(string memory){
+	function changeName(string memory _name) public payable {
 		name = _name;
-		return name;
+		//return name;
 	}
 
-	function changeImmatriculation(string memory _immatriculation) public returns (string memory){
+	function changeImmatriculation(string memory _immatriculation) public payable{
 		immatriculation = _immatriculation;
-		return immatriculation;
+		//return immatriculation;
 	}
 
  	function compareStrings (string memory a, string memory b) public view returns (bool) {

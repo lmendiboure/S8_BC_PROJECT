@@ -267,6 +267,7 @@ renderAddressIP: function(index) {
   changeName: function(index, name) {
     var self = this;
     var iovInstance;
+    index++;
     //console.log(account);
   
     Iov.setProvider(self.web3.currentProvider);
@@ -284,7 +285,7 @@ renderAddressIP: function(index) {
         //console.log(result);
         User.at(result).then((instance) => {
         name = instance;
-        return name.changeName(name);
+        return name.changeName(name.toString(), {from: self.web3.eth.accounts[index]});
       }).then((result) => {
         resolve(result);
       }).catch((err) => {
@@ -298,6 +299,8 @@ renderAddressIP: function(index) {
     var self = this;
     var iovInstance;
     //console.log(account);
+    index++;
+    console.log("index " + index);
   
     Iov.setProvider(self.web3.currentProvider);
     User.setProvider(self.web3.currentProvider);
@@ -314,7 +317,7 @@ renderAddressIP: function(index) {
         //console.log(result);
         User.at(result).then((instance) => {
         immatriculation = instance;
-        return immatriculation.changeImmatriculation(immatriculation);
+        return immatriculation.changeImmatriculation(immatriculation.toString(), {from: self.web3.eth.accounts[index]});
       }).then((result) => {
         resolve(result);
       }).catch((err) => {
