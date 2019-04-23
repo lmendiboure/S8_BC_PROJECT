@@ -35,11 +35,11 @@ export class AuthentificationService {
     }));
   }
 
-  register(id: string, email: string, password: string){
+  register(id: string, pseudo: string, password: string){
     var url = 'http://localhost:3001/users/signup/' + id;
     return this.http.patch<any>(url ,[
       {
-        "propName":"email", "value":email
+        "propName":"pseudo", "value":pseudo
       },
       {
         "propName":"password", "value":password
@@ -48,7 +48,7 @@ export class AuthentificationService {
       )
   }
 
-  updateInformation(name: string, surname: string, mail:string, 
+  updateInformation(pseudo: string, name: string, lastname: string, email:string, 
     password:string, vehicle: string, year:number,immatriculation:string,id: string){
     console.log(id);
     let headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('currentUser.token'));
@@ -58,24 +58,27 @@ export class AuthentificationService {
         "propName":"name", "value":name
       },
       {
-        "propName": "surname", "value": surname
+        "propName":"lastname", "value":lastname
       },
       {
-        "propName":"mail", "value":mail
-      },  
-      {
-        "propName":"password", "value":password
+        "propName":"email", "value":email
       },
       {
-        "propName": "vehicle", "value": vehicle
-      },
-      {
-        "propName": "year", "value": year
+        "propName":"pseudo", "value":pseudo
       },
       {
         "propName":"immatriculation", "value":immatriculation
       },
-      ], { headers })
+      {
+        "propName":"year", "value":year
+      },
+      {
+        "propName":"vehicle", "value":vehicle
+      },
+      {
+        "propName":"password", "value":password
+      }
+    ], { headers })
   }
 
   addUser(name:string,ip:string){
