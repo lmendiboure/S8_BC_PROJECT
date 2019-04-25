@@ -1,0 +1,70 @@
+<header>
+  <!-- sidebar-->
+  <div class="sidebar-fixed position-fixed">
+    <a class="logo-wrapper waves-effect">
+      <img class="img-responsive center-block" src="../../assets/side.png"  alt="" >
+    </a>
+    <div class="list-group list-group-flush">
+      <h2 text-align="center" >Actions</h2>
+      <a routerLink="/compte" routerLinkActive="active" class="list-group-item list-group-item-action waves-effect">
+        <mdb-icon fas icon="user" class="mr-3"></mdb-icon>Mes Statistiques
+      </a>
+      <a routerLink="/abonnement" routerLinkActive="active" class="list-group-item list-group-item-action waves-effect">
+        <mdb-icon fas icon="table" class="mr-3"></mdb-icon>Mes Abonnements
+      </a>
+      <a routerLink="/diffusion" routerLinkActive="active" class="list-group-item list-group-item-action waves-effect">
+        <mdb-icon far icon="map" class="mr-3"></mdb-icon>Diffuser du contenu
+      </a>
+    </div>
+  </div>
+
+  <!-- fin sidebare-->
+
+
+
+<div class="container-fluid">
+
+  <div id="div1">
+
+    <!--     titre  de page    -->
+          <mdb-card>
+            <mdb-card-body>
+              <h6 style="font-size:50px; margin-left: ">Diffuser une vidéo</h6>
+            </mdb-card-body>
+          </mdb-card>
+
+    <!--     fin titre       -->
+
+
+    <div class="wrapper2">
+
+<div class= "selection" >
+
+      <label>Envoyer ma vidéo au groupe de:</label>
+      <select class="custom-select" multiple>
+
+        <option value="1">Sécurité</option>
+        <option value="2">Les copains du projet S8</option>
+        <option value="3">Etat de la route</option>
+      </select>
+
+</div>
+
+  <!--
+      <div class="dropdown" mdbDropdown>
+        <button mdbDropdownToggle type="button" mdbBtn color="primary" class="dropdown-toggle waves-light" size="lg" mdbWavesEffect> Envoyer ma vidéo à: </button>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="#">Sécurité</a>
+          <a class="dropdown-item active" href="#">Les copains du projet S8</a>
+          <a class="dropdown-item" href="#">Etat de la route</a>
+        </div>
+      </div>
+     -->
+
+      <button class= "button" type="button" mdbBtn color="primary" mdbWavesEffect>Diffuser ma vidéo!</button>
+
+    </div>
+
+  </div>
+</div>
+</header>

@@ -2,7 +2,7 @@
 <div class="container bootstrap snippet">
   <div class="row">
     <div class="col-sm-10">
-      <h3>{{user.pseudo}} - Id Blockchain: {{user.id}}</h3>
+      <h3>user.pseudo - Id Blockchain: user.id</h3>
     </div>
     <div class="col-sm-2"><a class="pull-right"></a></div>
   </div>
@@ -33,29 +33,38 @@
           <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" #userForm="ngForm">
             <div class="form-group">
               <div class="col-xs-6">
-                <label for="name">
-                  <h4>Prénom</h4>
+                <label for="pseudo">
+                  <h4>Pseudo</h4>
                 </label>
-                <input type="text" formControlName="name" class="form-control" [ngClass]="{'is-invalid': submitted && f.name.errors}"
-                  placeholder="{{user.name}}">
+                <input type="text" formControlName="pseudo" class="form-control"
+                  [ngClass]="{'is-invalid': submitted && f.pseudo.errors}" placeholder="user.pseudo">
               </div>
             </div>
             <div class="form-group">
               <div class="col-xs-6">
-                <label for="surname">
+                <label for="name">
+                  <h4>Prénom</h4>
+                </label>
+                <input type="text" formControlName="name" class="form-control" [ngClass]="{'is-invalid': submitted && f.name.errors}"
+                  placeholder="user.name">
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-xs-6">
+                <label for="lastname">
                   <h4>Nom</h4>
                 </label>
-                <input type="text" formControlName="surname" class="form-control" 
-                [ngClass]="{'is-invalid': submitted && f.surname.errors}" placeholder="{{user.surname}}">
+                <input type="text" formControlName="lastname" class="form-control" 
+                [ngClass]="{'is-invalid': submitted && f.lastname.errors}" placeholder="user.lastname">
               </div>
             </div>
 
             <div class="form-group">
               <div class="col-xs-6">
-                <label for="mail">
+                <label for="email">
                   <h4>Email</h4>
                 </label>
-                <input type="mail" formControlName="mail" class="form-control"  placeholder="{{user.mail}}">
+                <input type="email" formControlName="email" class="form-control"  placeholder="user.email">
               </div>
             </div>
 
@@ -78,7 +87,7 @@
                 </label>
                 <span class="custom-dropdown custom-dropdown--white">
                   <select class="custom-dropdown__select custom-dropdown__select--white" formControlName="vehicle" [ngClass]="{'is-invalid': submitted && f.vehicle.errors} ">
-                    <option selected disabled>{{user.vehicle}}</option>
+                    <option selected disabled>user.vehicle</option>
                     <option>ALFA ROMEO</option>
                     <option>ASTON MARTIN</option>
                     <option>AUDI</option>
@@ -148,7 +157,7 @@
                   </label>
                   <h4>Immatriculation</h4>
                   <input type="text" formControlName="immatriculation" class="form-control" 
-                   placeholder="{{user.immatriculation}}" [ngClass]="{'is-invalid': submitted && f.immatriculation.errors}" >
+                   placeholder="user.immatriculation" [ngClass]="{'is-invalid': submitted && f.immatriculation.errors}" >
                 </div>
               </div>
             </div>
