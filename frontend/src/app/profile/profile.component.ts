@@ -33,9 +33,10 @@ export class ProfileComponent implements OnInit {
       this.id=params['id'];
     });
     this.token=JSON.parse(localStorage.getItem('currentUser')).token;
-    this.authentificationService.getSpecificUser(this.id, this.token).subscribe(data => localStorage.setItem('informations',JSON.stringify(data)));
-    this.user=localStorage.getItem('informations');
-    console.log(this.user);
+    this.authentificationService.getSpecificUser(this.id, this.token).subscribe(
+      data =>{
+        localStorage.setItem('informations',JSON.stringify(data))});
+    this.user=JSON.parse(localStorage.getItem('informations'))[0];
     this.profileForm = this.formBuilder.group({
       pseudo: ['', Validators.required],
       name: ['', Validators.required],
