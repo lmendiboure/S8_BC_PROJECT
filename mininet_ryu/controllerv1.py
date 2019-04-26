@@ -24,21 +24,25 @@ from operator import attrgetter
 from datetime import datetime
 from ryu.ofproto.ofproto_v1_3 import OFPG_ANY
 import time
+import random 
 
 #switches
 switches = []
  
-#eth_tab[srcmac]->(switch, port)
+#eth_tab[srcmac]->(rsu, port,prev_rsu)
 eth_tab={}
 
 #ip_tab[src_ip]->(mac)
 ip_to_mac={}
 
-#group_multicast[mult_addr][dpid]->count
-group_multicast=defaultdict(lambda:defaultdict(lambda:None))
+#group_multicast[mult_addr][dpid]->ethernet list
+group_multicast=defaultdict(lambda:defaultdict(lambda:list))
  
 #adjacency map [sw1][sw2]->port from sw1 to sw2
 adjacency=defaultdict(lambda:defaultdict(lambda:None))
+
+#multicast_group_id
+multicast_group_id={}
 
 datapath_list={}
 
@@ -76,17 +80,17 @@ def get_path(src,dst,first_port,final_port):
   abw[src]=float('Inf')
   Q=set(switches)
 
-  print "Q:", Q
+ # print "Q:", Q
 
   while len(Q)>0:
     u = max_abw(abw, Q)
     Q.remove(u)
-    print "Q:", Q, "u:", u
+    #print "Q:", Q, "u:", u
 
     for p in switches:
       if adjacency[u][p]!=None:
         link_abw = bw_available[str(u)][str(p)]
-        print "link_abw:", str(u),"->",str(p),":",link_abw, "kbps"
+        #print "link_abw:", str(u),"->",str(p),":",link_abw, "kbps"
         if abw[u] < link_abw:
           tmp = abw[u]
         else:
@@ -312,21 +316,34 @@ class ProjectController(app_manager.RyuApp):
         #                     ev.msg.datapath.id, stat.port_no,
         #                     stat.rx_packets, stat.rx_bytes, stat.rx_errors,
         #                     stat.tx_packets, stat.tx_bytes, stat.tx_errors)
- 
 
- 
-    def add_flow(self, datapath, match, actions ,priority,buffer_id=None , cookie=0 ,idle_timeout=0):
+
+
+    def add_flow(self, datapath, priority, match, actions, buffer_id=None):
+        # print "Adding flow ", match, actions
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
 
-	inst = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS, actions)]
+        inst = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS,actions)]
         if buffer_id:
-            mod = parser.OFPFlowMod(datapath=datapath, buffer_id=buffer_id,priority=priority, match=match,instructions=inst,cookie=cookie,idle_timeout=idle_timeout, command=ofproto.OFPFC_ADD)
+            mod = parser.OFPFlowMod(datapath=datapath, buffer_id=buffer_id,priority=priority, match=match,instructions=inst)
         else:
-            mod = parser.OFPFlowMod(datapath=datapath, priority=priority, buffer_id=ofproto.OFP_NO_BUFFER, match=match, instructions=inst, cookie=cookie, idle_timeout=idle_timeout,command=ofproto.OFPFC_ADD)
-
-        #mod = parser.OFPFlowMod(datapath=datapath, match=match, cookie=cookie,command=ofproto.OFPFC_ADD,priority=ofproto.OFP_DEFAULT_PRIORITY, instructions=inst)
+            mod = parser.OFPFlowMod(datapath=datapath, priority=priority,match=match, instructions=inst)
         datapath.send_msg(mod)
+
+    @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
+    def _switch_features_handler(self, ev):
+        print "switch_features_handler is called"
+        datapath = ev.msg.datapath
+        ofproto = datapath.ofproto
+        parser = datapath.ofproto_parser
+
+        match = parser.OFPMatch()
+        actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER,ofproto.OFPCML_NO_BUFFER)]
+	self.add_flow(datapath, 0, match, actions)
+
+ 
+
 
     def install_path(self, p, ev,dst_mac,buff_id):
        print "install_path is called"
@@ -340,26 +357,14 @@ class ProjectController(app_manager.RyuApp):
        for sw, in_port, out_port in p:
          print "->", dst_mac, "via ", sw, " in_port=", in_port, " out_port=", out_port
          match=parser.OFPMatch(eth_dst=dst_mac,in_port=in_port)
-         actions=[parser.OFPActionOutput(out_port)]
-         datapath=datapath_list[sw]
+	 dp=datapath_list[sw]
+         actions=[dp.ofproto_parser.OFPActionOutput(out_port)]
+ 
 	 if dpid==sw:
-           self.add_flow(datapath=datapath, match=match,actions=actions,priority=1,buffer_id=buff_id)
+           self.add_flow(datapath=dp, match=match,actions=actions,priority=1,buffer_id=buff_id)
 	 else:
-	   self.add_flow(datapath=datapath, match=match,actions=actions,priority=1)
+	   self.add_flow(datapath=dp, match=match,actions=actions,priority=1)
 
-
-    @set_ev_cls(ofp_event.EventOFPSwitchFeatures , CONFIG_DISPATCHER)
-    def switch_features_handler(self , ev):
-        print "switch_features_handler is called"
-        datapath = ev.msg.datapath
-        ofproto = datapath.ofproto
-        parser = datapath.ofproto_parser
-        match = parser.OFPMatch()
-        actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER,ofproto.OFPCML_NO_BUFFER)]
-        #inst = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS , actions)]
-        #mod = datapath.ofproto_parser.OFPFlowMod(datapath=datapath, match=match, cookie=0,command=ofproto.OFPFC_ADD, idle_timeout=0, hard_timeout=0,priority=0, instructions=inst)
-	self.add_flow(datapath,match,actions,0)
-        #datapath.send_msg(mod)
 
  
 
@@ -388,7 +393,7 @@ class ProjectController(app_manager.RyuApp):
 	print ""
 	
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
-    def _packet_in_handler(self, ev):
+    def _packet_in_handler(self, ev):	
          msg = ev.msg
          datapath = msg.datapath
          ofproto = datapath.ofproto
@@ -400,17 +405,20 @@ class ProjectController(app_manager.RyuApp):
          dst = eth.dst
          src = eth.src
          dpid = datapath.id
+	
+	 if eth.ethertype == 0x0800 and pkt[1].proto == 0x01 and (pkt[2].type == 8 or pkt[2].type==0):
+	   print "ICMP echo request or reply"
 	 
 	 #ignore LLDP broadcasts
          if eth.ethertype == ether_types.ETH_TYPE_LLDP:
             return
 	
   	 #drop IPV6 packets
-         if pkt.get_protocol(ipv6.ipv6):
-            match = parser.OFPMatch(eth_type=eth.ethertype)
-            actions = []
-            self.add_flow(datapath,match, actions,1)
-	    return 
+         #if pkt.get_protocol(ipv6.ipv6):
+          #  match = parser.OFPMatch(eth_type=eth.ethertype)
+           # actions = []
+            #self.add_flow(datapath,match, actions,1)
+	    #return 
 	 
 	 #answer arp requests
 	 if eth.ethertype==ether_types.ETH_TYPE_ARP:
@@ -434,7 +442,7 @@ class ProjectController(app_manager.RyuApp):
 	    
 	    #car have changed of RSU, need to update flow table
 	    if ip.proto == 0x01 and pkt[2].type == 10 : #ICMPv4 router sollicitation
-	       print src,"change de RSU, prev :",eth_tab[src][0],"new",dpid
+	       print src,"change de RSU, prev :",eth_tab[src][0],"new",dpid,"prev prev :",eth_tab[src][2]
 	       eth_tab[src]=(dpid,in_port,eth_tab[src][0])
 	       for sw in switches:
 	         datapath_tmp=datapath_list[sw]
@@ -449,26 +457,32 @@ class ProjectController(app_manager.RyuApp):
 	    #IGMP membership query
 	    if ip.proto == 0x02 and pkt[2].msgtype == 0x11:
 	       print src,"joined ",pkt[1].dst,"group"
-	       if (pkt[2].address in group_multicast) and (dpid in group_multicast[pkt[2].address]):
-	         group_multicast[pkt[2].address][dpid]+=1
-	         print 1
+	       if (pkt[1].dst in group_multicast) and (dpid in group_multicast[pkt[1].dst]) and (src not in group_multicast[pkt[1].dst][dpid]):
+	         group_multicast[pkt[1].dst][dpid].append(src)
 	       else:
-	         group_multicast[pkt[2].address][dpid]=1
-		 print 2
-	       print group_multicast[pkt[2].address][dpid]
+	         group_multicast[pkt[1].dst][dpid]=[src]
+	       print "Les voitures presentes sur le RSU", dpid, "sont ",group_multicast[pkt[1].dst][dpid]
 	       return 
 
 	    #IGMP leave group
 	    if ip.proto == 0x02 and pkt[2].msgtype == 0x17:
 	       print src,"left ",pkt[1].dst,"group"
-	       if (pkt[2].address in group_multicast) and (eth_tab[src][2] in group_multicast[pkt[2].address]):
-		 if group_multicast[pkt[2].address][eth_tab[src][2]]>0:
-	           group_multicast[pkt[2].address][eth_tab[src][2]]-=1
-	       print group_multicast[pkt[2].address][eth_tab[src][2]]
+	       if (pkt[1].dst in group_multicast) and (eth_tab[src][2] in group_multicast[pkt[1].dst]) and (src in group_multicast[pkt[1].dst][eth_tab[src][2]]):
+	           group_multicast[pkt[1].dst][eth_tab[src][2]].remove(src)
+		   for sw in switches: #del every multicast paths matching src and dst
+	             datapath_tmp=datapath_list[sw]
+	             for link in links:
+	               match=parser.OFPMatch(eth_src=src,eth_dst=dst,in_port=link[2])
+	       	       self.del_flow(datapath_tmp,match)
+		     match=parser.OFPMatch(eth_src=src,eth_dst=dst,in_port=1)#port wlan1
+		     self.del_flow(datapath_tmp,match)
+
+	       print "Il y a ",group_multicast[pkt[1].dst][eth_tab[src][2]]," sur le RSU",eth_tab[src][2]
    	       return 
 
-            if self.isMulticast(ip.dst):
+            if self.isMulticast(dst):
                self.sendMulticast(msg)
+	       return 
 
          #print "var : ",src,dst,in_port
  	 #print src, "envoie a" , dst, "type",hex(eth.ethertype)
@@ -493,11 +507,10 @@ class ProjectController(app_manager.RyuApp):
          datapath.send_msg(out)
 
     def isMulticast(self, dst):
-         return ( dst[0:2] == '01' or dst[0:5] == '33:33')
+         return ( dst[0:8] == '01:00:5e' or dst[0:5] == '33:33')
 
     def sendMulticast(self,msg):
 	 print "Entering send Multicast"
-	 msg = ev.msg
          datapath = msg.datapath
          ofproto = datapath.ofproto
          parser = datapath.ofproto_parser
@@ -510,26 +523,52 @@ class ProjectController(app_manager.RyuApp):
          dpid = datapath.id
 	 ip=pkt[1]
 	 paths=[]
-	
-	 for dpid_tmp in group_multicast[ip.src]:
-            paths.append(get_path_multicast(dpid,dpid_tmp,in_port,1))
+	 group_new=False
 
+         #print group_multicast[ip.dst]
+	 for dpid_tmp in group_multicast[ip.dst]:
+	    if group_multicast[ip.dst][dpid_tmp] != []:
+	      #print dpid_tmp	
+	      if dpid_tmp==dpid:
+		paths.append([(dpid,in_port,in_port)])
+              else:
+                paths.append(get_path(dpid,dpid_tmp,in_port,1))
+
+	 #print paths
+	 #print "fin des chemins"
 	 buckets=defaultdict(lambda:defaultdict(lambda:list))
 
 	 for path in paths:
-	   for sw, in_port, out_port in path:
+	   for sw, in_port_tmp, out_port in path:
 	     bucket_action = [parser.OFPActionOutput(out_port)]
-             buckets[sw][in_port].append(parser.OFPBucket(weight=0,watch_port=0,watch_group=ofproto.OFPG_ANY,actions=bucket_action))
-	     print buckets
-	 
-	 for key in buckets:
-	     for key2 in buckets[key]:
-	       group_id=random.randint(0, 2**32)
-	       req = ofp_parser.OFPGroupMod(datapath, ofproto.OFPGC_ADD, ofproto.OFPGT_ALL,group_id,buckets[key][key2])
-	       datapath_list[sw].send_msg[req]
-	       actions = [ofp_parser.OFPActionGroup(group_id)]
-	       match=parser.OFPMatch(eth_dst=dst_mac,in_port=key[1])
-	       self.add_flow(datapath_list[key[0]],match, actions,0)
+	     if (sw not in buckets) or (in_port_tmp not in buckets[sw]):
+	       buckets[sw][in_port_tmp]=[]
+	     
+             buckets[sw][in_port_tmp].append(parser.OFPBucket(weight=1,watch_port=out_port,watch_group=ofproto.OFPG_ANY,actions=bucket_action))
+
+	 #print buckets
+	 for sw in buckets:
+	     for in_port_tmp in buckets[sw]:
+	       if (sw,dst,in_port_tmp,src) not in multicast_group_id:
+	         group_new=True
+		 multicast_group_id[sw,dst,in_port_tmp,src]=random.randint(0, 2**32-1)
+
+	       group_id=multicast_group_id[sw,dst,in_port_tmp,src]
+	       dp=datapath_list[sw]
+	
+               if group_new:
+                 req = dp.ofproto_parser.OFPGroupMod(dp, dp.ofproto.OFPGC_ADD, dp.ofproto.OFPGT_ALL,group_id,buckets[sw][in_port_tmp])
+               else:
+                 req = dp.ofproto_parser.OFPGroupMod(dp, dp.ofproto.OFPGC_MODIFY, dp.ofproto.OFPGT_ALL,group_id,buckets[sw][in_port_tmp])
+               
+	       dp.send_msg(req)
+
+
+	       actions = [dp.ofproto_parser.OFPActionGroup(group_id)]
+	       match=parser.OFPMatch(eth_src=src,eth_dst=dst,in_port=in_port_tmp)
+	       print "sw in_port req ",sw,in_port_tmp,req
+	       #print "actions",actions
+	       self.add_flow(datapath=dp,match=match,actions=actions,priority=1)
 
 
 

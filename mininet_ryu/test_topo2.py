@@ -75,9 +75,13 @@ def topology():
     for car in cars:	
 	car.cmd('ifconfig %s-wlan0 up'%car)
 	car.cmd('ip address add 10.0.0.%d/24 dev %s-wlan0'%((int(cars.index(car))+1),car))
-	car.cmd('ip route add 225.0.0.1 dev %s-wlan0'%car)
 	car.cmd('ip route add 225.0.0.0 dev %s-wlan0'%car)
+	car.cmd('ip route add 225.0.0.1 dev %s-wlan0'%car)
 	car.cmd('sudo python recv_beacon.py 10.0.0.%d &'%(int(cars.index(car))+1))
+	fd=open("10.0.0.%d"%(int(cars.index(car))+1), "w")
+	fd.close()
+	car.cmd('./join_group.py 225.0.0.1 10.0.0.%d &'%(int(cars.index(car))+1))
+	
    
     for i in range(1,5):
     	rsus[i-1].cmd('sudo python send_beacon.py 02:00:00:00:0%d:00 RSU1%d &'%(i+4,i))
