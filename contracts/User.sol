@@ -1,8 +1,6 @@
 pragma solidity ^0.5.0;
 pragma experimental ABIEncoderV2;
 
-//import "./Subscriptions.sol";
-//import "./Advertisment.sol";
 
 contract User {
 
@@ -103,9 +101,12 @@ struct accessMode {
 	    return trustIndex--;
 	}
 
-	function changeRightCanSend(address _admin, bool _right,uint _idwanted) public payable {
+	function changeRightCanSend(address _admin, bool _right,string memory _IP) public payable {
 	    require(admin == _admin);
-	    vehicleAccess[_idwanted].canSend = _right;
+	    for (uint i=1; i<netCount+1; i++) {
+    	        if(compareStrings(_IP,vehicleAccess[i].IP))
+                    vehicleAccess[i].canSend = _right;
+             }
 	}
 
 
