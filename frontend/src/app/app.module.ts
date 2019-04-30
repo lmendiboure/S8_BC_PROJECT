@@ -20,10 +20,13 @@ import { ProfileComponent } from './profile/profile.component';
 import { UsersResolver } from './resolvers/users.resolver'
 import { MDBBootstrapModule } from 'angular-bootstrap-md'
 import { InformationUserResolver } from './resolvers/informationAboutUser.resolver';
-import { CompteComponent } from './mon-compte/compte.component';
-import { EntrantComponent } from './flux-entrant/entrant.component';
-import { DiffusionComponent } from './diffusion/diffusion.component';
+
+
 import { AbonnementComponent } from './page-abonnement/abonnement.component';
+import { CompteComponent} from './mon-compte/compte.component';
+import { SuivreComponent} from './suivre/suivre.component';
+import { DiffusionComponent} from './diffusion/diffusion.component';
+import { EntrantComponent} from './flux-entrant/entrant.component';
 
 
 @NgModule({
@@ -38,10 +41,12 @@ import { AbonnementComponent } from './page-abonnement/abonnement.component';
     ManageTIComponent,
     LoginComponent,
     ProfileComponent,
+
+    AbonnementComponent,
+    SuivreComponent,
     CompteComponent,
-    EntrantComponent,
     DiffusionComponent,
-    AbonnementComponent
+    EntrantComponent
   ],
   imports: [
     BrowserModule,
