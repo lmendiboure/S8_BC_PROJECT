@@ -17,7 +17,6 @@ export class ManageTIComponent implements OnInit {
 
   ngOnInit() {
     this.users = this.route.snapshot.data['users'];
-    console.log(this.users);
   }
 
 }

@@ -33,7 +33,7 @@ a {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   grid-gap: 10px;
-  grid-auto-rows: minmax(100px, auto);
+  /*grid-auto-rows: minmax(100px, auto);*/
   margin-left: 20%;
 }
 
@@ -58,13 +58,6 @@ a {
     padding: 15px 50px;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 
-}
-label{
-  color: #006699;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  font-size: 15px;
-  font-weight: normal;
-  line-height: 48px;
 }
 .dropdown{
   grid-column: 3 / 7 ;

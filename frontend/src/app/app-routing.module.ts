@@ -11,7 +11,6 @@ import { LoginComponent} from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
 import { UsersResolver } from './resolvers/users.resolver';
 import { InformationUserResolver } from './resolvers/informationAboutUser.resolver';
-
 import { CompteComponent } from './mon-compte/compte.component';
 import { EntrantComponent } from './flux-entrant/entrant.component';
 import { DiffusionComponent } from './diffusion/diffusion.component';

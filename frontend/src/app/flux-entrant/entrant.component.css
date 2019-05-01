@@ -37,21 +37,17 @@ h2 {
   grid-gap: 10px;
   grid-auto-rows: minmax(100px, auto);
 }
-.one1 {
-  grid-column: 1 /15 ;
-  grid-row: 2 / 4;
-  text-align: center;
-}
+
 .two {
   grid-column: 2 /15 ;
-  grid-row: 3/ 5;
+  grid-row: 2/ 5;
   text-align: center;
 }
-.vid {
-  grid-column: 1/ 10 ;
-  grid-row: 3/ 5;
-
+video{
+  width:600px;
+  height: auto;
 }
+
 
 /*------------------------------------------------------------------
 [ Form ]*/
