@@ -169,7 +169,28 @@ h4 {
 
 
 
-        .sidebar {
+
+
+        h6 {
+          color: #006699;
+          font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+          font-size: 30px;
+          font-weight: normal;
+          line-height: 48px;
+          margin: 0;
+        }
+
+
+
+
+
+
+
+        /*sidebare*/
+
+
+
+        .w3-sidebar {
           margin: 0;
           padding: 0;
           width: 200px;
@@ -183,7 +204,7 @@ h4 {
         }
 
 
-        .sidebar.list-group list-group-flush .active
+        .w3-sidebar.list-group list-group-flush .active
         {
           -webkit-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
 
@@ -196,11 +217,11 @@ h4 {
 
 
 
-        .sidebar .logo-wrapper {
+        .w3-sidebar .logo-wrapper {
           padding: 0.5 rem;
         }
 
-        .sidebar .logo-wrapper .img-responsive  {
+        .w3-sidebar .logo-wrapper .img-responsive  {
           max-height: 100px;
           display: block;
           margin-left: auto;
@@ -209,19 +230,19 @@ h4 {
 
 
 
-        .sidebar a {
+        .w3-sidebar a {
           display: block;
           color: black;
           padding: 16px;
           text-decoration: none;
         }
 
-        .sidebar a.active {
+        .w3-sidebar a.active {
           background-color: #318CE7;
           color: white;
         }
 
-        .sidebar a:hover:not(.active) {
+        .w3-sidebar a:hover:not(.active) {
           background-color: #555;
           color: white;
         }
@@ -233,21 +254,30 @@ h4 {
         }
 
         @media screen and (max-width: 700px) {
-          .sidebar {
+          .w3-sidebar {
             width: 100%;
             height: auto;
             position: relative;
           }
-          .sidebar a {float: left;}
+          .w3-sidebar a {float: left;}
           div.content {margin-left: 0;}
         }
 
         @media screen and (max-width: 400px) {
-          .sidebar a {
+          .w3-sidebar a {
             text-align: center;
             float: none;
           }
-          .contact100-form-title {
+
+        }
+
+
+
+
+
+        /*fin sidebare*/
+
+    /*      .contact100-form-title {
             display: block;
             font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
             font-size: 39px;
@@ -283,8 +313,7 @@ h4 {
             float: none;
 
           }
-        }
-
+        */
 
 
 
