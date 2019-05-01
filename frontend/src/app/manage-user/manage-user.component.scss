@@ -22,8 +22,21 @@ hr{
     box-shadow: 0 0 0 1px #ce93d8;
 }
 
+
+
+#col{max-width:1400px;height:auto;clear:both}
+
 #col1{
-    margin-left: 1em;
+float:left;
+width:65%;
+margin-right:15px;
+margin-bottom:20px;
+}#col2{
+width:32%;
+margin-right:20px;
+margin-top:20px;
+float:right;
+
 }
 
 .alert-danger{
@@ -237,6 +250,7 @@ iframe {
   border-style: solid;
   box-shadow: 2px;
   margin-top: 1em;
+  text-align:left;
 }
 
 

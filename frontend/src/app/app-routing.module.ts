@@ -22,10 +22,10 @@ import { SuivreComponent} from './suivre/suivre.component';
 
 const routes: Routes = [
   {path: 'inscription', component: AuthentificationComponent},
-  { path: 'userinformation',component: InformationAboutUserComponent, /*canActivate: [GuardsComponent], */resolve: { information: InformationUserResolver}},
+  { path: 'userinformation',component: InformationAboutUserComponent, /*canActivate: [GuardsComponent], *//* resolve: { information: InformationUserResolver} */},
   { path: 'admin', component: AdminComponent/*,canActivate: [GuardsComponent]*/},
-  { path: 'admin/manageuser', component: ManageUserComponent, /*canActivate: [GuardsComponent], */resolve: {users: UsersResolver}},
-  { path: 'admin/manageTI', component: ManageTIComponent, /*canActivate: [GuardsComponent], */resolve: { users: UsersResolver }},
+  { path: 'admin/manageuser', component: ManageUserComponent, /*canActivate: [GuardsComponent], *//* resolve: {users: UsersResolver} */},
+  { path: 'admin/manageTI', component: ManageTIComponent, /*canActivate: [GuardsComponent], *//* resolve: { users: UsersResolver } */},
   { path: '', component: HomeComponent/*, canActivate: [GuardsComponent]*/},
   { path: 'login', component: LoginComponent },
   { path: 'profile/:id', component: ProfileComponent/*, canActivate: [GuardsComponent]*/},
