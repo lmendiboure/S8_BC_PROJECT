@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule,HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -22,7 +22,12 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md'
 import { InformationUserResolver } from './resolvers/informationAboutUser.resolver';
 
 
+
 import { AbonnementComponent } from './page-abonnement/abonnement.component';
+import { CompteComponent } from './mon-compte/compte.component';
+import { SuivreComponent } from './suivre/suivre.component';
+import { DiffusionComponent } from './diffusion/diffusion.component';
+import { EntrantComponent } from './flux-entrant/entrant.component';
 import { ManageDiffusionVideoComponent } from './manage-diffusion-video/manage-diffusion-video.component';
 
 
@@ -38,11 +43,12 @@ import { ManageDiffusionVideoComponent } from './manage-diffusion-video/manage-d
     ManageTIComponent,
     LoginComponent,
     ProfileComponent,
-
     AbonnementComponent,
-
-    AbonnementComponent,
-    ManageDiffusionVideoComponent
+    SuivreComponent,
+    CompteComponent,
+    DiffusionComponent,
+    EntrantComponent,
+    ManageDiffusionVideoComponent,
   ],
   imports: [
     BrowserModule,
