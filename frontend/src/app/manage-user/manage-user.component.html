@@ -55,7 +55,7 @@
               <label for="name"></label>
               <div class="md-form">
                 <i class="fas fa-user prefix"></i>
-                <input type="text" id="inputIconEx2" style="text-align:left" class="form-control" formControlName="name" id="basicExample"
+                <input type="text" id="inputIconEx2" class="form-control" formControlName="name" id="basicExample"
                   [ngClass]="{ 'is-invalid': submitted && f.name.errors }" [mdbValidation]="false" mdbInputDirective>
                 <label for="basicExample">Identifiant véhicule</label>
                 <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
