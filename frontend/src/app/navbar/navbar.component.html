@@ -19,7 +19,7 @@
                         <mdb-icon fas icon="user" mdbDropdownToggle></mdb-icon>
                         <div class="dropdown-menu dropdown-menu-right dropdown-primary">
                             <a class="dropdown-item" *ngIf="currentUser" routerLink="/admin">Gestion du réseau</a>
-                            <a class="dropdown-item" routerLink="/account">Mon compte</a>
+                            <a class="dropdown-item" routerLink="/compte">Mon compte</a>
                             <a class="dropdown-item" [routerLink]="['/profile',id]">Mon profil</a>
                             <div class="divider dropdown-divider"></div>
                             <a class="dropdown-item" (click)="logout()">Déconnexion</a>
@@ -28,6 +28,6 @@
                 </a>
             </li>
         </ul>
-    
+
     </links>
 </mdb-navbar>
