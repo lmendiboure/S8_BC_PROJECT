@@ -101,10 +101,18 @@ export class AuthentificationService {
       
   }
 
+  changeRights(ipx: string,ipy: string,value: string,token: string){
+    var url = 'http://localhost:3001/admin/change';
+    let headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+    console.log(headers);
+    return this.http.post<any>(url,{ipx,ipy,value},{headers});
+  }
+
   logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('currentUser');
     localStorage.removeItem('id');
+    localStorage.removeItem('informations');
     this.currentUserSubject.next(null);   
     this.router.navigate(['/login']); 
   }

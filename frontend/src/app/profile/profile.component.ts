@@ -29,14 +29,6 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
-      this.id=params['id'];
-    });
-    this.token=JSON.parse(localStorage.getItem('currentUser')).token;
-    this.authentificationService.getSpecificUser(this.id, this.token).subscribe(
-      data =>{
-        localStorage.setItem('informations',JSON.stringify(data))});
-    this.user=JSON.parse(localStorage.getItem('informations'))[0];
     this.profileForm = this.formBuilder.group({
       pseudo: ['', Validators.required],
       name: ['', Validators.required],
@@ -47,6 +39,9 @@ export class ProfileComponent implements OnInit {
       year: ['', Validators.required],
       immatriculation: ['', Validators.required]
     })
+    this.user = this.route.snapshot.data['information'][0];
+    this.id = localStorage.getItem('id').split('"')[1];
+    this.token = JSON.parse(localStorage.getItem('currentUser')).token;
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 

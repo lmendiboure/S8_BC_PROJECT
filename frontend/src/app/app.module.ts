@@ -29,6 +29,7 @@ import { SuivreComponent } from './suivre/suivre.component';
 import { DiffusionComponent } from './diffusion/diffusion.component';
 import { EntrantComponent } from './flux-entrant/entrant.component';
 import { ManageDiffusionVideoComponent } from './manage-diffusion-video/manage-diffusion-video.component';
+import { GestionProblemesComponent } from './gestion-problemes/gestion-problemes.component';
 
 
 @NgModule({
@@ -49,6 +50,7 @@ import { ManageDiffusionVideoComponent } from './manage-diffusion-video/manage-d
     DiffusionComponent,
     EntrantComponent,
     ManageDiffusionVideoComponent,
+    GestionProblemesComponent,
   ],
   imports: [
     BrowserModule,

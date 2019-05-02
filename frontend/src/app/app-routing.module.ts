@@ -17,6 +17,7 @@ import { DiffusionComponent } from './diffusion/diffusion.component';
 import { AbonnementComponent } from './page-abonnement/abonnement.component';
 import { SuivreComponent} from './suivre/suivre.component';
 import { ManageDiffusionVideoComponent } from './manage-diffusion-video/manage-diffusion-video.component';
+import { GestionProblemesComponent } from './gestion-problemes/gestion-problemes.component';
 
 
 
@@ -28,13 +29,14 @@ const routes: Routes = [
   { path: 'admin/manageTI', component: ManageTIComponent, canActivate: [GuardsComponent], resolve: { users: UsersResolver }},
   { path: '', component: HomeComponent, canActivate: [GuardsComponent]},
   { path: 'login', component: LoginComponent },
-  { path: 'profile/:id', component: ProfileComponent, canActivate: [GuardsComponent]},
+  { path: 'profile/:id', component: ProfileComponent, canActivate: [GuardsComponent],resolve: {information: InformationUserResolver}},
   { path: 'compte', component: CompteComponent, canActivate: [GuardsComponent]},
   { path: 'entrant', component: EntrantComponent, canActivate: [GuardsComponent]},
   { path: 'abonnement', component: AbonnementComponent, canActivate: [GuardsComponent] },
   { path: 'diffusion', component: DiffusionComponent, canActivate: [GuardsComponent] },
   { path: 'suivre', component: SuivreComponent, canActivate: [GuardsComponent] },
   { path: 'admin/managerights', component: ManageDiffusionVideoComponent, canActivate: [GuardsComponent]},
+  { path: 'admin/manageissues', component: GestionProblemesComponent, canActivate: [GuardsComponent]},
 
 ];
 

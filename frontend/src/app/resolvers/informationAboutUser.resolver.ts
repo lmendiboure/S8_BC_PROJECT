@@ -14,9 +14,8 @@ export class InformationUserResolver implements Resolve<any>{
     }
     resolve(route: ActivatedRouteSnapshot): Observable<any> {
         var jsonInfo = JSON.parse(localStorage.getItem('currentUser'));
-        var id = route.queryParams['id'];
-        console.log(jsonInfo.token + "              "+  id);
-        return this.authenticationService.getSpecificUser(id, jsonInfo.token);
+        console.log(jsonInfo.token + "\n"+  jsonInfo.id);
+        return this.authenticationService.getSpecificUser(jsonInfo.id, jsonInfo.token);
 
     }
 }

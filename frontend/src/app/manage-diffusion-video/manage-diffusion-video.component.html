@@ -1,3 +1,54 @@
-<p>
-  manage-diffusion-video works!
-</p>
+<app-admin></app-admin>
+
+<!-- Default form subscription -->
+<div style="margin-left:22%">
+<div class="container-fluid">
+<form [formGroup]="rightsForm" (ngSubmit)="onSubmit()" #userForm="ngForm" class="text-center border border-light p-5">
+
+  <p class="h4 mb-4">Changer les droits</p>
+  <p>
+    Modifier les droits d'envoi d'un utilisateur à un autre.
+    <br>
+    <i>NB: Par défaut, tous les utilisateurs peuvent s'envoyer des vidéos entre eux.</i>
+  </p>
+  <div class="form-group">
+    <label for="ipemetteur"></label>
+    <div class="md-form">
+      <input mdbInput mdbValidate type="text" formControlName="ipemetteur" id="form2" class="form-control"
+        [ngClass]="{'is-invalid': submitted && f.ipemetteur.errors}">
+      <label for="form2">IP Émetteur</label>
+    </div>
+    <div *ngIf="submitted && f.ipemetteur.errors" class="invalid-feedback"></div>
+  </div>
+
+  <div class="form-group">
+    <label for="ipdest"></label>
+    <div class="md-form">
+      <input mdbInput mdbValidate type="text" formControlName="ipdest" id="form1" class="form-control"
+        [ngClass]="{'is-invalid': submitted && f.ipdest.errors}">
+      <label for="form1">IP Destinataire</label>
+    </div>
+    <div *ngIf="submitted && f.ipdest.errors" class="invalid-feedback"></div>
+  </div>
+
+  <div class="form-group">
+    <label for="bool"></label>
+    <span class="custom-dropdown custom-dropdown--white">
+      <select class="custom-dropdown__select custom-dropdown__select--white" formControlName="bool"
+        [ngClass]="{'is-invalid': submitted && f.bool.errors}">
+        <option selected disabled>Valeur</option>
+        <option>True</option>
+        <option>False</option>
+      </select>
+    </span>
+    <div *ngIf="submitted && f.bool.errors" class="invalid-feedback"></div>
+  </div>
+
+  <!-- Sign in button -->
+  <button type="submit">Enregistrer</button>
+
+
+</form>
+</div>
+</div>
+<!-- Default form subscription -->
