@@ -28,7 +28,6 @@ export class AuthentificationService {
       console.log(user.token);
       if (user && user.token) {
         localStorage.setItem('currentUser', JSON.stringify(user));
-        console.log(localStorage.currentUser);
         this.currentUserSubject.next(user);
       }
       return user;

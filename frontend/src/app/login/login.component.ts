@@ -15,6 +15,7 @@ export class LoginComponent implements OnInit {
   submitted = false;
   returnUrl: string;
   error = '';
+  ip;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -57,6 +58,12 @@ export class LoginComponent implements OnInit {
       .subscribe(
         data => {
           localStorage.setItem("id",JSON.stringify(data.id));
+          var id;
+          id = localStorage.getItem('id').split('"')[1];
+          var token;
+          token=JSON.parse(localStorage.getItem('currentUser')).token;
+          this.authenticationService.getSpecificUser(id,token).subscribe(data=>{
+            localStorage.setItem('ip',data[0].ip)});
           Swal.fire(
             'Connexion réussie!',
             '',
