@@ -170,7 +170,7 @@ router.get('/rightsend', checkAuth, (req, res, next) => {
 		        message: 'IP does not exist in database'
 		    		});}
 		else {
-			 	var id = hashids.decode(result[0].bcId);
+			 	var id = Number(hashids.decode(result[0].bcId))+1;
 				console.log(id);
 			 await truffleContract.getsendrights(id,ip).then((response) => {
 			    res.status(200).json({
@@ -188,7 +188,7 @@ router.get('/add', checkAuth, (req, res, next) => {
      var myip = req.body.myip;
      var ipadded = req.body.ipadded;
       User.find({ipAddress: myip}).exec().then(async (result) => {
-		var id = hashids.decode(result[0].bcId);
+		var id = Number(hashids.decode(result[0].bcId))+1;
 		//console.log(result);
 		if(result.length == 0) {
 		    	return res.status(409).json({
@@ -206,7 +206,7 @@ router.get('/add', checkAuth, (req, res, next) => {
 			        await truffleContract.addAddressTolist(id,ipadded).then((response) => {
 					console.log(response);
 			                  res.status(200).json({
-					  message: 'it was done heho'
+					  message: 'it was added'
 			   		 })
 			        })
 		    }
