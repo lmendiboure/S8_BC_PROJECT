@@ -103,6 +103,7 @@ contract Iov {
     function getRightCanSendById(uint _myid,string memory _IP) public view returns(bool) {
         return vehicleArray[_myid].getRightCanSend(_IP);
     }
+
     
     function incrementTrustIndex(uint _id) public payable returns(uint){
         return vehicleArray[_id].incrementTrustIndex();
@@ -113,9 +114,10 @@ contract Iov {
     }
     
     function changeRightCanSendByid(address _admin, uint _id, bool _right,uint _idwanted) public payable {
-        vehicleArray[_id].changeRightCanSend(_admin, _right, _idwanted);
+        string memory IP = vehicleArray[_idwanted].getAddressIP();
+        vehicleArray[_id].changeRightCanSend(_admin, _right, IP);
     }
-	
+
     function giveMoney(uint _iduser,int256 _value) public payable{
         moneyCount[_iduser]=_value;
     }
