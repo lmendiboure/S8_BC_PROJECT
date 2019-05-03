@@ -284,7 +284,7 @@ router.get('/:userId', checkAuth, (req, res, next) => {
     User.findById(id).exec().then(async (result) => {
         if(result) {
             blockId = Number(hashids.decode(result.bcId)) + 1;
-            console.log(blockId);
+            //console.log(blockId);
             //console.log('hello ' + hashids.decode(result.bcId));
             var info = { account:"", 
             name:"", 
