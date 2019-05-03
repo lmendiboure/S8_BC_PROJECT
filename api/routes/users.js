@@ -10,7 +10,7 @@ const multer = require('multer');
 
 const storage = multer.diskStorage({
     destination: function(req, file, callback) {
-        callback(null, './uploads');
+        callback(null, './uploads/');
     },
     filename: function(req, file, callback) {
         callback(null, new Date().toISOString() + file.originalName);
@@ -32,6 +32,7 @@ const upload = multer({
     },
     fileFilter: fileFilter
 });
+  
 var hashids = new Hashids('', 10);
 
 const mongoose = require('mongoose');
@@ -134,15 +135,16 @@ router.patch('/signup/:userId', (req, res, next) => {
 
 
 
-router.patch('/profile/:userId', upload.single('profileImage') , (req, res, next) => {
-    //console.log(req.file);
+router.patch('/profile/:userId', checkAuth, /*upload.single('profileImage'), */(req, res, next) => {
+   //console.log(req.file);
     const id = req.params.userId;
     var name;
     var immatriculation;
     User.find({_id: id})
     .exec()
     .then((user) => {
-            const updateOps = {profileImage: req.file.path};
+            //const updateOps = {profileImage: req.file.path};
+            const updateOps = {};
             for (const ops of req.body) {
                 updateOps[ops.propName] = ops.value;
                 if(ops.propName == "password") {
@@ -169,6 +171,10 @@ router.patch('/profile/:userId', upload.single('profileImage') , (req, res, next
                                             message: 'info modified',
                                             name: name,
                                             immatriculation: immatriculation,
+                                            /*request: {
+                                                type: 'GET',
+                                                url: "http://localhost:3000/products/" + result._id
+                                            }*/
                                         })
                                 })
                                 //res.status(200).json(result);
