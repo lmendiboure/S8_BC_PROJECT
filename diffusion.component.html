@@ -1,0 +1,65 @@
+<!-- sidebar-->
+
+<div class="w3-sidebar w3-light-grey w3-bar-block" style="width:20%">
+  <a class="logo-wrapper waves-effect">
+    <img class="img-responsive center-block" src="../../assets/side2.png" alt="">
+  </a>
+  <div class="list-group list-group-flush">
+    <h2 text-align="center">Actions</h2>
+    <a routerLink="/compte" routerLinkActive="active" class="list-group-item list-group-item-action waves-effect">
+      <mdb-icon fas icon="user" class="mr-3"></mdb-icon>Mes Statistiques
+    </a>
+    <a routerLink="/abonnement" routerLinkActive="active" class="list-group-item list-group-item-action waves-effect">
+      <mdb-icon fas icon="table" class="mr-3"></mdb-icon>Mes Abonnements
+    </a>
+    <a routerLink="/diffusion" routerLinkActive="active" class="list-group-item list-group-item-action waves-effect">
+      <mdb-icon far icon="map" class="mr-3"></mdb-icon>Diffuser du contenu
+    </a>
+  </div>
+</div>
+
+
+
+
+<!-- fin sidebare-->
+
+
+
+
+
+
+<div class="container-fluid">
+
+  <div id="div1">
+
+    <!--     titre  de page    -->
+    <mdb-card>
+      <mdb-card-body>
+        <h6 style="font-size:50px;">Diffuser une vidéo</h6>
+      </mdb-card-body>
+    </mdb-card>
+
+    <!--     fin titre       -->
+    <div class="wrapper2">
+
+      <div class="selection">
+        <div class="text-center">
+          <input type="file" class="text-center center-block file-upload" [(ngModel)]="currentInput" (change)="onFileSelected($event)">
+        </div>
+        <br>
+        <label>Envoyer ma vidéo au groupe de:</label>
+        <select class="custom-select" multiple (change)="onGroupSelection($event.target.value)">
+	  <!-- avoir la liste de groupes pas en statique soit par le serveur en locale de Luc soit par MongoDB qui stock les groupes de chaque utilisateur au choix-->
+          <option value="secu">Sécurité</option>
+          <option value="copain">Les copains du projet S8</option>
+          <option value="route">Etat de la route</option>
+        </select>
+
+      </div>
+
+      <button class="button" type="button" mdbBtn color="primary" mdbWavesEffect (click)="ngOnClickDiffusion()">Diffuser ma vidéo!</button>
+
+    </div>
+
+  </div>
+</div>
