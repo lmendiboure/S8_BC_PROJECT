@@ -94,12 +94,15 @@ router.get('/accounts', (req, res, next) => {
                     await truffleContract.renderTrustIndex(j).then(async (response) => {
                         info.trustIndex = response.toNumber();
 				//console.log(info);
-			  await truffleContract.renderAddressIP(j).then((response) => {
+			  await truffleContract.renderAddressIP(j).then(async (response) => {
 					//console.log(info);
 					info.ip=response;
 					//console.log(info.ip);
-				        json.push(info);
-				        return json;
+                        json.push(info);
+                        await truffleContract.renderImmatriculation(j).then((response) => {
+                            info.immatriculation = response;
+                            return json;
+                        });
 
 			});
 		 });
@@ -120,7 +123,7 @@ router.get('/:userId', (req, res, next) => {
         if(result) {
             blockId = hashids.decode(result.bcId) +1;
             //console.log('hello ' + hashids.decode(result.bcId));
-            var info = { account:"", name:"", trustIndex:"", ip:""};
+            var info = { account:"", name:"", trustIndex:"", ip:"", lastname: result.lastname, immatriculation: result.immatriculation, vehicle: result.vehicle, year: result.year};
             await truffleContract.renderAccount(blockId).then(async (response) => {
                 info.account = response;
                 //console.log(json);

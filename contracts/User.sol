@@ -18,6 +18,9 @@ struct accessMode {
 	uint public id;
 	string public name;
 	string public immatriculation;
+	string public lastname;
+	string public vehicle;
+	uint public year;
 	uint public trustIndex;
 	uint public netCount;
 	address myUserAd;

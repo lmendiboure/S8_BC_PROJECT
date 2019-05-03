@@ -5,6 +5,7 @@ const userSchema = mongoose.Schema({
     bcId: String,
     name: String, //prénom
     lastname: String, //nom
+    profileImage: String,
     immatriculation: String,
     ipAddress: String,
     bcAddress: String,

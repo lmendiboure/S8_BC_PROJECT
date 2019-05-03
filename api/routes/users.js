@@ -6,6 +6,32 @@ const bcrypt = require('bcrypt');
 var Hashids = require('hashids');
 const jwt = require('jsonwebtoken');
 const checkAuth = require('../middleware/check-auth');
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+    destination: function(req, file, callback) {
+        callback(null, './uploads');
+    },
+    filename: function(req, file, callback) {
+        callback(null, new Date().toISOString() + file.originalName);
+    }
+});
+
+const fileFilter = (req, file, callback) => {
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+        callback(null, true); //accept file
+    } else { // reject file
+        callback(null, false);
+    }
+};
+
+const upload = multer({
+    storage: storage, 
+    limits: {
+    fileSize: 1024 * 1024 * 5
+    },
+    fileFilter: fileFilter
+});
 var hashids = new Hashids('', 10);
 
 const mongoose = require('mongoose');
@@ -108,14 +134,15 @@ router.patch('/signup/:userId', (req, res, next) => {
 
 
 
-router.patch('/profile/:userId', (req, res, next) => {
+router.patch('/profile/:userId', upload.single('profileImage') , (req, res, next) => {
+    //console.log(req.file);
     const id = req.params.userId;
     var name;
     var immatriculation;
     User.find({_id: id})
     .exec()
     .then((user) => {
-            const updateOps = {};
+            const updateOps = {profileImage: req.file.path};
             for (const ops of req.body) {
                 updateOps[ops.propName] = ops.value;
                 if(ops.propName == "password") {
@@ -137,6 +164,7 @@ router.patch('/profile/:userId', (req, res, next) => {
                                     truffleContract.changeImmatriculation(hashids.decode(user[0].bcId), updateOps['immatriculation']).then((result) => {
                                         //console.log(user);
                                         immatriculation = result;
+
                                         res.status(200).json({
                                             message: 'info modified',
                                             name: name,
@@ -231,11 +259,13 @@ router.get('/accounts', checkAuth, (req, res, next) => {
                     info.name = response;
                     await truffleContract.renderTrustIndex(j).then(async (response) => {
                         info.trustIndex = response.toNumber();
-			  await truffleContract.renderAddressIP(j).then((response) => {
+			  await truffleContract.renderAddressIP(j).then(async (response) => {
 					info.ip=response;
-				        json.push(info);
-				        return json;
-
+                        json.push(info);
+                        await truffleContract.renderImmatriculation(j).then((response) => {
+                            info.immatriculation = response;
+                            return json;
+                        });
 			});
 		 });
                 });
@@ -253,13 +283,24 @@ router.get('/:userId', checkAuth, (req, res, next) => {
 
     User.findById(id).exec().then(async (result) => {
         if(result) {
-            blockId = hashids.decode(result.bcId) +1;
+            blockId = Number(hashids.decode(result.bcId)) + 1;
+            console.log(blockId);
             //console.log('hello ' + hashids.decode(result.bcId));
-            var info = { account:"", name:"", trustIndex:"", ip:""};
+            var info = { account:"", 
+            name:"", 
+            trustIndex:"", 
+            ip:"", 
+            lastname: result.lastname, 
+            immatriculation: result.immatriculation, 
+            vehicle: result.vehicle, 
+            year: result.year, 
+            image: result.profileImage};
             await truffleContract.renderAccount(blockId).then(async (response) => {
                 info.account = response;
                 //console.log(json);
+                console.log(response)
                 await truffleContract.renderName(blockId).then(async (response) => {
+                    
                     info.name = response;
                     await truffleContract.renderTrustIndex(blockId).then(async(response) => {
                         info.trustIndex = response.toNumber();

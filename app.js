@@ -15,6 +15,7 @@ mongoose.connect('mongodb+srv://Iov:' + process.env.PW +'@cluster0-zw9s8.mongodb
 
 
 app.use(morgan('dev'));
+app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
