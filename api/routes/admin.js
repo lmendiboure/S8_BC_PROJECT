@@ -159,7 +159,7 @@ router.post('/change', (req, res, next) => {
     var value = req.body.value;
     var idx,idy;
 
-    User.find({ipAddress: ipx}).exec().then((result) => {
+    User.find({ipAddress: ipx}).exec().then(async (result) => {
 	if(result.length == 0) {
 		    	return res.status(409).json({
 		        message: 'IP does not exist in database'
@@ -167,30 +167,28 @@ router.post('/change', (req, res, next) => {
        // console.log(result[0].bcAddress);
         idx =  Number(hashids.decode(result[0].bcId))+1 //It works
         console.log(idx);
-    })
+    
 
-    User.find({ipAddress: ipy}).exec().then( async (result) => {
+    await User.find({ipAddress: ipy}).exec().then(async (result) => {
 	if(result.length == 0) {
 		    	return res.status(409).json({
 		        message: 'IP does not exist in database'
-		    		});}
-        
-        idy =  Number(hashids.decode(result[0].bcId))+1 //It works
-	console.log(idy);
-
-	 await truffleContract.changerights(idx,idy,value).then((response) => {
-			    res.status(200).json({
-				message: 'admin changes send rights '
-		    }).catch(() => {
-			res.send(err.message);
+		    })
+	} else {
+		idy =  Number(hashids.decode(result[0].bcId))+1 //It works
+		console.log(idy);
+		console.log(value);
+		await truffleContract.changerights(idx,idy,value).then((response) => {
+			    return res.status(200).json({
+				message: 'admin changes send rights'
+		    })
+		})
+		}
+    	})
+	}).catch((err) => {
+			console.log(err);
 		    });
-		});
-
-    })
-
-   
 });
-
 
 
 router.get('/', (req, res, next) => {
