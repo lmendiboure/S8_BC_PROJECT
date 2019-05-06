@@ -44,20 +44,20 @@
 
       <div class="selection">
         <div class="text-center">
-          <input type="file" class="text-center center-block file-upload">
+          <input type="file" class="text-center center-block file-upload" [(ngModel)]="currentInput" (change)="onFileSelected($event)">
         </div>
         <br>
         <label>Envoyer ma vidéo au groupe de:</label>
-        <select class="custom-select" multiple>
-
-          <option value="1">Sécurité</option>
-          <option value="2">Les copains du projet S8</option>
-          <option value="3">Etat de la route</option>
+        <select class="custom-select" multiple (change)="onGroupSelection($event.target.value)">
+	  <!-- avoir la liste de groupes pas en statique soit par le serveur en locale de Luc soit par MongoDB qui stock les groupes de chaque utilisateur au choix-->
+          <option value="secu">Sécurité</option>
+          <option value="copain">Les copains du projet S8</option>
+          <option value="route">Etat de la route</option>
         </select>
 
       </div>
 
-      <button class="button" type="button" mdbBtn color="primary" mdbWavesEffect (click)="popUp()">Diffuser ma vidéo!</button>
+      <button class="button" type="button" mdbBtn color="primary" mdbWavesEffect (click)="ngOnClickDiffusion()">Diffuser ma vidéo!</button>
 
     </div>
 
