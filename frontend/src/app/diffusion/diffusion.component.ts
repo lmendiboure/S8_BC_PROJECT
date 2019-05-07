@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { HttpClient} from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-diffusion',
