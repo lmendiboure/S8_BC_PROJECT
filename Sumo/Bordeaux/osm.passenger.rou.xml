@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on Fri Apr  5 10:14:20 2019 by Eclipse SUMO duarouter Version 1.1.0
+<!-- generated on Wed May  1 12:35:10 2019 by Eclipse SUMO duarouter Version 1.1.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/duarouterConfiguration.xsd">
 
     <input>
-        <net-file value="/home/invite/Sumo/2019-04-05-10-13-45/osm.net.xml"/>
-        <route-files value="/home/invite/Sumo/2019-04-05-10-13-45/osm.passenger.trips.xml"/>
+        <net-file value="osm.net.xml"/>
+        <route-files value="osm.passenger.trips.xml"/>
     </input>
 
     <output>
-        <output-file value="/home/invite/Sumo/2019-04-05-10-13-45/osm.passenger.rou.xml"/>
-        <alternatives-output value="/home/invite/Sumo/2019-04-05-10-13-45/osm.passenger.rou.alt.xml"/>
+        <output-file value="osm.passenger.rou.xml"/>
+        <alternatives-output value="osm.passenger.rou.alt.xml"/>
     </output>
 
     <time>
@@ -506,7 +506,7 @@
     <vehicle id="veh172" type="veh_passenger" depart="1057.61" departLane="best">
         <route edges="26647027 -26647027 23162617#0 23162617#1 448118528#0 448118528#1 61407901#0 182069787#1 182069786#1 182069786#5 182069786#7 182069786#8 291166433#0 189536169#0 194261694#0 194261694#2 194261692 194261693#0 194261693#1 -625506881#0 -625506882#3 -625506882#0 283746975#1 180542447#0 23458741#0 626732218#6 626732218#7 626732218#10 626732218#11 185675468#0"/>
     </vehicle>
-    <vehicle id="veh173" type="veh_passenger" depart="1063.75" departLane="best" departSpeed="max">
+    <vehicle id="veh173" type="veh_passenger" depart="1063.76" departLane="best" departSpeed="max">
         <route edges="187673068#0 187673068#1 187673068#2 287478069 283591101#0 283591101#1 180368389#0 283746975#1 180542447#0 180542447#1 180542447#3 180542447#5 180542447#6 23157811#1 115994002#0 178163877#1 180582575#0 180582575#2 23160144#0 23160144#1"/>
     </vehicle>
     <vehicle id="veh174" type="veh_passenger" depart="1069.90" departLane="best" departSpeed="max">
@@ -701,7 +701,7 @@
     <vehicle id="veh243" type="veh_passenger" depart="1494.18" departLane="best">
         <route edges="287478069 283591101#0 283591101#1 180368389#0 371964284#1 625506882#3 625506881#0 -194261693#1 -194261693#0 -194261692 -194261694#3 -194261694#1 -189536169#2 23361564#1 23361564#6 23361564#8 23361564#9 23361564#10 23361564#11 23361564#12 80036959#1 182187278#0 604385374#1 604385374#2 604385373#0 604385373#1 -604385373#1"/>
     </vehicle>
-    <vehicle id="veh244" type="veh_passenger" depart="1500.32" departLane="best">
+    <vehicle id="veh244" type="veh_passenger" depart="1500.33" departLane="best">
         <route edges="48018456#2 48018456#3 187643366#1 -180582575#2 -180582575#1 178163878#1 -115994002#1 180362516#0 605662851#0 189588564#2 189588564#3 189588564#4 189588562#2 458296950 626726210#0"/>
     </vehicle>
     <vehicle id="veh245" type="veh_passenger" depart="1506.47" departLane="best">
