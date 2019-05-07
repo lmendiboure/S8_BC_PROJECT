@@ -1,15 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from "@angular/common/http"
-import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInterceptor, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { Observable, of, throwError, from } from 'rxjs';
+import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { Observable, of, throwError} from 'rxjs';
 import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
-import { DemoService } from './demo.service';
-import { reject } from 'q';
 
 @Injectable()
 export class FakeBackendInterceptor {
     constructor(private http: HttpClient,
-        private demoService: DemoService
     ) { }
     public users;
     public allusers;
@@ -91,18 +88,6 @@ export class FakeBackendInterceptor {
                 })
             }
 
-            /*if (request.url.endsWith('/admin/getusers') && request.method === 'GET') {
-                this.http.get('http://localhost:3001/admin/accounts').
-                    subscribe(res => { 
-                        this.allusers=res;
-                        console.log(res) });
-                return ok({
-                    users: this.allusers
-                })
-            }*/
-
-
-
             if (request.url.endsWith('/user/updateInformation') && request.method === "PUT") {
                 let url = "http://localhost:3000/users/" + request.body.pseudo;
                 console.log(url);
@@ -125,29 +110,12 @@ export class FakeBackendInterceptor {
                     immatriculation: request.body.immatriculation
                 })
             }
-
-
-
-            // get all users
-            //if (request.url.endsWith('/users') && request.method === 'GET') {
-            //if (!isLoggedIn) return unauthorised();
-            //return ok(this.users);
-            //}
-
-
-
-            // pass through any requests not handled above
             return next.handle(request);
         }))
             .pipe(materialize())
             .pipe(delay(500))
             .pipe(dematerialize());
 
-        // private helper functions
-
-        function unauthorised() {
-            return throwError({ status: 401, error: { message: 'Unauthorised' } });
-        }
 
         function ok(body) {
             return of(new HttpResponse({ status: 200, body }));

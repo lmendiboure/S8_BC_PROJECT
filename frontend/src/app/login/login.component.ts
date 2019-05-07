@@ -63,6 +63,7 @@ export class LoginComponent implements OnInit {
           var token;
           token=JSON.parse(localStorage.getItem('currentUser')).token;
           this.authenticationService.getSpecificUser(id,token).subscribe(data=>{
+            console.log(data);
             localStorage.setItem('ip',data[0].ip)});
           Swal.fire(
             'Connexion réussie!',

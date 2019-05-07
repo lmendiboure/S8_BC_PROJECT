@@ -94,7 +94,7 @@ export class AuthentificationService {
   }
 
   getSpecificUser(id: string, token: string) {
-    var url = 'http://localhost:3001/users/' + id;
+    var url = 'http://localhost:3001/users/'+id;
     let headers = new HttpHeaders().set('Authorization','Bearer '+ token);
     return this.http.get(url,{headers});
       
@@ -103,7 +103,6 @@ export class AuthentificationService {
   changeRights(ipx: string,ipy: string,value: string,token: string){
     var url = 'http://localhost:3001/admin/change';
     let headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
-    console.log(headers);
     return this.http.post<any>(url,{ipx,ipy,value},{headers});
   }
 
@@ -112,6 +111,7 @@ export class AuthentificationService {
     localStorage.removeItem('currentUser');
     localStorage.removeItem('id');
     localStorage.removeItem('informations');
+    localStorage.removeItem('ip');
     this.currentUserSubject.next(null);   
     this.router.navigate(['/login']); 
   }

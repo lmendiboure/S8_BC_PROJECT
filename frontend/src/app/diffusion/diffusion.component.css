@@ -1,27 +1,17 @@
-
-
 #div1{
     text-align: center;
-    margin-left: 20%;
-
+    margin-left: 21%;
 }
 
+#h6md{
+  font-size:50px;
+}
 
-h2 {
-    color: #006699;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    font-size: 30px;
-    font-weight: normal;
-    line-height: 48px;
-    text-decoration-color: navy;
-    text-align: center;
-  }
-
-
-a {
+a{
   color: #000000;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
+
 #img1{
     width: 10%;
     height: 10%;

@@ -53,19 +53,19 @@ export class ManageDiffusionVideoComponent implements OnInit {
       pipe(first())
       .subscribe(
         data => {
-          console.log(data);
           Swal.fire(
-            'Inscription réussie!',
+            "Modification effectuée, vous avez passé le droit d'envoyer de "+this.f.ipemetteur.value+
+            " à " + this.f.ipdest.value + " à " + this.f.bool.value +".",
             '',
             'success'
           ).then(function () {
-            window.location.href = '/login';
+            window.location.reload();
           })
         },
         error => {
           Swal.fire({
             type: 'error',
-            title: "Erreur lors de l'inscription",
+            title: "Erreur lors de la modification des droits",
             text: error,
           }).then(function () {
             window.location.reload();
