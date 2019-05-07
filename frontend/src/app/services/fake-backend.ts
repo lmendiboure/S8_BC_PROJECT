@@ -25,10 +25,8 @@ export class FakeBackendInterceptor {
                 const res = fetch('http://localhost:3001/users/login')
                 .then(response=>{
                     if(response) {
-                        console.log(response);
                         resolve(response.json());
                     } else {
-                        console.log("error");
                         reject("cc");
                     }
                     
@@ -90,7 +88,6 @@ export class FakeBackendInterceptor {
 
             if (request.url.endsWith('/user/updateInformation') && request.method === "PUT") {
                 let url = "http://localhost:3000/users/" + request.body.pseudo;
-                console.log(url);
                 this.http.put(url, {
                     prenom: request.body.prenom, pseudo: request.body.pseudo, id: request.body.id, nom: request.body.nom, mobile: request.body.mobile, email: request.body.email, password: request.body.password,
                     vehicle: request.body.vehicle, year: request.body.year, immatriculation: request.body.immatriculation

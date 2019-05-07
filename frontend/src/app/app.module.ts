@@ -70,7 +70,7 @@ import { InformationUserResolver } from './resolvers/informationAboutUser.resolv
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     fakeBackendProvider,
     UsersResolver,
-    InformationUserResolver
+    InformationUserResolver,
   ],
   bootstrap: [AppComponent]
 })

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthentificationService } from '../services/authentification.service';
-import { User } from '../models/user';
 
 
 @Component({
@@ -10,9 +9,11 @@ import { User } from '../models/user';
 })
 export class NavbarComponent implements OnInit {
 
-  currentUser: User;
-  connected =true;
+  currentUser;
+  connected = true;
   id;
+  token;
+  boolAdmin;
 
 
   constructor(private authentification: AuthentificationService) {
@@ -20,24 +21,24 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit() {
-    if(localStorage.getItem('id')!=null){
+    if (localStorage.getItem('id') != null) {
       this.id = localStorage.getItem('id').split('"')[1];
     }
+    this.boolAdmin = localStorage.getItem('isAdmin');
   }
 
   public logout(): void {
     this.authentification.logout();
-    window.location.reload();   
+    window.location.reload();
   }
 
   public ifRoot(): Boolean {
-    if (this.currentUser) {
-      if (this.currentUser.pseudo == "admin" && this.currentUser.password == "admin") {
-        return true;  
-      }
-      else {
-        return false;
-      }
+    if (this.boolAdmin === "true") {
+      console.log("je suis là");
+      return true;
+    }
+    else {
+      return false;
     }
   }
 }

@@ -26,7 +26,6 @@ export class InformationAboutUserComponent implements OnInit {
     var jsonInfo = JSON.parse(localStorage.getItem('currentUser'));
     var id = this._route.snapshot.queryParamMap.get('id');
     this.userSearch = this._route.snapshot.data['information'];
-    console.log(this.userSearch);
   }
 
 }
