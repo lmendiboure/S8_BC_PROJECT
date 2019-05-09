@@ -93,7 +93,7 @@ router.post("/login", (req, res, next) => {
 
 router.patch('/signup/:userId', (req, res, next) => {
     const id = req.params.userId;
-    User.find({_id: id})
+    User.find({pseudo: req.body.pseudo})
     .exec()
     .then((user) => {
         if(user.length >= 1) {
