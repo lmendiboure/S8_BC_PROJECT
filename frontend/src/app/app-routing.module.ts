@@ -21,6 +21,7 @@ import { GestionProblemesComponent } from './gestion-problemes/gestion-problemes
 
 import { UsersResolver } from './resolvers/users.resolver';
 import { InformationUserResolver } from './resolvers/informationAboutUser.resolver';
+import { SignalementsResolver } from './resolvers/signalements.resolver';
 
 
 
@@ -39,7 +40,7 @@ const routes: Routes = [
   { path: 'diffusion', component: DiffusionComponent, canActivate: [GuardsComponent] },
   { path: 'suivre', component: SuivreComponent, canActivate: [GuardsComponent] },
   { path: 'admin/managerights', component: ManageDiffusionVideoComponent, canActivate: [GuardsComponent]},
-  { path: 'admin/manageissues', component: GestionProblemesComponent, canActivate: [GuardsComponent]},
+  { path: 'admin/manageissues', component: GestionProblemesComponent, canActivate: [GuardsComponent], resolve: {signalements: SignalementsResolver}},
 
 ];
 

@@ -31,6 +31,7 @@ import { ErrorInterceptor } from './services/helpers.component';
 
 import { UsersResolver } from './resolvers/users.resolver'
 import { InformationUserResolver } from './resolvers/informationAboutUser.resolver';
+import { SignalementsResolver } from './resolvers/signalements.resolver'
 
 
 
@@ -71,6 +72,7 @@ import { InformationUserResolver } from './resolvers/informationAboutUser.resolv
     fakeBackendProvider,
     UsersResolver,
     InformationUserResolver,
+    SignalementsResolver,
   ],
   bootstrap: [AppComponent]
 })

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-gestion-problemes',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GestionProblemesComponent implements OnInit {
 
-  constructor() { }
+  signalements;
+
+  constructor(
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit() {
+    this.signalements = this.route.snapshot.data['signalements'].response;
+    console.log(this.signalements);
   }
 
 }
