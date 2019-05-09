@@ -70,44 +70,6 @@ router.get('/accounts', (req, res, next) => {
     });
 });
 
-router.get('/:userId', (req, res, next) => {
-    var json =[];
-    const id = req.params.userId;
-
-    User.findById(id).exec().then(async (result) => {
-        if(result) {
-            blockId = hashids.decode(result.bcId) +1;
-            //console.log('hello ' + hashids.decode(result.bcId));
-            var info = { account:"", name:"", trustIndex:"", ip:"", lastname: result.lastname, immatriculation: result.immatriculation, vehicle: result.vehicle, year: result.year};
-            await truffleContract.renderAccount(blockId).then(async (response) => {
-                info.account = response;
-                //console.log(json);
-                await truffleContract.renderName(blockId).then(async (response) => {
-                    info.name = response;
-                    await truffleContract.renderTrustIndex(blockId).then(async(response) => {
-                        info.trustIndex = response.toNumber();
-			await truffleContract.renderAddressIP(blockId).then((response) => {
-					//console.log(info);
-					info.ip=response;
-                        		json.push(info);
-                        		return json;
-                    }).then((result) => {
-                        res.status(200).send(json);
-                    });
-                });
-            });
-	});
-        } else {
-            res.status(404).json({
-                message : 'No valid entry for provided ID'
-            });
-        }
-
-        }).catch((err) => {
-            res.status(500).send(err);
-    });
-});
-
 router.post('/change', (req, res, next) => {
     var ipx = req.body.ipx;
     var ipy = req.body.ipy;
@@ -188,6 +150,57 @@ router.post('/', (req, res, next) => {
                 });
             });
         }
+    });
+});
+
+router.get('/reports', (req, res, next) => {
+    Report.find().then((response) => {
+        console.log(response);
+        //console.log(result);
+        res.status(200).json({
+            message: 'Liste des signalements',
+            response: response
+        })
+    }).catch((err) => {
+        res.send(err.message);
+    });
+});
+
+router.get('/:userId', (req, res, next) => {
+    var json =[];
+    const id = req.params.userId;
+
+    User.findById(id).exec().then(async (result) => {
+        if(result) {
+            blockId = hashids.decode(result.bcId) +1;
+            //console.log('hello ' + hashids.decode(result.bcId));
+            var info = { account:"", name:"", trustIndex:"", ip:"", lastname: result.lastname, immatriculation: result.immatriculation, vehicle: result.vehicle, year: result.year};
+            await truffleContract.renderAccount(blockId).then(async (response) => {
+                info.account = response;
+                //console.log(json);
+                await truffleContract.renderName(blockId).then(async (response) => {
+                    info.name = response;
+                    await truffleContract.renderTrustIndex(blockId).then(async(response) => {
+                        info.trustIndex = response.toNumber();
+			await truffleContract.renderAddressIP(blockId).then((response) => {
+					//console.log(info);
+					info.ip=response;
+                        		json.push(info);
+                        		return json;
+                    }).then((result) => {
+                        res.status(200).send(json);
+                    });
+                });
+            });
+	});
+        } else {
+            res.status(404).json({
+                message : 'No valid entry for provided ID'
+            });
+        }
+
+        }).catch((err) => {
+            res.status(500).send(err);
     });
 });
 

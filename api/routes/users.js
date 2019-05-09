@@ -335,19 +335,17 @@ router.get('/:userId', checkAuth, (req, res, next) => {
 router.post('/report/:userBcAddress', (req, res, next) => {
     var adr = req.params.userBcAddress;
     console.log(adr)
-    User.find().then((result) => {
-        const report = new Report({
-            _id: new mongoose.Types.ObjectId(),
-            title: req.body.title,
-            signalingAddress: adr,
-            userAddress: req.body.userAddress,
-            description: req.body.description,
-            date: req.body.date,
-        })
-        console.log(report);
-        report.save().then((response) => {
-            //console.log(result);
-    
+    const report = new Report({
+        _id: new mongoose.Types.ObjectId(),
+        title: req.body.title,
+        signalingAddress: adr,
+        userAddress: req.body.userAddress,
+        description: req.body.description,
+        date: req.body.date,
+    })
+    console.log(report);
+    report.save().then((response) => {
+        //console.log(result);
         res.status(200).json({
             message: 'signalement fait',
             response: response
@@ -355,7 +353,7 @@ router.post('/report/:userBcAddress', (req, res, next) => {
     }).catch((err) => {
         res.send(err.message);
     });
-    });
+    
     
     
 });
