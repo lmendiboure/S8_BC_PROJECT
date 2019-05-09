@@ -4,7 +4,7 @@ const reportSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     title: String,
     signalingAddress: String,
-    userAddress: String,
+    pseudo: String,
     description: String,
     date: String
 });

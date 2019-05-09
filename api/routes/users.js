@@ -26,13 +26,13 @@ const fileFilter = (req, file, callback) => {
 };
 
 const upload = multer({
-    storage: storage, 
+    storage: storage,
     limits: {
     fileSize: 1024 * 1024 * 5
     },
     fileFilter: fileFilter
 });
-  
+
 var hashids = new Hashids('', 10);
 
 const mongoose = require('mongoose');
@@ -163,7 +163,7 @@ router.patch('/profile/:userId', checkAuth, /*upload.single('profileImage'), */(
                                 await truffleContract.changeName(hashids.decode(user[0].bcId), user[0].name).then((response) => {
                                     console.log(response)
                                     name = response;
-                                 
+
                                     truffleContract.changeImmatriculation(hashids.decode(user[0].bcId), updateOps['immatriculation']).then((result) => {
                                         //console.log(user);
                                         immatriculation = result;
@@ -179,9 +179,9 @@ router.patch('/profile/:userId', checkAuth, /*upload.single('profileImage'), */(
                                         })
                                 })
                                 //res.status(200).json(result);
-                                
+
                             })
-                            
+
                             }).catch((err) => {
                                 //console.log(err);
                                 res.status(500).json({
@@ -192,7 +192,7 @@ router.patch('/profile/:userId', checkAuth, /*upload.single('profileImage'), */(
                     });
                 }
             }
-        
+
     })
 });
 
@@ -293,21 +293,21 @@ router.get('/:userId', checkAuth, (req, res, next) => {
             blockId = Number(hashids.decode(result.bcId)) + 1;
             //console.log(blockId);
             //console.log('hello ' + hashids.decode(result.bcId));
-            var info = { account:"", 
-            name:"", 
-            trustIndex:"", 
-            ip:"", 
-            lastname: result.lastname, 
-            immatriculation: result.immatriculation, 
-            vehicle: result.vehicle, 
-            year: result.year, 
+            var info = { account:"",
+            name:"",
+            trustIndex:"",
+            ip:"",
+            lastname: result.lastname,
+            immatriculation: result.immatriculation,
+            vehicle: result.vehicle,
+            year: result.year,
             image: result.profileImage};
             await truffleContract.renderAccount(blockId).then(async (response) => {
                 info.account = response;
                 //console.log(json);
                 console.log(response)
                 await truffleContract.renderName(blockId).then(async (response) => {
-                    
+
                     info.name = response;
                     await truffleContract.renderTrustIndex(blockId).then(async(response) => {
                         info.trustIndex = response.toNumber();
@@ -333,14 +333,14 @@ router.get('/:userId', checkAuth, (req, res, next) => {
     });
 });
 
-router.post('/report/:userBcAddress', checkAuth, (req, res, next) => {
-    var adr = req.params.userBcAddress;
+router.post('/report/:userId', checkAuth, (req, res, next) => {
+    var adr = req.params.userId;
     console.log(adr)
     const report = new Report({
         _id: new mongoose.Types.ObjectId(),
         title: req.body.title,
         signalingAddress: adr,
-        userAddress: req.body.userAddress,
+        pseudo: req.body.pseudo,
         description: req.body.description,
         date: req.body.date,
     })
@@ -354,9 +354,9 @@ router.post('/report/:userBcAddress', checkAuth, (req, res, next) => {
     }).catch((err) => {
         res.send(err.message);
     });
-    
-    
-    
+
+
+
 });
 
 router.get('/', checkAuth, (req, res, next) => {
