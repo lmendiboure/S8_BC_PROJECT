@@ -96,7 +96,7 @@ router.patch('/signup/:userId', (req, res, next) => {
     User.find({_id: id})
     .exec()
     .then((user) => {
-        if(user.length > 1) {
+        if(user.length >= 1) {
             console.log(user);
             return res.status(409).json({
                 message: 'Mail already exists'
