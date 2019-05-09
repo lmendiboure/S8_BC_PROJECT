@@ -1,3 +1,5 @@
 *.zip
 serv_local/node_modules/
 serv_local/p2.mp4
+/serv_local/225.0.0.1
+/serv_local/225.0.0.2

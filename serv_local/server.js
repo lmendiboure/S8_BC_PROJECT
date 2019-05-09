@@ -12,7 +12,7 @@ groups.set("secu", "225.0.0.1");
 app.get('/diffusion/:video/:group', function(req, res){
   console.log(req.params)
   if(req.params.video!='' && req.params.group !=''){
-   shell.exec("./send.sh "+groups[req.params.group]+" "+"2500"+" "+req.params.video)
+   shell.exec("./send.sh "+ req.params.group+" "+"2500"+" " + req.params.video)
    res.status(200).send()
   }
   else{
@@ -20,9 +20,9 @@ app.get('/diffusion/:video/:group', function(req, res){
  }
  });
 
-app.get('/video', function(req, res) {
+app.get('/video/:group_name/:video_name', function(req, res) {
   console.log('lire une vidéo')
-  const path = 'p2.mp4'
+  const path = './'+req.params.group_name+'/'+req.params.video_name
   const stat = fs.statSync(path)
   const fileSize = stat.size
   const range = req.headers.range
@@ -52,6 +52,15 @@ app.get('/video', function(req, res) {
     res.writeHead(200, head)
     fs.createReadStream(path).pipe(res)
   }
+});
+
+
+app.get('/local_video_list/:group', function(req, res){
+   console.log('liste des vidéos d\'un groupe')
+   const list_video=shell.exec('ls '+ req.params.group).stdout
+
+   res.status(200).json({list : list_video})
+ 
 });
 
 server.listen(2900,'127.0.0.1',function(){
