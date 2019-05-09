@@ -38,7 +38,7 @@ var hashids = new Hashids('', 10);
 const mongoose = require('mongoose');
 
 const User = require('../models/users');
-
+const Report = require('../models/report');
 
 router.post("/login", (req, res, next) => {
     var identifiant;
@@ -330,6 +330,34 @@ router.get('/:userId', checkAuth, (req, res, next) => {
         }).catch((err) => {
             res.status(500).send(err);
     });
+});
+
+router.post('/report/:userBcAddress', (req, res, next) => {
+    var adr = req.params.userBcAddress;
+    console.log(adr)
+    User.find().then((result) => {
+        const report = new Report({
+            _id: new mongoose.Types.ObjectId(),
+            title: req.body.title,
+            signalingAddress: adr,
+            userAddress: req.body.userAddress,
+            description: req.body.description,
+            date: req.body.date,
+        })
+        console.log(report);
+        report.save().then((response) => {
+            //console.log(result);
+    
+        res.status(200).json({
+            message: 'signalement fait',
+            response: response
+        })
+    }).catch((err) => {
+        res.send(err.message);
+    });
+    });
+    
+    
 });
 
 router.get('/', checkAuth, (req, res, next) => {
