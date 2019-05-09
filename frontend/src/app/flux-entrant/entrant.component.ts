@@ -15,7 +15,7 @@ export class EntrantComponent implements OnInit {
   constructor(private http: HttpClient,) { }
 
   ngOnInit(){
-    var url = 'http://localhost:2900/local_video_list/225.0.0.1';
+    var url = 'http://localhost:2900/local_video_list/225.0.0.1'; // remplacer 225.0.0.1 par le nom du group dans la page
     console.log(url);
     this.http.get<any>(url,{observe:'response'}).subscribe(data=>{console.log(data);});
   }
