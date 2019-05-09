@@ -2,11 +2,12 @@
 
 <div class="container-fluid">
   <mdb-card *ngFor="let signalement of signalements" id="card">
-    <mdb-card-header># {{signalement.title}}</mdb-card-header>
+    <mdb-card-header># {{signalement.title}}
+       <button><mdb-icon fas icon="check" (click)="taskCompleted(signalement._id)"></mdb-icon></button></mdb-card-header>
     <mdb-card-body>
       <blockquote class="blockquote mb-0">
         <p>{{signalement.description}}</p>
-        <footer class="blockquote-footer"> {{signalement.date}} - <cite title="Source Title">{{signalement.pseudo}} (id: {{signalement._id}})</cite></footer>
+        <footer class="blockquote-footer"> {{signalement.date}} - <cite title="Source Title">{{signalement.pseudo}} (id: {{signalement.id}})</cite></footer>
       </blockquote>
     </mdb-card-body>
   </mdb-card>

@@ -46,6 +46,9 @@ export class ManageUserComponent implements OnInit {
 
     this.users=this.route.snapshot.data['users'];
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    var array = this.users;
+    array.sort((a, b) => {return a.trustIndex-b.trustIndex}); 
+    console.log(array);
   }
 
   get f() { return this.addUserForm.controls; }
