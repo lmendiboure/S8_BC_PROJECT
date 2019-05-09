@@ -9,6 +9,25 @@ var hashids = new Hashids('', 10);
 const User = require('../models/users');
 const Report = require('../models/report');
 
+router.delete('/reports/:reportId', (req, res, next) => {
+    var id = req.params.reportId;
+    console.log(id);
+    Report.deleteOne({
+        _id: id
+    })
+    .exec()
+    .then((response) => {
+        console.log(response);
+        //console.log(result);
+        res.status(200).json({
+            message: 'Signalement supprimé',
+            response: response
+        })
+    }).catch((err) => {
+        res.send(err.message);
+    });
+});
+
 router.post('/delete', (req, res, next) => {
     var id;
     var name = req.body.name;
@@ -108,50 +127,6 @@ router.post('/change', (req, res, next) => {
 });
 
 
-router.post('/', (req, res, next) => {
-    var identifiant;
-    User.find({name: req.body.name})
-    .exec()
-    .then((name) => {
-        if(name.length >= 1) {
-            return res.status(409).json({
-                message: 'name already exists'
-            });
-        } else {
-            User.find().then(async (result) => {
-                console.log(result.length);
-                var id = hashids.encode(result.length);
-            const user = new User({
-                _id: new mongoose.Types.ObjectId(),
-                bcId: id,
-                name: req.body.name,
-                ipAddress: req.body.ip,
-                bcAddress: "",
-            })
-            //console.log('hash id ' + user.bcId);
-            identifiant=user._id;
-            //console.log(user.name);
-            await truffleContract.addAccount(user.ipAddress, user.name).then((response) => {
-                truffleContract.renderLastAccount().then(async (result) => {
-                    user.bcAddress = result;
-                    //console.log(user);
-                    user.save().then((result) => {
-                        //console.log(result);
-
-                    res.status(200).json({
-                        message: 'admin adds user',
-                        identifiant: identifiant,
-                        createdUser: response
-                    })
-                }).catch((err) => {
-                    res.send(err.message);
-                });
-                });
-                });
-            });
-        }
-    });
-});
 
 router.get('/reports', (req, res, next) => {
     Report.find().then((response) => {
@@ -201,6 +176,51 @@ router.get('/:userId', (req, res, next) => {
 
         }).catch((err) => {
             res.status(500).send(err);
+    });
+});
+
+router.post('/', (req, res, next) => {
+    var identifiant;
+    User.find({name: req.body.name})
+    .exec()
+    .then((name) => {
+        if(name.length >= 1) {
+            return res.status(409).json({
+                message: 'name already exists'
+            });
+        } else {
+            User.find().then(async (result) => {
+                console.log(result.length);
+                var id = hashids.encode(result.length);
+            const user = new User({
+                _id: new mongoose.Types.ObjectId(),
+                bcId: id,
+                name: req.body.name,
+                ipAddress: req.body.ip,
+                bcAddress: "",
+            })
+            //console.log('hash id ' + user.bcId);
+            identifiant=user._id;
+            //console.log(user.name);
+            await truffleContract.addAccount(user.ipAddress, user.name).then((response) => {
+                truffleContract.renderLastAccount().then(async (result) => {
+                    user.bcAddress = result;
+                    //console.log(user);
+                    user.save().then((result) => {
+                        //console.log(result);
+
+                    res.status(200).json({
+                        message: 'admin adds user',
+                        identifiant: identifiant,
+                        createdUser: response
+                    })
+                }).catch((err) => {
+                    res.send(err.message);
+                });
+                });
+                });
+            });
+        }
     });
 });
 
