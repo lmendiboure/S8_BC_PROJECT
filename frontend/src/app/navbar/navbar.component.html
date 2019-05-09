@@ -18,7 +18,7 @@
                     <div class="btn-group" mdbDropdown>
                         <mdb-icon fas icon="user" mdbDropdownToggle></mdb-icon>
                         <div class="dropdown-menu dropdown-menu-right dropdown-primary">
-                            <a class="dropdown-item" *ngIf="currentUser" routerLink="/admin">Gestion du réseau</a>
+                            <a class="dropdown-item" *ngIf="ifRoot()" routerLink="/admin">Gestion du réseau</a>
                             <a class="dropdown-item" routerLink="/compte">Mon compte</a>
                             <a class="dropdown-item" [routerLink]="['/profile',id]">Mon profil</a>
                             <div class="divider dropdown-divider"></div>

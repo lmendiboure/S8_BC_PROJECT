@@ -2,6 +2,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { MDBBootstrapModule } from 'angular-bootstrap-md'
+
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { AuthentificationComponent } from './authentification/authentification.component';
@@ -11,18 +14,7 @@ import { AdminComponent } from './admin/admin.component';
 import { ManageUserComponent } from './manage-user/manage-user.component';
 import { ManageTIComponent } from './manage-ti/manage-ti.component';
 import { LoginComponent } from './login/login.component';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { fakeBackendProvider } from './services/fake-backend';
-import { JwtInterceptor } from './services/jwt.interceptor';
-import { ErrorInterceptor } from './services/helpers.component';
-import { DemoService } from './services/demo.service';
 import { ProfileComponent } from './profile/profile.component';
-import { UsersResolver } from './resolvers/users.resolver'
-import { MDBBootstrapModule } from 'angular-bootstrap-md'
-import { InformationUserResolver } from './resolvers/informationAboutUser.resolver';
-
-
-
 import { AbonnementComponent } from './page-abonnement/abonnement.component';
 import { CompteComponent } from './mon-compte/compte.component';
 import { SuivreComponent } from './suivre/suivre.component';
@@ -30,6 +22,19 @@ import { DiffusionComponent } from './diffusion/diffusion.component';
 import { EntrantComponent } from './flux-entrant/entrant.component';
 import { ManageDiffusionVideoComponent } from './manage-diffusion-video/manage-diffusion-video.component';
 import { GestionProblemesComponent } from './gestion-problemes/gestion-problemes.component';
+import { SidebarUserComponent } from './sidebar-user/sidebar-user.component';
+
+
+import { fakeBackendProvider } from './services/fake-backend';
+import { JwtInterceptor } from './services/jwt.interceptor';
+import { ErrorInterceptor } from './services/helpers.component';
+
+import { UsersResolver } from './resolvers/users.resolver'
+import { InformationUserResolver } from './resolvers/informationAboutUser.resolver';
+import { SignalementsResolver } from './resolvers/signalements.resolver'
+
+
+
 
 
 @NgModule({
@@ -51,6 +56,7 @@ import { GestionProblemesComponent } from './gestion-problemes/gestion-problemes
     EntrantComponent,
     ManageDiffusionVideoComponent,
     GestionProblemesComponent,
+    SidebarUserComponent,
   ],
   imports: [
     BrowserModule,
@@ -63,12 +69,10 @@ import { GestionProblemesComponent } from './gestion-problemes/gestion-problemes
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    DemoService,
-
-    // provider used to create fake backend
     fakeBackendProvider,
     UsersResolver,
-    InformationUserResolver
+    InformationUserResolver,
+    SignalementsResolver,
   ],
   bootstrap: [AppComponent]
 })

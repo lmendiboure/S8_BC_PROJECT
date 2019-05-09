@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
   templateUrl: './manage-user.component.html',
   styleUrls: ['./manage-user.component.scss']
 })
+
 export class ManageUserComponent implements OnInit {
   addUserForm: FormGroup;
   researchForm: FormGroup;

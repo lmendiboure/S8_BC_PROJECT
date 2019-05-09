@@ -1,12 +1,12 @@
 <app-admin></app-admin>
 
 <div class="container-fluid">
-  <mdb-card>
-    <mdb-card-header>Problème #1</mdb-card-header>
+  <mdb-card *ngFor="let signalement of signalements" id="card">
+    <mdb-card-header># {{signalement.title}}</mdb-card-header>
     <mdb-card-body>
       <blockquote class="blockquote mb-0">
-        <p>SKUSKU</p>
-        <footer class="blockquote-footer"> Something - <cite title="Source Title">User0</cite></footer>
+        <p>{{signalement.description}}</p>
+        <footer class="blockquote-footer"> {{signalement.date}} - <cite title="Source Title">{{signalement.pseudo}} (id: {{signalement._id}})</cite></footer>
       </blockquote>
     </mdb-card-body>
   </mdb-card>

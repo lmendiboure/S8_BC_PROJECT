@@ -9,6 +9,7 @@ import { AuthentificationService } from '../services/authentification.service';
   templateUrl: 'login.component.html',
   styleUrls: ['./login.component.scss']
 })
+
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   loading = false;
@@ -62,6 +63,9 @@ export class LoginComponent implements OnInit {
           id = localStorage.getItem('id').split('"')[1];
           var token;
           token=JSON.parse(localStorage.getItem('currentUser')).token;
+          if(this.f.pseudo.value=="admin"){
+            localStorage.setItem('isAdmin','true');
+          }
           this.authenticationService.getSpecificUser(id,token).subscribe(data=>{
             localStorage.setItem('ip',data[0].ip)});
           Swal.fire(
@@ -84,4 +88,5 @@ export class LoginComponent implements OnInit {
           this.loading = false;
         });
   }
+
 }
