@@ -332,7 +332,7 @@ router.get('/:userId', checkAuth, (req, res, next) => {
     });
 });
 
-router.post('/report/:userBcAddress', (req, res, next) => {
+router.post('/report/:userBcAddress', checkAuth, (req, res, next) => {
     var adr = req.params.userBcAddress;
     console.log(adr)
     const report = new Report({
