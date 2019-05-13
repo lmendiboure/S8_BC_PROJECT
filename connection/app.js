@@ -371,6 +371,27 @@ changerights: function(_idx,_idy,_value) {
     });
   },
 
+addgrp: function(_idgrp,_IP) {
+    var self = this;
+    var iovInstance;
+ 	console.log(_idgrp);
+	console.log(_IP);
+ 
+    Iov.setProvider(self.web3.currentProvider);
+
+    return new Promise(function(resolve, reject) {
+      Iov.deployed().then((instance) => {
+        iovInstance = instance;
+        return iovInstance;
+      }).then((res) => {
+        return iovInstance.addtogrp(_idgrp,_IP,{from: self.web3.eth.accounts[0]});
+         }).then((count) => {
+        resolve(count);
+      }).catch((err) => {
+        console.log(err);
+      })
+    });
+  },
 /*
   function catchEvent() {
     return new Promise(function(resolve, reject) {

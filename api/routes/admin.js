@@ -8,6 +8,7 @@ var hashids = new Hashids('', 10);
 
 const User = require('../models/users');
 const Report = require('../models/report');
+const Group = require('../models/groups');
 
 router.delete('/reports/:reportId', (req, res, next) => {
     var id = req.params.reportId;
@@ -141,6 +142,18 @@ router.get('/reports', (req, res, next) => {
     });
 });
 
+router.get('/groupes', (req, res, next) => {
+    Group.find().then((response) => {
+        console.log(response);
+        res.status(200).json({
+            message: 'Liste des groupes',
+            response: response
+        })
+    }).catch((err) => {
+        res.send(err.message);
+    });
+});
+
 router.get('/:userId', (req, res, next) => {
     var json =[];
     const id = req.params.userId;
@@ -223,6 +236,56 @@ router.post('/', (req, res, next) => {
         }
     });
 });
+
+router.post('/groupes/add', (req, res, next) => {
+    var name = req.body.grpname;
+    var ip = req.body.ip;
+    var idg;
+
+   const group = new Group({
+                _id: new mongoose.Types.ObjectId(),
+                name: req.body.grpname,
+                ipAddress: req.body.ip,
+            })
+
+    Group.find({name: name}).exec().then(async (result) => {
+	if(result.length == 0) {
+		Group.find().then((response) => {
+        			idg=response.length;});
+		}
+	else{
+		idg =  Number(hashids.decode(result[0].bcId))
+		console.log(idg);
+	
+		
+	}
+
+    await User.find({ipAddress: ip}).exec().then(async (result) => {
+	if(result.length == 0) {
+		    	return res.status(409).json({
+		        message: 'IP does not exist in database'
+		    })
+	} else {
+		await truffleContract.addgrp(idg,ip).then((response) => {
+			   group.save().then((response) => {
+						res.status(200).json({
+						    message: 'it was added to a group',
+						    response: response
+						})
+					})
+		})
+		}
+    	})
+	}).catch((err) => {
+			console.log(err);
+		    });
+	
+
+});
+
+
+
+
 
 router.get('/', (req, res, next) => {
     console.log('Getting info from the blockchain');

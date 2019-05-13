@@ -13,6 +13,11 @@ contract Iov {
     }
 
     // Store vehicles
+
+ struct groupe{
+        string x;
+    }
+    mapping(uint => groupe[]) grps;
     // Search for vehicle
    
     mapping(uint => User) public vehicleArray;
@@ -49,6 +54,40 @@ contract Iov {
         delete vehicleArray[vehicleCount];
         vehicleCount--;
     }
+	
+
+       function strConcat(string memory _a, string memory _b, string memory _c, string memory _d, string memory _e) internal returns (string memory){
+	    bytes memory _ba = bytes(_a);
+	    bytes memory _bb = bytes(_b);
+	    bytes memory _bc = bytes(_c);
+	    bytes memory _bd = bytes(_d);
+	    bytes memory _be = bytes(_e);
+	    string memory abcde = new string(_ba.length + _bb.length + _bc.length + _bd.length + _be.length);
+	    bytes memory babcde = bytes(abcde);
+	    uint k = 0;
+	    for (uint i = 0; i < _ba.length; i++) babcde[k++] = _ba[i];
+	    for (uint i = 0; i < _bb.length; i++) babcde[k++] = _bb[i];
+	    for (uint i = 0; i < _bc.length; i++) babcde[k++] = _bc[i];
+	    for (uint i = 0; i < _bd.length; i++) babcde[k++] = _bd[i];
+	    for (uint i = 0; i < _be.length; i++) babcde[k++] = _be[i];
+	    return string(babcde);
+}
+
+    
+    function addtogrp(uint _idgrp,string memory _IP) public {
+        grps[_idgrp].push(groupe(_IP));
+    }
+    
+    function getGroups(uint _idgrp) public returns(string memory) {
+        uint l= grps[_idgrp].length;
+        string memory resultat="{'IP' : ";
+        for (uint i=0; i<l; i++) {
+                    resultat  = strConcat(resultat,grps[_idgrp][i].x,",'IP' ",":","");
+             }
+        resultat  = strConcat(resultat,"}","","","");
+        return resultat;
+    }
+
     
     function AskHelp(uint _iduser,string memory _msg) public payable {
         sosUsers[_iduser] = new SOS(_iduser);
