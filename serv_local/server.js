@@ -54,52 +54,50 @@ app.get('/video/:group_name/:video_name', function(req, res) {
   }
 });
 
-app.get('/ftp_upload/:nom_video', (req, res) => {
-  config = {
-    host: 'localhost',
-    port: 21,
-    user: 'domingo',
-    password: 'domingo'
-}
-options = {
-    logging: 'basic'
-}
- client = new ftpClient(config, options);
+app.get('/ftp_upload/:groupe/:nom_video', (req, res) => {
+  var PromiseFtp = require('promise-ftp');
+  var fs = require('fs');
 
-
-  client.connect(function () {
-
-   client.upload(['/'+req.params.nom_video], '~/', {
-     baseDir: '~/',
-     overwrite: 'older'
-   }, function (result) {
-     console.log(result);
-   });
-
+  var ftp = new PromiseFtp();
+  ftp.connect({host: host, user: user, password: password})
+  .then(function (serverMessage) {
+    return ftp.put("/"+req.params.groupe+"/"+req.params.nom_video, "/"+req.params.groupe+"/"+req.params.nom_video);
+  }).then(function () {
+    return ftp.end();
+  });
 });
-});
-app.get('/ftp_dowload/:nom_video', (req, res) => {
-  config = {
-    host: 'localhost',
-    port: 21,
-    user: 'domingo',
-    password: 'domingo'
-}
-options = {
-    logging: 'basic'
-}
- client = new ftpClient(config, options);
 
 
-  client.connect(function () {
 
-    client.download('~/'+req.params.nom_video, '/video', {
-        overwrite: 'all'
-    }, function (result) {
-        console.log(result);
+app.get('/ftp_list', (req, res) => {
+
+  var ftp = new PromiseFtp();
+  ftp.connect({host: "10.0.0.250", user: domingo, password: domingo })
+    .then(function (serverMessage) {
+      console.log('Server message: '+serverMessage);
+      return ftp.list('/');
+    }).then(function (list) {
+      console.log('Directory listing:');
+      console.dir(list);
+      return ftp.end();
     });
-
 });
+
+
+app.get('/ftp_download/:groupe/:nom_video', (req, res) => {
+  var ftp = new PromiseFtp();
+  ftp.connect({host: host, user: user, password: password})
+  .then(function (serverMessage) {
+    return ftp.get("/"+req.params.groupe+"/"+req.params.nom_video);
+  }).then(function (stream) {
+    return new Promise(function (resolve, reject) {
+      stream.once('close', resolve);
+      stream.once('error', reject);
+      stream.pipe(fs.createWriteStream("/"+req.params.groupe+"/"+req.params.nom_video));
+    });
+  }).then(function () {
+    return ftp.end();
+  });
 });
 
 app.get('/local_video_list/:group', function(req, res){
