@@ -104,6 +104,12 @@ export class AuthentificationService {
     return this.http.post<any>(url,{ipx,ipy,value},{headers});
   }
 
+  doReporting(title: string, description: string,date: string,token: string,id: string){
+    let headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+    var url = "http://localhost:3001/users/report/" + id;
+    return this.http.post<any>(url,{title,description,date},{headers});
+  }
+
   logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('currentUser');

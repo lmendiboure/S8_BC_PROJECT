@@ -12,4 +12,5 @@ export class User {
     year: number;
     immatriculation: string;
     token: string;
+    trustIndex: number;
 }

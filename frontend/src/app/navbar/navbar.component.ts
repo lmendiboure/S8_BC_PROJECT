@@ -34,7 +34,6 @@ export class NavbarComponent implements OnInit {
 
   public ifRoot(): Boolean {
     if (this.boolAdmin === "true") {
-      console.log("je suis là");
       return true;
     }
     else {

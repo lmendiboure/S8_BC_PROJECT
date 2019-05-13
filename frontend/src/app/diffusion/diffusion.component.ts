@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient} from '@angular/common/http';
+import { HttpClient, HttpParams,HttpResponse, HttpHeaders } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-diffusion',
@@ -36,17 +38,14 @@ export class DiffusionComponent implements OnInit {
     this.group=groupSelection;
   }
   
-  ngOnClickDiffusion() {
+  ngOnClickDiffusion(){
+
     var url = 'http://localhost:2900/diffusion/'+this.video+'/'+this.group;
     console.log(url);
-    this.http.get<any>(url).subscribe(data=>{console.log(data);});
-
-
-
-    /*if(res==200){
+    this.http.get<any>(url,{ observe: 'response' }).subscribe(data=>{console.log(data);if(data.status==200){
     Swal.fire('Vidéo envoyée','','success')}
     else{		
-	//Swal.fire('Erreur lors de l\'envoi de la vidéo','','error')}*/
+	Swal.fire('Erreur lors de l\'envoi de la vidéo','','error')}
+    });
     }
-
 }

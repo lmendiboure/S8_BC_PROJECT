@@ -1,12 +1,26 @@
 <app-admin></app-admin>
 
 <div class="container-fluid">
-  <mdb-card >
-    <mdb-card-header>Problème #1</mdb-card-header>
+  <div *ngIf="boolSignal">Pas de signalements !</div>
+  <mdb-card *ngFor="let signalement of signalements" id="card">
+    <mdb-card-header>
+    <div class="row">
+      <div class="col-auto">
+        # <strong>{{signalement.title}}</strong>
+      </div>
+      <div class="col-auto ml-auto">
+        <button >
+          <mdb-icon fas icon="check" (click)="taskCompleted(signalement._id)"></mdb-icon>
+        </button>
+      </div>
+    </div>
+    <p style="font-size: 8pt;">IdProblème: {{signalement._id}}</p>
+    </mdb-card-header>
     <mdb-card-body>
       <blockquote class="blockquote mb-0">
-        <p>SKUSKU</p>
-        <footer class="blockquote-footer"> Something - <cite title="Source Title">User0</cite></footer>
+        <p>{{signalement.description}}</p>
+        <footer class="blockquote-footer"> {{signalement.date}} - <cite title="Source Title">Utilisateur:
+            {{signalement.signalingAddress}}</cite></footer>
       </blockquote>
     </mdb-card-body>
   </mdb-card>
