@@ -18,7 +18,7 @@ export class CompteComponent implements OnInit {
     private authenticationService: AuthentificationService,
   ) { }
 
-  ngOnInit() {
+  ngOnInit() { // il faut écrire les requêtes sur le serveur pour avoir les stats dire à youssef pour qu'il code les fonctions pour le temps de vidéos transmis faudra faire un post dans la page diffusion sur le serveur pour ajouter le temps de vidéo le temps de vidéo sera demandé sur le serveur local
     this.token = JSON.parse(localStorage.getItem('currentUser')).token;
   }
 
