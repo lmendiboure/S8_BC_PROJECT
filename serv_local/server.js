@@ -54,6 +54,53 @@ app.get('/video/:group_name/:video_name', function(req, res) {
   }
 });
 
+app.get('/ftp_upload/:nom_video', (req, res) => {
+  config = {
+    host: 'localhost',
+    port: 21,
+    user: 'domingo',
+    password: 'domingo'
+}
+options = {
+    logging: 'basic'
+}
+ client = new ftpClient(config, options);
+
+
+  client.connect(function () {
+
+   client.upload(['/'+req.params.nom_video], '~/', {
+     baseDir: '~/',
+     overwrite: 'older'
+   }, function (result) {
+     console.log(result);
+   });
+
+});
+});
+app.get('/ftp_dowload/:nom_video', (req, res) => {
+  config = {
+    host: 'localhost',
+    port: 21,
+    user: 'domingo',
+    password: 'domingo'
+}
+options = {
+    logging: 'basic'
+}
+ client = new ftpClient(config, options);
+
+
+  client.connect(function () {
+
+    client.download('~/'+req.params.nom_video, '/video', {
+        overwrite: 'all'
+    }, function (result) {
+        console.log(result);
+    });
+
+});
+});
 
 app.get('/local_video_list/:group', function(req, res){
    console.log('liste des vidéos d\'un groupe')
