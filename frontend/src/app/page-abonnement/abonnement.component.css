@@ -36,41 +36,41 @@ h4 {
   grid-auto-rows: minmax(100px, auto);
 }
 .one1 {
-  grid-column: 1 / 5 ;
+  grid-column: 2 / 6 ;
   grid-row: 1 / 2;
   text-align: center;
 }
 .one2 {
-  grid-column: 1 / 5 ;
+  grid-column: 2 / 6 ;
   grid-row: 2 / 5;
   text-align: left;
 }
 
 .two1 {
-  grid-column: 5 / 10 ;
+  grid-column: 6 / 10 ;
   grid-row: 1 / 2;
   text-align: center;
 }
 .two2 {
-  grid-column: 5 / 10 ;
+  grid-column: 6 / 10 ;
   grid-row: 2 / 5;
   text-align: left;
 
 }
 .two3 {
-  grid-column: 5 / 10 ;
+  grid-column: 6 / 10 ;
   grid-row: 3 / 4;
   text-align: left;
 
 }
 .two4 {
-  grid-column: 5 / 10 ;
+  grid-column: 6 / 10 ;
   grid-row: 4 / 5;
   text-align: left;
 
 }
 .two5 {
-  grid-column: 5 / 10 ;
+  grid-column: 6 / 10 ;
   grid-row: 5 / 6;
   text-align: left;
 
