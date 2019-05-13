@@ -1,32 +1,56 @@
 <app-sidebar-user></app-sidebar-user>
 
-<div class="container-fluid">
-  <div id="div1">
-    <mdb-card>
+<!-- <div class="container-fluid">
+  <div id="div1"> -->
+<!--     <mdb-card>
       <mdb-card-body>
         <h6 id="h6md">Diffuser une vidéo</h6>
       </mdb-card-body>
-    </mdb-card>
+    </mdb-card> -->
 
-    <div class="wrapper2">
+
+    <div class="container-fluid">
+        <mdb-card >
+          <mdb-card-header><h5><b>Diffuser ma vidéo</b></h5></mdb-card-header>
+          <mdb-card-body>
+              
+              <div class="text-center">
+                  <input type="file" class="text-center center-block file-upload" [(ngModel)]="currentInput" (change)="onFileSelected($event)">
+                </div>
+                <br>
+                <label>Envoyer ma vidéo au groupe de:</label>
+                <select class="custom-select" multiple (change)="onGroupSelection($event.target.value)">
+            <!-- avoir la liste de groupes pas en statique soit par le serveur en locale de Luc soit par MongoDB qui stock les groupes de chaque utilisateur au choix-->
+                  <option value="secu">Sécurité</option>
+                  <option value="copain">Les copains du projet S8</option>
+                  <option value="route">Etat de la route</option>
+                </select>
+                <br>
+                <button type="button" class="btn btn-primary" mdbWavesEffect (click)="ngOnClickDiffusion()">Diffuser ma vidéo </button>
+
+             
+          </mdb-card-body>
+        </mdb-card>
+      </div>
+
+    
+<!--     <div class="wrapper2">
       <div class="selection">
         <div class="text-center">
           <input type="file" class="text-center center-block file-upload" [(ngModel)]="currentInput" (change)="onFileSelected($event)">
         </div>
         <br>
         <label>Envoyer ma vidéo au groupe de:</label>
-        <select class="custom-select" multiple (change)="onGroupSelection($event.target.value)">
+        <select class="custom-select" multiple (change)="onGroupSelection($event.target.value)"> -->
 	  <!-- avoir la liste de groupes pas en statique soit par le serveur en locale de Luc soit par MongoDB qui stock les groupes de chaque utilisateur au choix-->
-          <option value="secu">Sécurité</option>
+<!--           <option value="secu">Sécurité</option>
           <option value="copain">Les copains du projet S8</option>
           <option value="route">Etat de la route</option>
         </select>
 
-      </div>
-
-      <button class="button" type="button" mdbBtn color="primary" mdbWavesEffect (click)="ngOnClickDiffusion()">Diffuser ma vidéo!</button>
-
-    </div>
-
+      </div> 
+ 
+    </div>-->
+<!-- 
   </div>
-</div>
+</div> -->
