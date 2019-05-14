@@ -2,9 +2,10 @@ const mongoose = require('mongoose');
 
 const groupSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    bcId: String,
+    grId: String,
     name: String, 
-    ipAddress: Object,
+    list : [],
+
 });
 
 

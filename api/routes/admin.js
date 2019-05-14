@@ -242,18 +242,41 @@ router.post('/groupes/add', (req, res, next) => {
     var ip = req.body.ip;
     var idg;
 
-   const group = new Group({
-                _id: new mongoose.Types.ObjectId(),
-                name: req.body.grpname,
-                ipAddress: req.body.ip,
-            })
+   var a;
+ 
 
     Group.find({name: name}).exec().then(async (result) => {
+	a=result;
 	if(result.length == 0) {
 		Group.find().then((response) => {
         			idg=response.length;});
+		  const group = new Group({
+                _id: new mongoose.Types.ObjectId(),
+		grId:idg,
+                name: req.body.grpname,
+		list: [ip],
+                       });
+		group.save().then((response) => {
+						res.status(200).json({
+						    message: 'it was added to a group',
+						    response: response
+						})
+					})
+		
 		}
 	else{
+		//a.list.push(ip);
+		Group.update({name: name}, {$push: {list : ip }})
+                            .exec()
+                            .then((result) => {
+                                console.log(result);
+                                res.status(200).json(result);
+                            }).catch((err) => {
+                                console.log(err);
+                                res.status(500).json({
+                                    error : err
+                                })
+                            });
 		idg =  Number(hashids.decode(result[0].bcId))
 		console.log(idg);
 	
@@ -267,12 +290,7 @@ router.post('/groupes/add', (req, res, next) => {
 		    })
 	} else {
 		await truffleContract.addgrp(idg,ip).then((response) => {
-			   group.save().then((response) => {
-						res.status(200).json({
-						    message: 'it was added to a group',
-						    response: response
-						})
-					})
+			
 		})
 		}
     	})
@@ -283,7 +301,30 @@ router.post('/groupes/add', (req, res, next) => {
 
 });
 
+router.get('/groupes/search',  (req, res, next) => {
+        var ip = req.body.ip;
+	var names = [];
+	Group.find({list: { $in: ip }}).then(  (result) => {
+		console.log(result);
+	  /*for(let j = 0; j <= result.length; j++) {
+		var info = { name:"", list:""};
+		info.name = result[j].name;
+		console.log(info.name);
+		info.list = result[j].list;
+		console.log(info.list);
+		names.push(info);
+		console.log(info);
+		}*/
+	return res.status(200).json({
+		        responce: result
+		    })
+	
+	}).catch((err) => {
+			console.log(err);
+		    });
 
+
+});
 
 
 
