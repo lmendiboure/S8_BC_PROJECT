@@ -26,6 +26,7 @@ export class ManageUserComponent implements OnInit {
   error='';
   users: User[]=[];
   userSearch;
+  userToSupervise;
 
 
   constructor(
@@ -46,9 +47,9 @@ export class ManageUserComponent implements OnInit {
 
     this.users=this.route.snapshot.data['users'];
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-    var array = this.users;
-    array.sort((a, b) => {return a.trustIndex-b.trustIndex}); 
-    console.log(array);
+    this.users.sort((a, b) => {return a.trustIndex-b.trustIndex}); 
+    this.userToSupervise=this.users[0];
+    console.log(this.userToSupervise)
   }
 
   get f() { return this.addUserForm.controls; }

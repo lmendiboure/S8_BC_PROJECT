@@ -110,6 +110,16 @@ export class AuthentificationService {
     return this.http.post<any>(url,{title,description,date},{headers});
   }
 
+  increaseTI(blockchainAddress: string){
+    var url = "http://localhost:3001/users/trustIndex/increase/";
+    return this.http.post<any>(url, {blockchainAddress});
+  }
+
+  decreaseTI(blockchainAddress: string) {
+    var url = "http://localhost:3001/users/trustIndex/decrease/";
+    return this.http.post<any>(url, { blockchainAddress });
+  }
+
   logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('currentUser');

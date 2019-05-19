@@ -45,8 +45,8 @@
           {{user.trustIndex}}
         </td>
         <td>
-          <button mdbBtn color="green" rounded="true" size="sm" type="button" class="m-0" style="margin: auto" mdbWavesEffect>+</button>
-          <button mdbBtn color="red" rounded="true" size="sm" type="button" class="m-0" style="margin: auto" mdbWavesEffect>-</button>
+          <button mdbBtn color="green" rounded="true" size="sm" type="button" class="m-0" style="margin: auto" (click)="increaseTrustIndex(user.account)" mdbWavesEffect>+</button>
+          <button mdbBtn color="red" rounded="true" size="sm" type="button" class="m-0" style="margin: auto" (click)="decreaseTrustIndex(user.account)" mdbWavesEffect>-</button>
         </td>
       </tr>
     </tbody>
