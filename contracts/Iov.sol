@@ -31,6 +31,7 @@ contract Iov {
     event userAdded(uint _id,address _UserAdded,string _name);
     event userDeleted(uint _id);
     event IPAdded(uint _id,string _IP);
+    event trustIndex(uind _id);
     
     event returnFeedback(
         address  _recv,bool _feedback
@@ -145,11 +146,13 @@ contract Iov {
 
     
     function incrementTrustIndex(uint _id) public payable returns(uint){
-        return vehicleArray[_id].incrementTrustIndex();
+        vehicleArray[_id].incrementTrustIndex();
+        emit trustIndex(_id);
     }
     
     function decrementTrustIndex(uint _id) public payable returns(uint) {
-        return vehicleArray[_id].decrementTrustIndex();
+        vehicleArray[_id].decrementTrustIndex();
+        emit trustIndex(_id);
     }
     
     function changeRightCanSendByid(address _admin, uint _id, bool _right,uint _idwanted) public payable {
