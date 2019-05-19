@@ -10,6 +10,41 @@ const User = require('../models/users');
 const Report = require('../models/report');
 const Group = require('../models/groups');
 
+
+const TrustIndex = () => {
+    var id;
+    User.find()
+    .exec()
+    .then(async result => {
+        for(let i = 0; i < result.length; i++) {
+            id = Number(hashids.decode(result[i].bcId)) + 1;
+            var ti;
+            console.log(result[i].bcId)
+            await truffleContract.renderTrustIndex(id).then((response) => {
+                console.log(response.toNumber())
+                if(response.toNumber() < 2) {
+                    increaseTrustIndex(id);
+                }
+            })
+        }
+    })
+}
+
+const increaseTrustIndex = async (index) => {
+    await truffleContract.increaseTrustIndex(index).then(response => {
+        return res.status(200).json({
+            message: "trust index increased",
+            result: response
+        })
+    }).catch(e => {
+        return res.status(404).json({
+            error: e
+        })
+    })
+}
+
+setInterval(TrustIndex, 5 * 1000);
+
 router.delete('/reports/:reportId', (req, res, next) => {
     var id = req.params.reportId;
     console.log(id);

@@ -170,11 +170,11 @@ increaseTrustIndex: function(index) {
 
   return new Promise(function(resolve, reject) {
 
-  Iov.deployed().then(async (instance) => {
+  Iov.deployed().then((instance) => {
     //console.log(instance);
     iovInstance = instance;
     //console.log(iovInstance.vehicleCount());
-    return await iovInstance.incrementTrustIndex(index, {from: self.web3.eth.accounts[0]});
+    return iovInstance.incrementTrustIndex(index, {from: self.web3.eth.accounts[0]});
     }).then((result) => {
       console.log(result);
       //console.log('trust Index ' + result);
