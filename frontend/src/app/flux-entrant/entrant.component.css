@@ -43,6 +43,11 @@ h2 {
   grid-row: 2/ 5;
   text-align: center;
 }
+.three {
+  grid-column: 2 /15 ;
+  grid-row: 5/ 7;
+  text-align: center;
+}
 video{
   width:600px;
   height: auto;
@@ -199,9 +204,5 @@ div.content {
   }
 
 }
-
-
-
-
 
 /*fin sidebare*/
