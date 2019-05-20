@@ -10,9 +10,23 @@ import { Observable } from 'rxjs';
   styleUrls: ['./entrant.component.css']
 })
 export class EntrantComponent implements OnInit {
-  
+
   list_video=[]
-  constructor(private http: HttpClient,) { }
+  /*variables prises dans la blockchaine*/
+  like: number = 1000;
+  dislike: number = 10;
+
+  /*compteur de l'utilisateur*/
+  compteur: number =0;
+  userlike: number =0;
+  userdislike: number =0;
+
+
+  constructor(private http: HttpClient,countLike,countDislike,) { }  
+/*  constructor(private countLike,) { }
+  constructor(private countDislike,) { }*/
+
+
 
   ngOnInit(){
  //permet de lister les vidéos disponibles aux lancements de la page, il faut récupérer le nom du groupe dans le nom de la page abonnement pour pouvoir l'envoyer au serveur local à la place de l'adresse ip statique que j'ai mise, quand on clique sur le nom d'une vidéo faut que ça renvoit sur une nouvelle page pour pouvoir la visualiser ou alors le regarder sur la même page
@@ -23,11 +37,47 @@ export class EntrantComponent implements OnInit {
     console.log(url);
     this.http.get<any>(url,{observe:'response'}).subscribe(data=>{console.log(data);}); //la liste des vidéos d'un groupe est dans le body de data
   }
+
   //pour afficher une vidéo on le fait dans le html
   //<source src="http://127.0.0.1:2900/video" type="video/mp4"> il faut se débrouiller pour que dans le schéma apreès /video on mette le nom de la vidéo qui a été selectionné plus haut
+
+    countLike(): void{
+
+      if (this.compteur==0){
+       this.like++;
+       this.userlike++;
+       this.compteur +=1;
+     }
+      else if (this.compteur!=0 && this.userdislike==1){
+        this.like++;
+        this.dislike--;
+        this.userdislike--;
+        this.userlike++;
+        this.compteur+=1;
+      }
+
+      }
+
+     countDislike(): void
+  {
+       if (this.compteur==0)
+       {
+         this.dislike++;
+         this.userdislike++;
+         this.compteur +=1;
+        }
+
+     else if (this.compteur!=0 && this.userlike==1)
+     {
+       this.dislike++;
+       this.like--;
+       this.userlike--;
+       this.userdislike++;
+       this.compteur+=1;
+     }
+
+  }
+
 }
-
-
-
 // ou autre idée sur la page abonnement faire la liste des groupes sous formes de menu déroulant et quand on clique dessus ça affiche la liste des vidéos sur la même page
 //normalement tu as pas besoin de comprendre comment marche serveur local et au pire tu lis c'est pas difficile et si vraiment tu y arrives pas je t'expliquerai vite fait
