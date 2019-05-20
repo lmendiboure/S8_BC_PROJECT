@@ -120,6 +120,20 @@ export class AuthentificationService {
     return this.http.post<any>(url, { blockchainAddress });
   }
 
+  getListGroup(){
+ return console.log(this.http.get<any>('http://localhost:3001/admin/groupes/'));
+}
+
+addToGroup(name: string, ipuser: string){
+   var url = "http://localhost:3001/admin/groupes/add/";
+   return this.http.post<any>(url);
+ }
+
+findGroupOfUser(ipuser: string, list: string) {
+   var url = 'http://localhost:3001/admin/groupes/search/’;
+   return this.http.get<any>(url,{list});   
+ }
+ 
   logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('currentUser');
