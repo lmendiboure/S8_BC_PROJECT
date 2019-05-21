@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';   
+import { map } from 'rxjs/operators';
 import { User } from '../models/user';
 import { Router, ActivatedRoute} from '@angular/router';
 
@@ -46,10 +46,10 @@ export class AuthentificationService {
       )
   }
 
-  updateInformation(pseudo: string, name: string, lastname: string, email:string, 
+  updateInformation(pseudo: string, name: string, lastname: string, email:string,
     password:string, vehicle: string, year:number,immatriculation:string,id: string){
     let headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('currentUser.token'));
-    return this.http.patch<any>('http://localhost:3001/users/profile/'+id, 
+    return this.http.patch<any>('http://localhost:3001/users/profile/'+id,
     [
       {
         "propName":"name", "value":name
@@ -95,7 +95,7 @@ export class AuthentificationService {
     var url = 'http://localhost:3001/users/'+id;
     let headers = new HttpHeaders().set('Authorization','Bearer '+ token);
     return this.http.get(url,{headers});
-      
+
   }
 
   changeRights(ipx: string,ipy: string,value: string,token: string){
@@ -141,7 +141,7 @@ export class AuthentificationService {
     localStorage.removeItem('informations');
     localStorage.removeItem('ip');
     localStorage.removeItem('isAdmin');
-    this.currentUserSubject.next(null);   
-    this.router.navigate(['/login']); 
+    this.currentUserSubject.next(null);
+    this.router.navigate(['/login']);
   }
 }

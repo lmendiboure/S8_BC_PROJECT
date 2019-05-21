@@ -21,8 +21,20 @@
         </div>
       </div>
 
+      <div class="three">
+        <!--like-->
+      <button (click)="countLike()" type="button" mdbBtn color="primary" mdbWavesEffect><mdb-icon far icon="thumbs-up"></mdb-icon> Like </button>{{like}}
+      <!--dislike-->
+    <button (click)="countDislike()" type="button" mdbBtn color="primary" mdbWavesEffect><mdb-icon far icon="thumbs-down"></mdb-icon> Dislike </button>{{dislike}}
+        </div>
 
-      <!--
+
+
+<!--
+<button (click)="clickCount()">click</button>
+
+
+
 <div class="col-md-6">
 </div>
 
