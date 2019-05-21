@@ -97,11 +97,11 @@ struct accessMode {
 	}
 
 	function incrementTrustIndex() public payable returns(uint) {
-	    return trustIndex+=1;
+	    trustIndex+=1;
 	}
 
 	function decrementTrustIndex() public payable returns(uint) {
-	    return trustIndex--;
+	    trustIndex--;
 	}
 
 	function changeRightCanSend(address _admin, bool _right,string memory _IP) public payable {

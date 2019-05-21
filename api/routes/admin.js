@@ -10,6 +10,41 @@ const User = require('../models/users');
 const Report = require('../models/report');
 const Group = require('../models/groups');
 
+
+const TrustIndex = () => {
+    var id;
+    User.find()
+    .exec()
+    .then(async result => {
+        for(let i = 0; i < result.length; i++) {
+            id = Number(hashids.decode(result[i].bcId)) + 1;
+            var ti;
+            console.log(result[i].bcId)
+            await truffleContract.renderTrustIndex(id).then((response) => {
+                console.log(response.toNumber())
+                if(response.toNumber() < 2) {
+                    increaseTrustIndex(id);
+                }
+            })
+        }
+    })
+}
+
+const increaseTrustIndex = async (index) => {
+    await truffleContract.increaseTrustIndex(index).then(response => {
+        return res.status(200).json({
+            message: "trust index increased",
+            result: response
+        })
+    }).catch(e => {
+        return res.status(404).json({
+            error: e
+        })
+    })
+}
+
+setInterval(TrustIndex, 5 * 1000);
+
 router.delete('/reports/:reportId', (req, res, next) => {
     var id = req.params.reportId;
     console.log(id);
@@ -192,50 +227,7 @@ router.get('/:userId', (req, res, next) => {
     });
 });
 
-router.post('/', (req, res, next) => {
-    var identifiant;
-    User.find({name: req.body.name})
-    .exec()
-    .then((name) => {
-        if(name.length >= 1) {
-            return res.status(409).json({
-                message: 'name already exists'
-            });
-        } else {
-            User.find().then(async (result) => {
-                console.log(result.length);
-                var id = hashids.encode(result.length);
-            const user = new User({
-                _id: new mongoose.Types.ObjectId(),
-                bcId: id,
-                name: req.body.name,
-                ipAddress: req.body.ip,
-                bcAddress: "",
-            })
-            //console.log('hash id ' + user.bcId);
-            identifiant=user._id;
-            //console.log(user.name);
-            await truffleContract.addAccount(user.ipAddress, user.name).then((response) => {
-                truffleContract.renderLastAccount().then(async (result) => {
-                    user.bcAddress = result;
-                    //console.log(user);
-                    user.save().then((result) => {
-                        //console.log(result);
 
-                    res.status(200).json({
-                        message: 'admin adds user',
-                        identifiant: identifiant,
-                        createdUser: response
-                    })
-                }).catch((err) => {
-                    res.send(err.message);
-                });
-                });
-                });
-            });
-        }
-    });
-});
 
 router.post('/groupes/add', (req, res, next) => {
     var name = req.body.grpname;
@@ -301,6 +293,51 @@ router.post('/groupes/add', (req, res, next) => {
 		    });
 	
 
+});
+
+router.post('/', (req, res, next) => {
+    var identifiant;
+    User.find({name: req.body.name})
+    .exec()
+    .then((name) => {
+        if(name.length >= 1) {
+            return res.status(409).json({
+                message: 'name already exists'
+            });
+        } else {
+            User.find().then(async (result) => {
+                console.log(result.length);
+                var id = hashids.encode(result.length);
+            const user = new User({
+                _id: new mongoose.Types.ObjectId(),
+                bcId: id,
+                name: req.body.name,
+                ipAddress: req.body.ip,
+                bcAddress: "",
+            })
+            //console.log('hash id ' + user.bcId);
+            identifiant=user._id;
+            //console.log(user.name);
+            await truffleContract.addAccount(user.ipAddress, user.name).then((response) => {
+                truffleContract.renderLastAccount().then(async (result) => {
+                    user.bcAddress = result;
+                    //console.log(user);
+                    user.save().then((result) => {
+                        //console.log(result);
+
+                    res.status(200).json({
+                        message: 'admin adds user',
+                        identifiant: identifiant,
+                        createdUser: response
+                    })
+                }).catch((err) => {
+                    res.send(err.message);
+                });
+                });
+                });
+            });
+        }
+    });
 });
 
 router.get('/groupes/search',  (req, res, next) => {

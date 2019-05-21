@@ -40,6 +40,54 @@ const mongoose = require('mongoose');
 const User = require('../models/users');
 const Report = require('../models/report');
 
+router.post('/trustIndex/increase', (req, res, next) => {
+    var id;
+    User.find({ bcAddress: req.body.blockchainAddress })
+    .exec()
+    .then(async user => {
+        id = Number(hashids.decode(user[0].bcId)) + 1;
+        console.log(id)
+        await truffleContract.increaseTrustIndex(id).then(response => {
+            return res.status(200).json({
+                message: "trust index increased",
+                result: response
+            })
+        }).catch(e => {
+            return res.status(404).json({
+                error: e
+            })
+        })
+    }).catch(err => {
+        return res.status(404).json({
+            error: err
+        })
+    })
+});
+
+router.post('/trustIndex/decrease', (req, res, next) => {
+    var id;
+    User.find({ bcAddress: req.body.blockchainAddress })
+    .exec()
+    .then(async user => {
+        id = Number(hashids.decode(user[0].bcId)) + 1;
+        console.log(id)
+        await truffleContract.decreaseTrustIndex(id).then(response => {
+            return res.status(200).json({
+                message: "trust index decreased",
+                result: response
+            })
+        }).catch(e => {
+            return res.status(404).json({
+                error: e
+            })
+        })
+    }).catch(err => {
+        return res.status(404).json({
+            error: err
+        })
+    })
+});
+
 router.post("/login", (req, res, next) => {
     var identifiant;
     User.find({ pseudo: req.body.pseudo })
