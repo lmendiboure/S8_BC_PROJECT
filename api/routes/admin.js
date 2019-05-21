@@ -139,7 +139,7 @@ router.post('/change', (req, res, next) => {
        // console.log(result[0].bcAddress);
         idx =  Number(hashids.decode(result[0].bcId))+1 //It works
         console.log(idx);
-    
+
 
     await User.find({ipAddress: ipy}).exec().then(async (result) => {
 	if(result.length == 0) {
@@ -236,7 +236,7 @@ router.post('/groupes/add', (req, res, next) => {
     var idg;
 
    var a;
- 
+
 
     Group.find({name: name}).exec().then(async (result) => {
 	a=result;
@@ -256,7 +256,7 @@ router.post('/groupes/add', (req, res, next) => {
 						    response: response
 						})
 					})
-		
+
 		}
 	else{
 		//a.list.push(ip);
@@ -273,8 +273,8 @@ router.post('/groupes/add', (req, res, next) => {
                             });
 		idg =  Number(hashids.decode(result[0].bcId))
 		console.log(idg);
-	
-		
+
+
 	}
 
     await User.find({ipAddress: ip}).exec().then(async (result) => {
@@ -284,14 +284,14 @@ router.post('/groupes/add', (req, res, next) => {
 		    })
 	} else {
 		await truffleContract.addgrp(idg,ip).then((response) => {
-			
+
 		})
 		}
     	})
 	}).catch((err) => {
 			console.log(err);
 		    });
-	
+
 
 });
 
@@ -340,8 +340,9 @@ router.post('/', (req, res, next) => {
     });
 });
 
-router.get('/groupes/search',  (req, res, next) => {
-        var ip = req.body.ip;
+router.post('/groupes/search',  (req, res, next) => {
+  var ip = req.body.ip;
+  console.log(ip);
 	var names = [];
 	Group.find({list: { $in: ip }}).then(  (result) => {
 		console.log(result);
@@ -357,7 +358,7 @@ router.get('/groupes/search',  (req, res, next) => {
 	return res.status(200).json({
 		        responce: result
 		    })
-	
+
 	}).catch((err) => {
 			console.log(err);
 		    });
