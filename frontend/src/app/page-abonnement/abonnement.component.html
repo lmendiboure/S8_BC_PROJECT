@@ -1,63 +1,83 @@
-<app-sidebar-user></app-sidebar-user>
+<!-- sidebar-->
+
+<div class="w3-sidebar w3-light-grey w3-bar-block" style="width:20%">
+  <a class="logo-wrapper waves-effect">
+    <img class="img-responsive center-block" src="../../assets/side2.png" alt="">
+  </a>
+  <div class="list-group list-group-flush">
+    <h2 text-align="center">Actions</h2>
+    <a routerLink="/compte" routerLinkActive="active" class="list-group-item list-group-item-action waves-effect">
+      <mdb-icon fas icon="user" class="mr-3"></mdb-icon>Mes Statistiques
+    </a>
+    <a routerLink="/abonnement" routerLinkActive="active" class="list-group-item list-group-item-action waves-effect">
+      <mdb-icon fas icon="table" class="mr-3"></mdb-icon>Mes Abonnements
+    </a>
+    <a routerLink="/diffusion" routerLinkActive="active" class="list-group-item list-group-item-action waves-effect">
+      <mdb-icon far icon="map" class="mr-3"></mdb-icon>Diffuser du contenu
+    </a>
+  </div>
+</div>
+
+
+
 
 <!-- fin sidebare-->
 
 
-  <div class="container-fluid">
-<div id="div1">
+<div class="container-fluid">
+  <div id="div1">
 
-  <!--     titre       -->
-  <mdb-card>
-    <mdb-card-body>
-      <h6 style="font-size:50px;">Abonnements</h6>
-    </mdb-card-body>
-  </mdb-card>
+    <!--     titre       -->
+    <mdb-card>
+      <mdb-card-body>
+        <h6 style="font-size:50px;">Abonnements</h6>
+      </mdb-card-body>
+    </mdb-card>
 
-  <!--     fin titre       -->
+    <!--     fin titre       -->
 
 
 
-  <div class="wrapper">
+    <div class="wrapper">
 
-    <div class="one1">
-      <span class="contact100-form-title">
-      <br>
-        Mes Abonnements
-      </span>
+      <div class="one1">
+        <span class="contact100-form-title">
+          Mes Abonnements
+        </span>
+      </div>
+
+      <div class="one2">
+        <mdb-card>
+          <ul class="list-group list-group-flush">
+            <li *ngFor="let flux of mySubs" class="list-group-item">
+              <a class="click" [routerLink]="['/entrant',flux]">
+                {{ flux }}
+              </a>
+            </li>
+          </ul>
+        </mdb-card>
+      </div>
+
+
+
+      <div class="two1">
+        <span class="contact100-form-title">
+          Flux disponibles
+        </span>
+      </div>
+
+      <div class="two2">
+        <mdb-card>
+          <ul class="list-group list-group-flush">
+            <li *ngFor="let flux of listGroups" class="list-group-item">
+              <a class="click" routerLink="/entrant">
+                {{ flux.name }}
+              </a>
+            </li>
+          </ul>
+        </mdb-card>
+      </div>
+
     </div>
-
-    <div class="one2">
-      <mdb-card>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">  <a class="click" href="/entrant">Sécurité</a></li>
-          <li class="list-group-item">    <a class="click" href="/entrant">  Les copains du projet S8</a></li>
-          <li class="list-group-item">  <a class="click" href="/entrant">Etats de la route</a></li>
-        </ul>
-      </mdb-card>
-    </div>
-
-
-
-    <div class="two1">
-      <span class="contact100-form-title">
-        <br>
-        Flux disponibles       
-      </span>
-    </div>
-
-    <div class="two2">
-      <mdb-card>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">  <a class="click" href="/entrant">Sécurité</a></li>
-          <li class="list-group-item">    <a class="click" href="/entrant">  Les copains du projet S8</a></li>
-          <li class="list-group-item">  <a class="click" href="/entrant">Etats de la route</a></li>
-          <li class="list-group-item">  <a class="click" href="/entrant">Etats de la route</a></li>
-          <li class="list-group-item">  <a class="click" href="/entrant">Etats de la route</a></li>
-          <li class="list-group-item">  <a class="click" href="/entrant">Etats de la route</a></li>
-        </ul>
-      </mdb-card>
-    </div>
-
   </div>
-</div>
 </div>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';   
 import { User } from '../models/user';
@@ -84,7 +84,7 @@ export class AuthentificationService {
 
   deleteUser(name:string){
     var url = 'http://localhost:3001/admin/delete/';
-    return this.http.post<any>(url,{name}).subscribe(data=>{console.log(data);window.location.reload()});
+    return this.http.post<any>(url,{name}).subscribe(_=>{window.location.reload()});
   }
 
   getUsers(){
@@ -118,6 +118,20 @@ export class AuthentificationService {
   decreaseTI(blockchainAddress: string) {
     var url = "http://localhost:3001/users/trustIndex/decrease/";
     return this.http.post<any>(url, { blockchainAddress });
+  }
+
+  getListGroup() {
+    return this.http.get<any>('http://localhost:3001/admin/groupes/');
+  }
+
+  addToGroup(grpname: string, ip: string) {
+    var url = "http://localhost:3001/admin/groupes/add/";
+    return this.http.post<any>(url, { grpname, ip });
+  }
+
+  findGroupOfUser(ip: string) {
+    var url = 'http://localhost:3001/admin/groupes/search';
+    return this.http.post(url,{ip});
   }
 
   logout() {

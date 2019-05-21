@@ -49,7 +49,6 @@ export class ManageUserComponent implements OnInit {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     this.users.sort((a, b) => {return a.trustIndex-b.trustIndex}); 
     this.userToSupervise=this.users[0];
-    console.log(this.userToSupervise)
   }
 
   get f() { return this.addUserForm.controls; }

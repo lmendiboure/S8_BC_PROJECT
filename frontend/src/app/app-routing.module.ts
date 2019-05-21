@@ -35,7 +35,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'profile/:id', component: ProfileComponent, canActivate: [GuardsComponent],resolve: {information: InformationUserResolver}},
   { path: 'compte', component: CompteComponent, canActivate: [GuardsComponent]},
-  { path: 'entrant', component: EntrantComponent, canActivate: [GuardsComponent]},
+  { path: 'entrant/:groupName', component: EntrantComponent, canActivate: [GuardsComponent]},
   { path: 'abonnement', component: AbonnementComponent, canActivate: [GuardsComponent] },
   { path: 'diffusion', component: DiffusionComponent, canActivate: [GuardsComponent] },
   { path: 'suivre', component: SuivreComponent, canActivate: [GuardsComponent] },
