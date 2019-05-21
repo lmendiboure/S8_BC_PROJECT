@@ -240,6 +240,7 @@ router.post('/', (req, res, next) => {
 router.post('/groupes/add', (req, res, next) => {
     var name = req.body.grpname;
     var ip = req.body.ip;
+    var ipgrp= req.body.ipgrp;
     var idg;
 
    var a;
@@ -252,9 +253,10 @@ router.post('/groupes/add', (req, res, next) => {
         			idg=response.length;});
 		  const group = new Group({
                 _id: new mongoose.Types.ObjectId(),
-		grId:idg,
+                grIP:ipgrp,
+		        grId:idg,
                 name: req.body.grpname,
-		list: [ip],
+		        list: [ip],
                        });
 		group.save().then((response) => {
 						res.status(200).json({
