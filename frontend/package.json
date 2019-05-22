@@ -24,6 +24,7 @@
     "@fortawesome/fontawesome-free": "^5.8.1",
     "@types/chart.js": "^2.7.50",
     "MD5": "~1.2.1",
+    "all": "0.0.0",
     "angular-bootstrap-md": "^7.4.4",
     "body-parser": "^1.18.3",
     "chart.js": "^2.5.0",

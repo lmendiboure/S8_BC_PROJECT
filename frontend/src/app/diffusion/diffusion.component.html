@@ -13,27 +13,26 @@
         <mdb-card >
           <mdb-card-header><h5><b>Diffuser ma vidéo</b></h5></mdb-card-header>
           <mdb-card-body>
-              
+
               <div class="text-center">
                   <input type="file" class="text-center center-block file-upload" [(ngModel)]="currentInput" (change)="onFileSelected($event)">
                 </div>
                 <br>
                 <label>Envoyer ma vidéo au groupe de:</label>
-                <select class="custom-select" multiple (change)="onGroupSelection($event.target.value)">
+                <select  class="custom-select" (change)="onGroupSelection($event.target.value)">
             <!-- avoir la liste de groupes pas en statique soit par le serveur en locale de Luc soit par MongoDB qui stock les groupes de chaque utilisateur au choix-->
-                  <option value="secu">Sécurité</option>
-                  <option value="copain">Les copains du projet S8</option>
-                  <option value="route">Etat de la route</option>
+                  <option *ngFor="let flux of usersGroup" value="{{flux.name}}">{{flux.name}}</option>
                 </select>
                 <br>
                 <button type="button" class="btn btn-primary" mdbWavesEffect (click)="ngOnClickDiffusion()">Diffuser ma vidéo </button>
 
-             
+
+
           </mdb-card-body>
         </mdb-card>
       </div>
 
-    
+
 <!--     <div class="wrapper2">
       <div class="selection">
         <div class="text-center">
@@ -48,7 +47,6 @@
           <option value="route">Etat de la route</option>
         </select>
 
-      </div> 
- 
-    </div>-->
+      </div>
 
+    </div>-->

@@ -9,12 +9,9 @@ import { AuthentificationService } from '../services/authentification.service';
 })
 export class AbonnementComponent implements OnInit {
 
-  public fluxDispo: string[] = ['Windstorm', 'Bombasto', 'Magneta', 'Tornado'];
-  public mySubs: string[] = ['aymanlebg1', 'aymanlebg2', 'aymanlebg3'];
   public listGroups;
   public userIP;
   public usersGroup;
-
 
   constructor(private http: HttpClient,
     private authentificationService: AuthentificationService) {
@@ -30,18 +27,18 @@ export class AbonnementComponent implements OnInit {
 
     this.listGroups = JSON.parse(localStorage.getItem('listGroups'));
     this.userIP = localStorage.getItem('ip').split('"')[0];
-    console.log(this.userIP);
+
     this.authentificationService.findGroupOfUser(this.userIP).subscribe(
       data => {
-        console.log(data);
-        //localStorage.setItem('usersGroup',JSON.stringify(data.responce));
+
+        localStorage.setItem('usersGroup',JSON.stringify(data.response));
       }
     );
     this.usersGroup = JSON.parse(localStorage.getItem('usersGroup'));
-    console.log(this.usersGroup);
 
 
   }
+
 
 
 

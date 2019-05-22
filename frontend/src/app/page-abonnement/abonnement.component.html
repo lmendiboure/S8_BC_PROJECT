@@ -49,9 +49,9 @@
       <div class="one2">
         <mdb-card>
           <ul class="list-group list-group-flush">
-            <li *ngFor="let flux of mySubs" class="list-group-item">
-              <a class="click" [routerLink]="['/entrant',flux]">
-                {{ flux }}
+            <li *ngFor="let flux of usersGroup" class="list-group-item">
+              <a class="click" [routerLink]="['/entrant',flux.name]">
+                {{ flux.name }}
               </a>
             </li>
           </ul>
@@ -70,7 +70,7 @@
         <mdb-card>
           <ul class="list-group list-group-flush">
             <li *ngFor="let flux of listGroups" class="list-group-item">
-              <a class="click" routerLink="/entrant">
+              <a class="click" [routerLink]="['/entrant',flux.name]" >
                 {{ flux.name }}
               </a>
             </li>

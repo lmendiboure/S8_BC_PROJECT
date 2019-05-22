@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { AuthentificationService } from '../services/authentification.service';
 
 
 @Component({
@@ -20,9 +21,21 @@ export class EntrantComponent implements OnInit {
   compteur: number =0;
   userlike: number =0;
   userdislike: number =0;
+  groupName;
+  listOfEveryGroups;
+  listOfEveryGroupsIP=[];
+  listOfEveryGroupsName=[];
+  IPurl;
 
 
-  constructor(private http: HttpClient,countLike,countDislike,) { }  
+
+
+
+  constructor(private http: HttpClient, private _route: ActivatedRoute,
+  private router: Router, private authenticationService: AuthentificationService,) {
+
+
+  }
 /*  constructor(private countLike,) { }
   constructor(private countDislike,) { }*/
 
@@ -32,8 +45,27 @@ export class EntrantComponent implements OnInit {
  //permet de lister les vidéos disponibles aux lancements de la page, il faut récupérer le nom du groupe dans le nom de la page abonnement pour pouvoir l'envoyer au serveur local à la place de l'adresse ip statique que j'ai mise, quand on clique sur le nom d'une vidéo faut que ça renvoit sur une nouvelle page pour pouvoir la visualiser ou alors le regarder sur la même page
 //(pour plus tard) par exemple à gauche on affichera la vidéos en locale et à droite les vidéos sur le serveur ftp
 //sur la page de la vidéo mettre bouton j'aime/j'aime pas demander à youssef et ayman je sais pas trop comment c'est censé marcher
+    this.listOfEveryGroups = JSON.parse(localStorage.getItem('listGroups'));
+    for (let idx in this.listOfEveryGroups) {
+      // prend la liste des noms de groupes auquel on fait parti
+      //ainsi que la liste des ip des groupes
+      this.listOfEveryGroupsIP.push(this.listOfEveryGroups[idx].grIP);
+      this.listOfEveryGroupsName.push(this.listOfEveryGroups[idx].name);
 
-    var url = 'http://localhost:2900/local_video_list/225.0.0.1'; // remplacer 225.0.0.1 par le nom du group dans la page
+
+    }
+
+
+    this._route.params.subscribe(paramsId => {
+        this.groupName = paramsId.groupName;
+    });
+    for (let idx in this.listOfEveryGroupsName){
+      if (this.groupName.localeCompare(this.listOfEveryGroupsName[idx] )==0) {
+        this.IPurl=this.listOfEveryGroupsIP[idx]; //correspondance IP/ nom de groupe
+      }
+    }
+
+    var url = 'http://localhost:2900/local_video_list/'+this.IPurl; // remplacer 225.0.0.1 par le nom du group dans la page
     console.log(url);
     this.http.get<any>(url,{observe:'response'}).subscribe(data=>{console.log(data);}); //la liste des vidéos d'un groupe est dans le body de data
   }
