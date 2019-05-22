@@ -356,7 +356,7 @@ router.post('/groupes/search',  (req, res, next) => {
 		console.log(info);
 		}*/
 	return res.status(200).json({
-		        responce: result
+		        response: result
 		    })
 
 	}).catch((err) => {
