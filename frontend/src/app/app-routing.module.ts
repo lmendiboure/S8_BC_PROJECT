@@ -17,7 +17,7 @@ import { AbonnementComponent } from './page-abonnement/abonnement.component';
 import { SuivreComponent } from './suivre/suivre.component';
 import { ManageDiffusionVideoComponent } from './manage-diffusion-video/manage-diffusion-video.component';
 import { GestionProblemesComponent } from './gestion-problemes/gestion-problemes.component';
-
+import { VideoEntrantesComponent } from './video-entrantes/video-entrantes.component';
 
 import { UsersResolver } from './resolvers/users.resolver';
 import { InformationUserResolver } from './resolvers/informationAboutUser.resolver';
@@ -35,10 +35,11 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'profile/:id', component: ProfileComponent, canActivate: [GuardsComponent],resolve: {information: InformationUserResolver}},
   { path: 'compte', component: CompteComponent, canActivate: [GuardsComponent]},
-  { path: 'entrant/:groupName', component: EntrantComponent, canActivate: [GuardsComponent]},
+  { path: 'entrant/:groupName/:vidName', component: EntrantComponent, canActivate: [GuardsComponent]},
   { path: 'abonnement', component: AbonnementComponent, canActivate: [GuardsComponent] },
   { path: 'diffusion', component: DiffusionComponent, canActivate: [GuardsComponent] },
   { path: 'suivre', component: SuivreComponent, canActivate: [GuardsComponent] },
+  { path: 'videos/:groupName', component: VideoEntrantesComponent, canActivate: [GuardsComponent] },
   { path: 'admin/managerights', component: ManageDiffusionVideoComponent, canActivate: [GuardsComponent]},
   { path: 'admin/manageissues', component: GestionProblemesComponent, canActivate: [GuardsComponent], resolve: {signalements: SignalementsResolver}},
 

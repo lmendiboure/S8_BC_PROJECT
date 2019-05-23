@@ -31,7 +31,8 @@ import { ErrorInterceptor } from './services/helpers.component';
 
 import { UsersResolver } from './resolvers/users.resolver'
 import { InformationUserResolver } from './resolvers/informationAboutUser.resolver';
-import { SignalementsResolver } from './resolvers/signalements.resolver'
+import { SignalementsResolver } from './resolvers/signalements.resolver';
+import { VideoEntrantesComponent } from './video-entrantes/video-entrantes.component';
 
 
 
@@ -57,6 +58,7 @@ import { SignalementsResolver } from './resolvers/signalements.resolver'
     ManageDiffusionVideoComponent,
     GestionProblemesComponent,
     SidebarUserComponent,
+    VideoEntrantesComponent,
   ],
   imports: [
     BrowserModule,

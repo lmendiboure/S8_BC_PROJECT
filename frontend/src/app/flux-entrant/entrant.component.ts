@@ -22,6 +22,7 @@ export class EntrantComponent implements OnInit {
   userlike: number =0;
   userdislike: number =0;
   groupName;
+  vidName;
   listOfEveryGroups;
   listOfEveryGroupsIP=[];
   listOfEveryGroupsName=[];
@@ -64,7 +65,6 @@ export class EntrantComponent implements OnInit {
         this.IPurl=this.listOfEveryGroupsIP[idx]; //correspondance IP/ nom de groupe
       }
     }
-
     var url = 'http://localhost:2900/local_video_list/'+this.IPurl; // remplacer 225.0.0.1 par le nom du group dans la page
     console.log(url);
     this.http.get<any>(url,{observe:'response'}).subscribe(data=>{console.log(data);}); //la liste des vidéos d'un groupe est dans le body de data

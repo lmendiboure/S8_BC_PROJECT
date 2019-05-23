@@ -30,7 +30,7 @@
     <!--     titre       -->
     <mdb-card>
       <mdb-card-body>
-        <h6 style="font-size:50px;">Abonnements</h6>
+        <h6 style="font-size:50px;">Listes des vidéos de {{ groupName}}</h6>
       </mdb-card-body>
     </mdb-card>
 
@@ -42,17 +42,19 @@
 
       <div class="one1">
         <span class="contact100-form-title">
-          Mes Abonnements
+          Vidéos disponibles
         </span>
       </div>
 
       <div class="one2">
         <mdb-card>
           <ul class="list-group list-group-flush">
-            <li *ngFor="let flux of usersGroup" class="list-group-item">
-              <a class="click" [routerLink]="['/videos',flux.name]">
-                {{ flux.name }}
+            <li *ngFor="let vid of listVideos" class="list-group-item">
+
+              <a class="click" [routerLink]="['/entrant', groupName,vid]">
+                {{ vid }}
               </a>
+
             </li>
           </ul>
         </mdb-card>
@@ -60,23 +62,6 @@
 
 
 
-      <div class="two1">
-        <span class="contact100-form-title">
-          Flux disponibles
-        </span>
-      </div>
-
-      <div class="two2">
-        <mdb-card>
-          <ul class="list-group list-group-flush">
-            <li *ngFor="let flux of listGroups" class="list-group-item">
-              <a class="click" [routerLink]="['/videos',flux.name]" >
-                {{ flux.name }}
-              </a>
-            </li>
-          </ul>
-        </mdb-card>
-      </div>
 
     </div>
   </div>
