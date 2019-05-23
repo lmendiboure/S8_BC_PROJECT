@@ -102,8 +102,12 @@ app.get('/ftp_download/:groupe/:nom_video', (req, res) => {
 
 app.get('/local_video_list/:group', function(req, res){
    console.log('liste des vidéos d\'un groupe')
-   const list_video=shell.exec('ls '+ req.params.group).stdout
-
+    list_video=shell.exec('ls '+ req.params.group).stdout
+     list=list_video.split("\n")	
+console.log(list)
+  list.pop()
+ list_video=list.join(",")	
+console.log(list_video)																																																																																																																																																																																																																																																																																																																										
    res.status(200).json({list : list_video})
  
 });
