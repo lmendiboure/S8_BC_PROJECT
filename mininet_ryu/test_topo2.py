@@ -50,7 +50,7 @@ def topology():
     h1=net.addHost('h1')
     h2=net.addHost('h2')
     
-    ftp_serv = net.addHost( 'ftp_serv' )
+    ftp_serv = net.addHost( 'ftp_serv',mac='3a:c8:4d:23:0d:b0' )
     ftp_serv.cmd( '/usr/sbin/vsftpd  &' ) 	
     s1 = net.addSwitch('S1',dpid="1200")
 

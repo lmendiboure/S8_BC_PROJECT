@@ -98,11 +98,11 @@ def get_path(src,dst,first_port,final_port):
   available_bw[src]=float('Inf')
   Q=set(rsus)
 
-
+  print "eth_tab",eth_tab
   while len(Q)>0:
     u = max_available_bw(available_bw, Q)
+    print u,Q
     Q.remove(u)
-
     for p in rsus:
       if adjacency[u][p]!=None:
         link_available_bw = bw_available[str(u)][str(p)]
