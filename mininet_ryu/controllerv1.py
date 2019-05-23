@@ -24,10 +24,15 @@ from operator import attrgetter
 from datetime import datetime
 from ryu.ofproto.ofproto_v1_3 import OFPG_ANY
 import time
-import random 
+import random
+import sys
+import json
+import requests
+import json
 
-#switches
-switches = []
+
+#rsus
+rsus = []
  
 #eth_tab[srcmac]->(rsu, port,prev_rsu)
 eth_tab={}
@@ -47,19 +52,32 @@ multicast_group_id={}
 datapath_list={}
 
 # bandwith management
-byte=defaultdict(lambda:defaultdict(lambda:None))
-clock=defaultdict(lambda:defaultdict(lambda:None))
+prev_bw=defaultdict(lambda:defaultdict(lambda:None))
+prev_time=defaultdict(lambda:defaultdict(lambda:None))
 bw_used=defaultdict(lambda:defaultdict(lambda:None))
 bw_available=defaultdict(lambda:defaultdict(lambda:None))
 bw=defaultdict(lambda:defaultdict(lambda:None))
 
-def max_abw(abw, Q):
+#group_priority : group_priority[ip]->priority
+group_priority={}
+
+#stats:stats[dpid]->count
+stats_list={}
+
+#token for authentication
+myToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2M0NTBlZWE5ZTExNzFhMWVkM2IyN2QiLCJibG9ja0FkZHJlc3MiOiIweDcwMDA3RTFjMjc3NDk1ZTMzMTM2N2JiNmM2MGU0MzlEZTM3QkEzM0YiLCJpYXQiOjE1NTYzNjk4NjcsImV4cCI6MTU1NjM3MzQ2N30.n6Owyd5eu-i9lZO_bGe4WtiB_WveCBg8BtarYJc4e2o'
+head = {'Authorization': 'token {}'.format(myToken)}
+
+#fd_bw_used = open("bw_used.txt", "a")
+#fd_drop = open("packet_drop.txt", "a")
+
+def max_available_bw(available_bw, Q):
 
   max = float('-Inf')
   node = 0
   for v in Q:
-    if abw[v] > max:
-      max = abw[v]
+    if available_bw[v] > max:
+      max = available_bw[v]
       node = v
   return node
 
@@ -70,37 +88,34 @@ def get_path(src,dst,first_port,final_port):
   print "src=",src," dst=",dst, " first_port=", first_port, " final_port=", final_port
 
   #available bandwidth
-  abw = {}
+  available_bw = {}
   previous = {}
  
-  for dpid in switches:
-    abw[dpid] = float('-Inf')
+  for dpid in rsus:
+    available_bw[dpid] = float('-Inf')
     previous[dpid] = None
 
-  abw[src]=float('Inf')
-  Q=set(switches)
+  available_bw[src]=float('Inf')
+  Q=set(rsus)
 
- # print "Q:", Q
 
   while len(Q)>0:
-    u = max_abw(abw, Q)
+    u = max_available_bw(available_bw, Q)
     Q.remove(u)
-    #print "Q:", Q, "u:", u
 
-    for p in switches:
+    for p in rsus:
       if adjacency[u][p]!=None:
-        link_abw = bw_available[str(u)][str(p)]
-        #print "link_abw:", str(u),"->",str(p),":",link_abw, "kbps"
-        if abw[u] < link_abw:
-          tmp = abw[u]
+        link_available_bw = bw_available[str(u)][str(p)]
+        if available_bw[u] < link_available_bw:
+          tmp = available_bw[u]
         else:
-          tmp = link_abw
-        if abw[p] > tmp:
-          alt = abw[p]
+          tmp = link_available_bw
+        if available_bw[p] > tmp:
+          alt = available_bw[p]
         else:
           alt = tmp
-        if alt > abw[p]:
-          abw[p] = alt
+        if alt > available_bw[p]:
+          available_bw[p] = alt
           previous[p] = u
 
   r=[]
@@ -131,71 +146,6 @@ def get_path(src,dst,first_port,final_port):
   r.append((dst,in_port,final_port))
   return r
 
-def get_path_multicast(dpid_src,dpid_dst,first_port,final_port):
-  global bw_available
-  print "Dijkstra's widest path algorithm"
-
-  #available bandwidth
-  abw = {}
-  previous = {}
- 
-  for dpid in switches:
-    abw[dpid] = float('-Inf')
-    previous[dpid] = None
-
-  abw[dpid_src]=float('Inf')
-  Q=set(switches)
-
-  print "Q:", Q
-
-  while len(Q)>0:
-    u = max_abw(abw, Q)
-    Q.remove(u)
-    print "Q:", Q, "u:", u
-
-    for p in switches:
-      if adjacency[u][p]!=None:
-        link_abw = bw_available[str(u)][str(p)]
-        print "link_abw:", str(u),"->",str(p),":",link_abw, "kbps"
-        if abw[u] < link_abw:
-          tmp = abw[u]
-        else:
-          tmp = link_abw
-        if abw[p] > tmp:
-          alt = abw[p]
-        else:
-          alt = tmp
-        if alt > abw[p]:
-          abw[p] = alt
-          previous[p] = u
-
-  r=[]
-  p=dpid_dst
-  r.append(p)
-  q=previous[p]
-
-  while q is not None:
-    if q == dpid_src:
-      r.append(q)
-      break
-    p=q
-    r.append(p)
-    q=previous[p]
-  r.reverse()
-
-  if dpid_src==dpid_dst:
-    path=[dpid_src]
-  else:
-    path=r
- 
-  r = []
-  in_port = first_port
-  for s1,s2 in zip(path[:-1],path[1:]):
-    out_port = adjacency[s1][s2]
-    r.append((s1,in_port,out_port))
-    in_port = adjacency[s2][s1]
-  r.append((dpid_dst,in_port,final_port))
-  return r
 
  
 class ProjectController(app_manager.RyuApp):
@@ -208,11 +158,11 @@ class ProjectController(app_manager.RyuApp):
         self.topology_api_app = self
         self.datapaths = {}
         self.monitor_thread = hub.spawn(self._monitor)
-
+        
         global bw
-
+	#setting the default bandwith for each link / the same as mininet-wifi
         try:
-          fin = open("bw.txt", "r")
+          fin = open("bandwidth.txt", "r")
           for line in fin:
             a=line.split()
             if a:
@@ -222,7 +172,7 @@ class ProjectController(app_manager.RyuApp):
           fin.close()
 
         except IOError:
-          print "make bw2.txt ready"
+          print "Bandwidth.txt does not exist"
        #print "bw:", bw       
 
     @set_ev_cls(ofp_event.EventOFPStateChange,[MAIN_DISPATCHER, DEAD_DISPATCHER])
@@ -240,7 +190,7 @@ class ProjectController(app_manager.RyuApp):
                 #print 'unregister datapath:', datapath.id
                 del self.datapaths[datapath.id]
 
-    def _monitor(self):
+    def _monitor(self): #stats requests for each RSUS
         while True:
             for dp in self.datapaths.values():
                 self._request_stats(dp)
@@ -283,25 +233,38 @@ class ProjectController(app_manager.RyuApp):
 
     @set_ev_cls(ofp_event.EventOFPPortStatsReply, MAIN_DISPATCHER)
     def _port_stats_reply_handler(self, ev):
-        global byte, clock, bw_used, bw_available
+        global prev_bw, prev_time, bw_used, bw_available, fd_bw_used
         #print time.time()," _port_stats_reply_handler"
         body = ev.msg.body
         dpid = ev.msg.datapath.id
-
+       # sum_bwa=0
+        #i=0
+        #sum_drop=0
         for stat in sorted(body, key=attrgetter('port_no')):
           #print dpid, stat.port_no, stat.tx_packets
-          for p in switches:
+          for p in rsus:
             if adjacency[dpid][p]==stat.port_no:
               #print dpid, p, stat.port_no, bw[str(dpid)][str(p)]
 
-              if byte[dpid][p]>0:
-                bw_used[dpid][p] = (stat.tx_bytes - byte[dpid][p]) * 8.0 / (time.time()-clock[dpid][p]) / 1000
-                bw_available[str(dpid)][str(p)]=int(bw[str(dpid)][str(p)]) * 1024.0 - bw_used[dpid][p]
-                #print str(dpid),"->",str(p),":",bw_available[str(dpid)][str(p)]," kbps"
-                #print str(dpid),"->",str(p),":", bw[str(dpid)][str(p)]," kbps"
+              if prev_bw[dpid][p]>0:
+                #i=i+1
+                bw_used[dpid][p] = (stat.tx_bytes - prev_bw[dpid][p]) * 8.0 / (time.time()-prev_time[dpid][p])
+                bw_available[str(dpid)][str(p)]=int(bw[str(dpid)][str(p)]) - bw_used[dpid][p]
+                #sum_bwa=sum_bwa+bw_available[str(dpid)][str(p)]
+                #sum_drop=stat.rx_dropped/stat.rx_packets + stat.tx_dropped/stat.tx_packets
+                #print stat.tx_bytes, time.time()
+                print str(dpid),"->",str(p),":",bw_available[str(dpid)][str(p)]/1000,"kbps"
+                print str(dpid),"->",str(p),":", bw[str(dpid)][str(p)]/1000," kbps"
 
-              byte[dpid][p]=stat.tx_bytes
-              clock[dpid][p]=time.time()
+              prev_bw[dpid][p]=stat.tx_bytes
+              prev_time[dpid][p]=time.time()
+
+        #if i>0:
+         # if dpid not in stats_list:
+          #  stats_list[dpid]=0
+          #stats_list[dpid]=stats_list[dpid]+1
+	  #fd_bw_used.write(str(stats_list[dpid])+" "+str(sum_bwa/(i*1000))+"\n")
+          #fd_drop.write(str(stats_list[dpid])+" "+str(sum_drop/i)+"\n")
 
         #print "-------------------------------------------------------------------" 
 
@@ -412,7 +375,7 @@ class ProjectController(app_manager.RyuApp):
 	 #ignore LLDP broadcasts
          if eth.ethertype == ether_types.ETH_TYPE_LLDP:
             return
-	
+
   	 #drop IPV6 packets
          #if pkt.get_protocol(ipv6.ipv6):
           #  match = parser.OFPMatch(eth_type=eth.ethertype)
@@ -421,11 +384,11 @@ class ProjectController(app_manager.RyuApp):
 	    #return 
 	 
 	 #answer arp requests
-	 if eth.ethertype==ether_types.ETH_TYPE_ARP:
-	    pkt_arp=pkt.get_protocol(arp.arp)
-	    if pkt_arp.opcode == arp.ARP_REQUEST:
-	      self.handle_arp(datapath,in_port,eth,pkt_arp,msg.buffer_id)
-	      return 	
+	# if eth.ethertype==ether_types.ETH_TYPE_ARP:
+	 #   pkt_arp=pkt.get_protocol(arp.arp)
+	  #  if pkt_arp.opcode == arp.ARP_REQUEST:
+	   #   self.handle_arp(datapath,in_port,eth,pkt_arp,msg.buffer_id)
+	    #  return 	
 	 
 	 #if ipv4
 	 if eth.ethertype == 0x0800:
@@ -444,7 +407,7 @@ class ProjectController(app_manager.RyuApp):
 	    if ip.proto == 0x01 and pkt[2].type == 10 : #ICMPv4 router sollicitation
 	       print src,"change de RSU, prev :",eth_tab[src][0],"new",dpid,"prev prev :",eth_tab[src][2]
 	       eth_tab[src]=(dpid,in_port,eth_tab[src][0])
-	       for sw in switches:
+	       for sw in rsus:
 	         datapath_tmp=datapath_list[sw]
 	         for link in links:
 	           match=parser.OFPMatch(eth_dst=src,in_port=link[2])
@@ -460,7 +423,7 @@ class ProjectController(app_manager.RyuApp):
 	       if (pkt[1].dst in group_multicast) and (dpid in group_multicast[pkt[1].dst]) and (src not in group_multicast[pkt[1].dst][dpid]):
 	         group_multicast[pkt[1].dst][dpid].append(src)
 	       else:
-	         group_multicast[pkt[1].dst][dpid]=[src]
+	         group_multicast[pkt[1].dst][dpid]=["3a:c8:4d:23:0d:b0",src] #always add the ftp_server
 	       print "Les voitures presentes sur le RSU", dpid, "sont ",group_multicast[pkt[1].dst][dpid]
 	       return 
 
@@ -469,7 +432,7 @@ class ProjectController(app_manager.RyuApp):
 	       print src,"left ",pkt[1].dst,"group"
 	       if (pkt[1].dst in group_multicast) and (eth_tab[src][2] in group_multicast[pkt[1].dst]) and (src in group_multicast[pkt[1].dst][eth_tab[src][2]]):
 	           group_multicast[pkt[1].dst][eth_tab[src][2]].remove(src)
-		   for sw in switches: #del every multicast paths matching src and dst
+		   for sw in rsus: #del every multicast paths matching src and dst
 	             datapath_tmp=datapath_list[sw]
 	             for link in links:
 	               match=parser.OFPMatch(eth_src=src,eth_dst=dst,in_port=link[2])
@@ -481,7 +444,8 @@ class ProjectController(app_manager.RyuApp):
    	       return 
 
             if self.isMulticast(dst):
-               self.sendMulticast(msg)
+               if self.rightToSend(ip.src,ip.dst):
+                 self.sendMulticast(msg)
 	       return 
 
          #print "var : ",src,dst,in_port
@@ -507,7 +471,16 @@ class ProjectController(app_manager.RyuApp):
          datapath.send_msg(out)
 
     def isMulticast(self, dst):
-         return ( dst[0:8] == '01:00:5e' or dst[0:5] == '33:33')
+         #return ( dst[0:8] == '01:00:5e' or dst[0:5] == '33:33')
+	 return 0
+
+    def rightToSend(self,src,dst):
+        myUrl = 'http://localhost:3001/users/rightsend'
+	head = {'Authorization': 'token {}'.format(myToken)}
+	r1 = requests.get(myUrl, headers=head,data={"ip_src":src,"ip_dst":ip_dst})
+	resp = r1.json()
+        return resp['right']
+	
 
     def sendMulticast(self,msg):
 	 print "Entering send Multicast"
@@ -568,7 +541,14 @@ class ProjectController(app_manager.RyuApp):
 	       match=parser.OFPMatch(eth_src=src,eth_dst=dst,in_port=in_port_tmp)
 	       print "sw in_port req ",sw,in_port_tmp,req
 	       #print "actions",actions
-	       self.add_flow(datapath=dp,match=match,actions=actions,priority=1)
+
+               if ip.dst not in group_priority:
+                 myUrl = 'http://localhost:3001/users/priority'
+                 r2=requests.get(myUrl, headers=head, data={"ip":ip.dst})
+	         resp = r2.json()
+                 group_priority[ip.dst]=resp['priority']
+
+	       self.add_flow(datapath=dp,match=match,actions=actions,priority=group_priority[ip.dst])
 
 
 
@@ -577,15 +557,15 @@ class ProjectController(app_manager.RyuApp):
     @set_ev_cls(events)
     def get_topology_data(self, ev):
          #print "get_topology_data() is called"
-         global switches, adjacency, datapath_list,links
+         global rsus, adjacency, datapath_list,links
          switch_list = get_switch(self.topology_api_app, None)
-         switches=[switch.dp.id for switch in switch_list]
+         rsus=[switch.dp.id for switch in switch_list]
 
          for switch in switch_list:
             datapath_list[switch.dp.id]=switch.dp
 
          #print "datapath_list=", datapath_list
-         #print "switches=", switches
+         #print "rsus=", rsus
          links_list = get_link(self.topology_api_app, None)
          #print "links_list=", links_list
          links=[(link.src.dpid,link.dst.dpid,link.src.port_no,link.dst.port_no) for link in links_list]
@@ -595,5 +575,7 @@ class ProjectController(app_manager.RyuApp):
             adjacency[s1][s2]=port1
             adjacency[s2][s1]=port2
             #print s1,":", port1, "<--->",s2,":",port2
+
+
 
 
