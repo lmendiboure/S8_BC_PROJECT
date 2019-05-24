@@ -50,16 +50,12 @@ export class VideoEntrantesComponent implements OnInit {
     this.http.get<any>(url,{observe:'response'}).subscribe(data=>
       {console.log(data);
         this.Videos=data.body.list;
-        this.Videos=JSON.stringify(this.Videos);
-        //console.log(this.Videos);
-        console.log(this.Videos);
+        this.Videos=this.Videos.split(",");
+        console.log("hello"+this.Videos);
           for (let idx in this.Videos) {
-              if((this.Videos[idx]).localeCompare("\\n")!=0 ){
 
                   this.listVideos.push(this.Videos[idx]);
                   console.log(this.listVideos[idx]);
-                }
-
 
             }
 

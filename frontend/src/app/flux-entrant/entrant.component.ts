@@ -59,6 +59,7 @@ export class EntrantComponent implements OnInit {
 
     this._route.params.subscribe(paramsId => {
         this.groupName = paramsId.groupName;
+        this.vidName   = paramsId.vidName;
     });
     for (let idx in this.listOfEveryGroupsName){
       if (this.groupName.localeCompare(this.listOfEveryGroupsName[idx] )==0) {
